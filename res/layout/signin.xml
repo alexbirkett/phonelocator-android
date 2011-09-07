@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+ - 
+ -  Copyright 2011 Birkett Enterprise Ltd
+ -
+ -  Licensed under the Apache License, Version 2.0 (the "License");
+ -  you may not use this file except in compliance with the License.
+ -  You may obtain a copy of the License at
+ -
+ -     http://www.apache.org/licenses/LICENSE-2.0
+ -
+ -  Unless required by applicable law or agreed to in writing, software
+ -  distributed under the License is distributed on an "AS IS" BASIS,
+ -  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ -  See the License for the specific language governing permissions and
+ -  limitations under the License.
+ - 
+ -->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent" android:padding="10px">
+
+	<TextView android:id="@+id/user_name_label"
+		android:layout_width="fill_parent" android:layout_height="wrap_content"
+		android:text="@string/user_name" />
+
+	<EditText android:id="@+id/user_name" android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:background="@android:drawable/editbox_background"
+		android:layout_below="@id/user_name_label" />
+
+	<TextView android:id="@+id/password_label"
+		android:layout_width="fill_parent" android:layout_height="wrap_content"
+		android:text="@string/password" android:layout_below="@id/user_name" />
+
+	<EditText android:id="@+id/password" android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:background="@android:drawable/editbox_background"
+		android:layout_below="@id/password_label" />
+
+	<Button android:id="@+id/sign_in" android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:layout_below="@id/password"
+		android:layout_alignParentRight="true" android:layout_marginLeft="10px"
+		android:layout_marginTop="10px" android:text="@string/sign_in" />
+
+	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		android:orientation="horizontal" android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:layout_below="@id/sign_in"
+		android:gravity="center_vertical|right">
+
+		<TextView android:id="@+id/no_account_label"
+			android:layout_width="wrap_content" android:layout_height="fill_parent"
+			android:gravity="center_vertical" android:text="@string/no_account" />
+
+		<Button android:id="@+id/sign_up" android:layout_width="wrap_content"
+			android:layout_alignParentRight="true" android:layout_height="fill_parent"
+			android:gravity="center_vertical|right" android:text="@string/sign_up"
+			android:layout_marginLeft="10px" />
+	</LinearLayout>
+</RelativeLayout>
