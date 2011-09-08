@@ -128,7 +128,7 @@ public class StatusActivity extends Activity implements OnClickListener {
 
 	void doUnbindService() {
 	    if (isServiceBound()) {
-	        unbindService(mConnection);
+	    	getApplicationContext().unbindService(mConnection);
 	    }
 	}
 
