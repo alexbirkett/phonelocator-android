@@ -18,6 +18,8 @@
 
 package com.birkettenterprise.phonelocator.activity;
 
+import com.birkettenterprise.phonelocator.R;
+
 import android.app.TabActivity;
 import android.os.Bundle;
 import android.widget.TabHost;

@@ -18,11 +18,18 @@
 
 package com.birkettenterprise.phonelocator.activity;
 
+import com.birkettenterprise.phonelocator.R;
+import com.birkettenterprise.phonelocator.service.PhonelocatorService;
+
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -31,10 +38,13 @@ import android.view.View.OnClickListener;
 
 public class StatusActivity extends Activity implements OnClickListener {
     
+	private PhonelocatorService mBoundService;
+
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.status);
+        doBindService();
     }
     
     @Override
@@ -43,6 +53,12 @@ public class StatusActivity extends Activity implements OnClickListener {
         inflater.inflate(R.menu.status_menu, menu);
         return true;
     }
+    
+    @Override
+	protected void onDestroy() {
+	    super.onDestroy();
+	    doUnbindService();
+	}
     
     @Override
 	public Dialog onCreateDialog(int id) {
@@ -94,4 +110,29 @@ public class StatusActivity extends Activity implements OnClickListener {
 		startActivity(intent);
 	}
 
+	private ServiceConnection mConnection = new ServiceConnection() {
+	    public void onServiceConnected(ComponentName className, IBinder service) {
+	        mBoundService = ((PhonelocatorService.PhonelocatorServiceBinder)service).getService();
+	    }
+
+	    public void onServiceDisconnected(ComponentName className) {
+	        mBoundService = null;
+	    }
+	};
+
+	void doBindService() {
+		getApplicationContext().bindService(new Intent(StatusActivity.this, PhonelocatorService.class), mConnection, Context.BIND_AUTO_CREATE);
+	}
+	
+	
+
+	void doUnbindService() {
+	    if (isServiceBound()) {
+	        unbindService(mConnection);
+	    }
+	}
+
+	private boolean isServiceBound() {
+		return mBoundService != null;
+	}
 }

@@ -18,6 +18,8 @@
 
 package com.birkettenterprise.phonelocator.activity;
 
+import com.birkettenterprise.phonelocator.R;
+
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;

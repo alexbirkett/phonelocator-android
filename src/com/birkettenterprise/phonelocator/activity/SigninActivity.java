@@ -18,6 +18,8 @@
 
 package com.birkettenterprise.phonelocator.activity;
 
+import com.birkettenterprise.phonelocator.R;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
