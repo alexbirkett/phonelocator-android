@@ -26,6 +26,7 @@ import android.os.IBinder;
 public class PhonelocatorService extends Service {
 
     private final IBinder mBinder = new PhonelocatorServiceBinder();
+    private PreferenceSynchronizer mPreferenceSynchronizer;
     
 	public class PhonelocatorServiceBinder extends Binder {
         public PhonelocatorService getService() {
@@ -36,6 +37,7 @@ public class PhonelocatorService extends Service {
     @Override
     public void onCreate() {
     	super.onCreate();
+    	mPreferenceSynchronizer = new PreferenceSynchronizer(this);
     }
 
     @Override
@@ -46,6 +48,7 @@ public class PhonelocatorService extends Service {
     @Override
     public void onDestroy() {
     	super.onDestroy();
+    	mPreferenceSynchronizer.destroy();
     }
 
     @Override
