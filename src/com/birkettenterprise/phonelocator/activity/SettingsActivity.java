@@ -27,6 +27,8 @@ import android.preference.PreferenceActivity;
 
 public class SettingsActivity extends PreferenceActivity implements
 		OnSharedPreferenceChangeListener {
+	
+	private static final String MODIFICATION_TIMESTAMP = "modification_timestamp";
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -36,8 +38,18 @@ public class SettingsActivity extends PreferenceActivity implements
 
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
 			String key) {
+		if (!key.endsWith(MODIFICATION_TIMESTAMP)) {
+			storeTimeStamp(sharedPreferences, key);
+		}
 	}
 
+	private void storeTimeStamp(SharedPreferences sharedPreferences,
+			String key) {
+	      SharedPreferences.Editor editor = sharedPreferences.edit();
+	      editor.putLong(key + MODIFICATION_TIMESTAMP, System.currentTimeMillis());
+	      editor.commit();
+	}
+	
 	protected void onResume() {
 		super.onResume();
 		getPreferenceScreen().getSharedPreferences()
