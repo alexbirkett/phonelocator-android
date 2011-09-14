@@ -26,10 +26,13 @@ import android.content.Intent;
 
 public class PhonelocatorApplication extends Application {
 
+	private static PhonelocatorApplication mInstance;
+	
 	@Override
 	public void onCreate() {
 		super.onCreate();
 		startService(this);
+		setInstanceVariable();
 	}
 	
 	/**
@@ -40,5 +43,17 @@ public class PhonelocatorApplication extends Application {
 	public static void startService(Context context) {
 		Intent startServiceIntent = new Intent(context, PhonelocatorService.class);
 	    context.startService(startServiceIntent);
+	}
+	
+	private void setInstanceVariable() {
+		if (mInstance != null) {
+			throw new RuntimeException();
+		}
+		mInstance = this;
+	}
+	
+	
+	public static PhonelocatorApplication getInstance() {
+		return mInstance;
 	}
 }
