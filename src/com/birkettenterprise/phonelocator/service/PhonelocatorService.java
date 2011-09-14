@@ -18,6 +18,8 @@
 
 package com.birkettenterprise.phonelocator.service;
 
+import com.birkettenterprise.phonelocator.database.DatabaseHelper;
+
 import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
@@ -27,6 +29,7 @@ public class PhonelocatorService extends Service {
 
     private final IBinder mBinder = new PhonelocatorServiceBinder();
     private PreferenceSynchronizer mPreferenceSynchronizer;
+    private DatabaseHelper mDatabaseHelper;
     
 	public class PhonelocatorServiceBinder extends Binder {
         public PhonelocatorService getService() {
@@ -38,6 +41,7 @@ public class PhonelocatorService extends Service {
     public void onCreate() {
     	super.onCreate();
     	mPreferenceSynchronizer = new PreferenceSynchronizer(this);
+    	mDatabaseHelper = new DatabaseHelper(this);
     }
 
     @Override
@@ -49,6 +53,7 @@ public class PhonelocatorService extends Service {
     public void onDestroy() {
     	super.onDestroy();
     	mPreferenceSynchronizer.destroy();
+    	mDatabaseHelper.close();
     }
 
     @Override
