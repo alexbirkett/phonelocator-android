@@ -42,7 +42,7 @@ public class SigninActivity extends Activity implements OnClickListener {
 		if (view == findViewById(R.id.sign_in)) {
 			activeStatus();
 		} else {
-			activateSignup();
+			openUrl();
 		}
 	}
 	
@@ -56,5 +56,10 @@ public class SigninActivity extends Activity implements OnClickListener {
 		Uri uri = Uri.parse(getString(R.string.sign_up_url));
 		Intent intent = new Intent(Intent.ACTION_VIEW, uri);
 		startActivity(intent);
+	}
+	
+	private void openUrl() {
+		Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://10.0.0.3:3000"));
+		startActivity(browserIntent);
 	}
 }
