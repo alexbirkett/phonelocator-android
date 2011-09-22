@@ -48,14 +48,8 @@ public class SigninActivity extends Activity implements OnClickListener {
 	
 	private void activeStatus() {
 		finish();
-		Intent intent = new Intent(this, StatusActivity.class);
+		Intent intent = new Intent(this, TabsAcitvity.class);
         startActivity(intent);
-	}
-	
-	private void activateSignup() {
-		Uri uri = Uri.parse(getString(R.string.sign_up_url));
-		Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-		startActivity(intent);
 	}
 	
 	private void openUrl() {

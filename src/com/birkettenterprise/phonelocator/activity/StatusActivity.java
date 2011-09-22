@@ -19,7 +19,7 @@
 package com.birkettenterprise.phonelocator.activity;
 
 import com.birkettenterprise.phonelocator.R;
-import com.birkettenterprise.phonelocator.service.PhonelocatorService;
+import com.birkettenterprise.phonelocator.service.RegistrationService;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -38,7 +38,7 @@ import android.view.View.OnClickListener;
 
 public class StatusActivity extends Activity implements OnClickListener {
     
-	private PhonelocatorService mBoundService;
+	private RegistrationService mBoundService;
 
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -112,7 +112,7 @@ public class StatusActivity extends Activity implements OnClickListener {
 
 	private ServiceConnection mConnection = new ServiceConnection() {
 	    public void onServiceConnected(ComponentName className, IBinder service) {
-	        mBoundService = ((PhonelocatorService.PhonelocatorServiceBinder)service).getService();
+	        mBoundService = ((RegistrationService.RegistrationServiceBinder)service).getService();
 	    }
 
 	    public void onServiceDisconnected(ComponentName className) {
@@ -121,7 +121,7 @@ public class StatusActivity extends Activity implements OnClickListener {
 	};
 
 	void doBindService() {
-		getApplicationContext().bindService(new Intent(StatusActivity.this, PhonelocatorService.class), mConnection, Context.BIND_AUTO_CREATE);
+		getApplicationContext().bindService(new Intent(StatusActivity.this, RegistrationService.class), mConnection, Context.BIND_AUTO_CREATE);
 	}
 	
 	

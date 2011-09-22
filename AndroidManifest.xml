@@ -18,14 +18,18 @@
  -->
  
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="com.birkettenterprise.phonelocator" android:versionCode="1"
-	android:versionName="0.7">
-	<application android:name=".application.PhonelocatorApplication" android:icon="@drawable/icon" android:label="@string/app_name"
-		android:debuggable="true">
-		
-		<activity android:name=".activity.TabsAcitvity" android:label="@string/app_name"/>
-
-		<activity android:name=".activity.StatusActivity" android:label="@string/app_name"/>	
+		package="com.birkettenterprise.phonelocator"
+		android:versionCode="1"
+		android:versionName="0.7">
+	
+	<uses-sdk android:minSdkVersion="7" />
+	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+	<uses-permission android:name="android.permission.WAKE_LOCK"/>
+	
+	<application android:name=".application.PhonelocatorApplication" 
+	             android:icon="@drawable/icon"
+	             android:label="@string/app_name"
+				 android:debuggable="true">
 	
 		<activity android:name=".activity.SigninActivity" android:label="@string/app_name">	
 			<intent-filter>
@@ -40,19 +44,23 @@
 			</intent-filter>
 		</activity>
 		
-		<activity android:name=".activity.SettingsActivity" android:label="@string/app_name">
-
-		</activity>
-		<service android:name=".service.PhonelocatorService"/>
+		<activity android:name=".activity.TabsAcitvity" android:label="@string/app_name"/>
+		<activity android:name=".activity.StatusActivity" android:label="@string/app_name"/>	
+		<activity android:name=".activity.SettingsActivity" android:label="@string/app_name"/>
+	
+		<service android:name=".service.UpdateService"/>
+		<service android:name=".service.RegistrationService"/>
 		
-		<receiver android:name=".broadcastreceiver.PhonelocatorBroadcastReceiver">  
+		<receiver android:name=".broadcastreceiver.BootCompletedBroadcastReceiver">  
 		    <intent-filter>  
+		        <action android:name="android.intent.action.BOOT_COMPLETED" />  
+		    </intent-filter>
+		     <intent-filter>  
 		        <action android:name="android.intent.action.BOOT_COMPLETED" />  
 		    </intent-filter>  
 		</receiver>
+		<receiver android:name=".broadcastreceiver.AlarmBroadcastReceiver"/>  
 
 	</application>
-	<uses-sdk android:minSdkVersion="7" />
-	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-	
+
 </manifest>

@@ -19,16 +19,29 @@
 package com.birkettenterprise.phonelocator.activity;
 
 import com.birkettenterprise.phonelocator.R;
+import com.birkettenterprise.phonelocator.broadcastreceiver.AlarmBroadcastReceiver;
+import com.birkettenterprise.phonelocator.service.UpdateService;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.preference.PreferenceActivity;
+import android.preference.PreferenceManager;
 
 public class SettingsActivity extends PreferenceActivity implements
 		OnSharedPreferenceChangeListener {
+
+	public static final String TIMESTAMP = "_timestamp";
 	
-	private static final String MODIFICATION_TIMESTAMP = "modification_timestamp";
+	private static final int MILLISECONDS_IN_SECOND = 1000;
+	private static final String DEFAULT_UPDATE_FREQUENCY = "3600";
+	
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -38,15 +51,18 @@ public class SettingsActivity extends PreferenceActivity implements
 
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
 			String key) {
-		if (!key.endsWith(MODIFICATION_TIMESTAMP)) {
+		if (!key.endsWith(TIMESTAMP)) {
 			storeTimeStamp(sharedPreferences, key);
+		}
+		if (key.equals(getString(R.string.update_frequency_key))) {
+			handleUpdateFrequencyChanged(this);
 		}
 	}
 
 	private void storeTimeStamp(SharedPreferences sharedPreferences,
 			String key) {
 	      SharedPreferences.Editor editor = sharedPreferences.edit();
-	      editor.putLong(key + MODIFICATION_TIMESTAMP, System.currentTimeMillis());
+	      editor.putLong(key + TIMESTAMP, System.currentTimeMillis());
 	      editor.commit();
 	}
 	
@@ -61,5 +77,34 @@ public class SettingsActivity extends PreferenceActivity implements
 		getPreferenceScreen().getSharedPreferences()
 				.unregisterOnSharedPreferenceChangeListener(this);
 	}
+	
+	
+	public static long getUpdateIntervalInMicroSeconds(Context context) {
+		SharedPreferences sharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(context);
+		return Long.parseLong(sharedPreferences.getString(
+				context.getString(R.string.update_frequency_key),
+				DEFAULT_UPDATE_FREQUENCY)) * MILLISECONDS_IN_SECOND;
+	}
+	
+	public static void handleUpdateFrequencyChanged(Context context) {
 
+		long intervalInMicroseconds = getUpdateIntervalInMicroSeconds(context);
+
+		AlarmManager alamManager = (AlarmManager) context
+				.getSystemService(Context.ALARM_SERVICE);
+		
+		Intent intent = new Intent(context, AlarmBroadcastReceiver.class);
+		
+		intent.putExtra(UpdateService.COMMAND, UpdateService.SYNCHRONIZE_SETTINGS | UpdateService.UPDATE_LOCATION);
+		// Extras not sent if no action is set: http://stackoverflow.com/questions/3127957/why-the-pendingintent-doesnt-send-back-my-custom-extras-setup-for-the-intent
+		intent.setAction("foo");
+		
+		PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+		alamManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
+				SystemClock.elapsedRealtime(),
+				intervalInMicroseconds, pendingIntent);
+	}
+	
 }

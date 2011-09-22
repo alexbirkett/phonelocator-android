@@ -25,15 +25,15 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 
-public class PhonelocatorService extends Service {
+public class RegistrationService extends Service {
 
-    private final IBinder mBinder = new PhonelocatorServiceBinder();
+    private final IBinder mBinder = new RegistrationServiceBinder();
     private PreferenceSynchronizer mPreferenceSynchronizer;
     private DatabaseHelper mDatabaseHelper;
     
-	public class PhonelocatorServiceBinder extends Binder {
-        public PhonelocatorService getService() {
-            return PhonelocatorService.this;
+	public class RegistrationServiceBinder extends Binder {
+        public RegistrationService getService() {
+            return RegistrationService.this;
         }
     }
 

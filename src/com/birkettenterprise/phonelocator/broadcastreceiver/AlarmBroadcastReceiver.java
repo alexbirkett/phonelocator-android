@@ -16,28 +16,19 @@
  * 
  */
 
-package com.birkettenterprise.phonelocator.application;
+package com.birkettenterprise.phonelocator.broadcastreceiver;
 
-import android.app.Application;
+import com.birkettenterprise.phonelocator.service.UpdateService;
 
-public class PhonelocatorApplication extends Application {
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
 
-	private static PhonelocatorApplication mInstance;
-	
+
+public class AlarmBroadcastReceiver extends BroadcastReceiver {
 	@Override
-	public void onCreate() {
-		super.onCreate();
-		setInstanceVariable();
-	}
-	
-	private void setInstanceVariable() {
-		if (mInstance != null) {
-			throw new RuntimeException();
-		}
-		mInstance = this;
-	}
-	
-	public static PhonelocatorApplication getInstance() {
-		return mInstance;
+	public void onReceive(Context context, Intent intent) {
+		intent.setClass(context, com.birkettenterprise.phonelocator.service.UpdateService.class);
+		UpdateService.sendWakefulWork(context, intent);
 	}
 }

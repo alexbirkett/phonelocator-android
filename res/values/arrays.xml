@@ -31,4 +31,18 @@
 		<item>12 Hours</item>
 		<item>Day</item>
 	</string-array>
+	
+	<string-array name="update_frequencies_values">
+		<item>60</item> <!--  Minute -->
+		<item>300</item> <!-- 5 Minutes -->
+		<item>600</item> <!-- 10 Minutes -->
+		<item>900</item> <!-- 15 Minutes -->
+		<item>1800</item> <!-- 30 Minutes -->
+		<item>3600</item> <!-- 1 Hour -->
+		<item>7200</item> <!--  2 Hours -->
+		<item>14400</item> <!-- 4 Hours -->
+		<item>21600</item> <!-- 6 Hours -->
+		<item>43200</item> <!-- 12 Hours -->
+		<item>86400</item> <!-- Day -->
+	</string-array>
 </resources>
