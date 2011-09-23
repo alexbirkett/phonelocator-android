@@ -33,14 +33,11 @@
     
     <string name="periodic_updates">Periodic Updates</string>
     <string name="periodic_updates_summary">Send location to server periodically</string>
-    
-    <string name="auto_start">Autostart</string>
-    <string name="auto_start_summary">Start service on boot</string>
-    
+        
     <string name="update_frequency">Update Frequency</string>
     <string name="update_frequency_summary">How often updates are sent</string>
     
     <string name="update_frequency_key">update_frequency_key</string>
     <string name="periodic_updates_key">periodic_updates_key</string>
-    <string name="auto_start_key">auto_start_key</string>
+
 </resources>

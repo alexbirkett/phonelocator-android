@@ -31,8 +31,4 @@
                 android:entryValues="@array/update_frequencies_values"
                 android:dialogTitle="@string/update_frequency"
                 android:dependency="periodic_updates_key" />
-     <CheckBoxPreference
-		android:key="@string/auto_start_key"
-		android:title="@string/auto_start"
-		android:summary="@string/auto_start_summary" />
 </PreferenceScreen>
