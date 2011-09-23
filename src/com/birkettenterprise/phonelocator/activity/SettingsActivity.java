@@ -20,7 +20,7 @@ package com.birkettenterprise.phonelocator.activity;
 
 import com.birkettenterprise.phonelocator.R;
 import com.birkettenterprise.phonelocator.broadcastreceiver.AlarmBroadcastReceiver;
-import com.birkettenterprise.phonelocator.service.UpdateService;
+import com.birkettenterprise.phonelocator.broadcastreceiver.LocationPollerBroadcastReceiver;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -28,6 +28,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.preference.PreferenceActivity;
@@ -94,11 +95,18 @@ public class SettingsActivity extends PreferenceActivity implements
 		AlarmManager alamManager = (AlarmManager) context
 				.getSystemService(Context.ALARM_SERVICE);
 		
-		Intent intent = new Intent(context, AlarmBroadcastReceiver.class);
+		/*Intent intent = new Intent(context, AlarmBroadcastReceiver.class);
 		
 		intent.putExtra(UpdateService.COMMAND, UpdateService.SYNCHRONIZE_SETTINGS | UpdateService.UPDATE_LOCATION);
 		// Extras not sent if no action is set: http://stackoverflow.com/questions/3127957/why-the-pendingintent-doesnt-send-back-my-custom-extras-setup-for-the-intent
-		intent.setAction("foo");
+		intent.setAction("foo");*/
+		
+		Intent intent = new Intent(context, LocationPollerBroadcastReceiver.class);
+		
+		intent.putExtra(LocationPollerBroadcastReceiver.EXTRA_INTENT,
+							 new Intent(context, AlarmBroadcastReceiver.class));
+		intent.putExtra(LocationPollerBroadcastReceiver.EXTRA_PROVIDER,
+							 LocationManager.GPS_PROVIDER);
 		
 		PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
