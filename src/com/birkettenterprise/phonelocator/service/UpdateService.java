@@ -40,7 +40,7 @@ public class UpdateService extends WakefulIntentService {
 	public static final int UPDATE_LOCATION = 1;
 	public static final int SYNCHRONIZE_SETTINGS = 2;
 
-	private static final String TAG = "PhonelocatorService";
+	private static final String TAG = "Phonelocator";
 	
 	public UpdateService() {
 		super("PhonelocatorSerivce");
