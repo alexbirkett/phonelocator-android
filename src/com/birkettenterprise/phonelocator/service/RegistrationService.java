@@ -18,18 +18,59 @@
 
 package com.birkettenterprise.phonelocator.service;
 
-import com.birkettenterprise.phonelocator.database.DatabaseHelper;
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.Vector;
+
+import com.birkettenterprise.phonelocator.protocol.RegistrationResponse;
+import com.birkettenterprise.phonelocator.protocol.Session;
 
 import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
+import android.os.Handler;
 import android.os.IBinder;
 
 public class RegistrationService extends Service {
 
     private final IBinder mBinder = new RegistrationServiceBinder();
-    private PreferenceSynchronizer mPreferenceSynchronizer;
-    private DatabaseHelper mDatabaseHelper;
+    
+    private Handler mHandler;
+    private Session mSession;
+    private Throwable mException;
+    private Vector<Runnable> mObservers;
+    private RegistrationResponse mRegistrationResponse;
+    private RegisrationRunnable mRegisrationRunnable;
+    private Thread mRegistrationThread;
+    
+    private class RegisrationRunnable implements Runnable {
+
+		public void run() {
+			try {
+				mSession.connect();
+				mRegistrationResponse = mSession.register();
+			} catch (Throwable e) {
+				mException = e;
+			} finally {
+				try {
+					mSession.close();
+				} catch (IOException e) {
+					// ignore
+				}
+			}
+			
+			synchronized (mObservers) {
+				Iterator<Runnable> iterator = mObservers.iterator();
+				while (iterator.hasNext()) {
+					Runnable nextRunnable = iterator.next();
+					mHandler.post(nextRunnable);
+				}
+			}
+			mRegistrationThread = null;
+		}
+    	
+    }
+    
     
 	public class RegistrationServiceBinder extends Binder {
         public RegistrationService getService() {
@@ -40,24 +81,62 @@ public class RegistrationService extends Service {
     @Override
     public void onCreate() {
     	super.onCreate();
-    	mPreferenceSynchronizer = new PreferenceSynchronizer(this);
-    	mDatabaseHelper = new DatabaseHelper(this);
+    	mHandler = new Handler();
+    	mSession = new Session();
+    	mObservers = new Vector<Runnable>();
+    	mRegisrationRunnable = new RegisrationRunnable();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-       return START_STICKY;
+    	return START_STICKY;
     }
 
     @Override
     public void onDestroy() {
     	super.onDestroy();
-    	mPreferenceSynchronizer.destroy();
-    	mDatabaseHelper.close();
     }
 
     @Override
     public IBinder onBind(Intent intent) {
         return mBinder;
+    }
+    
+    public void register() {
+    	if (mRegistrationThread != null) {
+    		throw new RuntimeException("already registering");
+    	}
+    	mRegistrationResponse = null;
+    	mException = null;
+    	mRegistrationThread = new Thread(mRegisrationRunnable);
+    	mRegistrationThread.start();
+    }
+    
+    public void addObserver(Runnable observer) {
+    	synchronized (mObservers) {
+    		mObservers.add(observer);
+    	}
+    }
+    
+    public void removeObserver(Runnable observer) {
+    	synchronized (mObservers) {
+    		mObservers.remove(observer);
+    	}
+    }
+    
+    public boolean isSuccess() {
+    	return mRegistrationResponse != null && mException == null;
+    }
+    
+    public RegistrationResponse getResponse() {
+    	return mRegistrationResponse;
+    }
+    
+    public Throwable getException() {
+    	return mException;
+    }
+    
+    public boolean isRunning() {
+    	return mRegistrationThread != null;
     }
 }
