@@ -222,7 +222,7 @@ public class LocationPollerService extends Service {
         }
       };
 
-      mHandler .postDelayed(onTimeout, TIMEOUT);
+      mHandler.postDelayed(onTimeout, TIMEOUT);
       mLocationManager.requestLocationUpdates(mProvider, 0, 0, mListener);
     }
 
