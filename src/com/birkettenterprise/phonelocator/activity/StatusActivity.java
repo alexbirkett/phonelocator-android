@@ -19,17 +19,12 @@
 package com.birkettenterprise.phonelocator.activity;
 
 import com.birkettenterprise.phonelocator.R;
-import com.birkettenterprise.phonelocator.service.RegistrationService;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -38,13 +33,10 @@ import android.view.View.OnClickListener;
 
 public class StatusActivity extends Activity implements OnClickListener {
     
-	private RegistrationService mBoundService;
-
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.status);
-        doBindService();
     }
     
     @Override
@@ -57,7 +49,6 @@ public class StatusActivity extends Activity implements OnClickListener {
     @Override
 	protected void onDestroy() {
 	    super.onDestroy();
-	    doUnbindService();
 	}
     
     @Override
@@ -108,31 +99,5 @@ public class StatusActivity extends Activity implements OnClickListener {
 		Uri uri = Uri.parse(getString(R.string.sign_up_url));
 		Intent intent = new Intent(Intent.ACTION_VIEW, uri);
 		startActivity(intent);
-	}
-
-	private ServiceConnection mConnection = new ServiceConnection() {
-	    public void onServiceConnected(ComponentName className, IBinder service) {
-	        mBoundService = ((RegistrationService.RegistrationServiceBinder)service).getService();
-	    }
-
-	    public void onServiceDisconnected(ComponentName className) {
-	        mBoundService = null;
-	    }
-	};
-
-	void doBindService() {
-		getApplicationContext().bindService(new Intent(StatusActivity.this, RegistrationService.class), mConnection, Context.BIND_AUTO_CREATE);
-	}
-	
-	
-
-	void doUnbindService() {
-	    if (isServiceBound()) {
-	    	getApplicationContext().unbindService(mConnection);
-	    }
-	}
-
-	private boolean isServiceBound() {
-		return mBoundService != null;
 	}
 }
