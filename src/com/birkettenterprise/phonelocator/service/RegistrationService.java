@@ -58,25 +58,30 @@ public class RegistrationService extends Service {
 					// ignore
 				}
 			}
-			
-			synchronized (mObservers) {
-				Iterator<Runnable> iterator = mObservers.iterator();
-				while (iterator.hasNext()) {
-					Runnable nextRunnable = iterator.next();
-					mHandler.post(nextRunnable);
-				}
-			}
+			updateObservers();
+
 			mRegistrationThread = null;
 		}
     	
     }
-    
     
 	public class RegistrationServiceBinder extends Binder {
         public RegistrationService getService() {
             return RegistrationService.this;
         }
     }
+	
+	private void updateObservers() {
+		synchronized (mObservers) {
+			Iterator<Runnable> iterator = mObservers.iterator();
+			while (iterator.hasNext()) {
+				Runnable nextRunnable = iterator.next();
+				mHandler.post(nextRunnable);
+			}
+			mObservers.removeAllElements();
+		}
+
+	}
 
     @Override
     public void onCreate() {
