@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.util.Date;
 
 import com.birkettenterprise.phonelocator.broadcastreceiver.LocationPollerBroadcastReceiver;
+import com.birkettenterprise.phonelocator.database.Database;
 
 import android.content.Intent;
 import android.location.Location;
@@ -41,9 +42,11 @@ public class UpdateService extends WakefulIntentService {
 	public static final int SYNCHRONIZE_SETTINGS = 2;
 
 	private static final String TAG = "Phonelocator";
+	private Database mDatabase;
 	
 	public UpdateService() {
 		super("PhonelocatorSerivce");
+		mDatabase = new Database(this);
 	}
 
 	@Override
