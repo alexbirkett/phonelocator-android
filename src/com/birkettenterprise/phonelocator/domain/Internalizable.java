@@ -16,24 +16,13 @@
  * 
  */
 
-package com.birkettenterprise.phonelocator.protocol;
+package com.birkettenterprise.phonelocator.domain;
 
-public class RegistrationResponse {
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 
-	private String mAuthenticationToken;
-	private String mRegistrationUrl;
-	
-	public String getAuthenticationToken() {
-		return mAuthenticationToken;
-	}
-	public void setAuthenticationToken(String authenticationToken) {
-		this.mAuthenticationToken = authenticationToken;
-	}
-	public String getRegistrationUrl() {
-		return mRegistrationUrl;
-	}
-	public void setRegistrationUrl(String registrationUrl) {
-		this.mRegistrationUrl = registrationUrl;
-	}
-	
+public interface Internalizable {
+	public void internalize(DataInputStream inputStream) throws IOException;
+	public void externalize(DataOutputStream outputStream) throws IOException;
 }

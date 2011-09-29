@@ -16,24 +16,11 @@
  * 
  */
 
-package com.birkettenterprise.phonelocator.protocol;
+package com.birkettenterprise.phonelocator.domain;
 
-public class RegistrationResponse {
-
-	private String mAuthenticationToken;
-	private String mRegistrationUrl;
-	
-	public String getAuthenticationToken() {
-		return mAuthenticationToken;
-	}
-	public void setAuthenticationToken(String authenticationToken) {
-		this.mAuthenticationToken = authenticationToken;
-	}
-	public String getRegistrationUrl() {
-		return mRegistrationUrl;
-	}
-	public void setRegistrationUrl(String registrationUrl) {
-		this.mRegistrationUrl = registrationUrl;
-	}
-	
+public class BeaconTypes {
+	public static final byte CELL = 0;
+	public static final byte WLAN = 1;
+	public static final byte GPS = 2;
+	public static final byte SIMPLEGPS = 3;
 }

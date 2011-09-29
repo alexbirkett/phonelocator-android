@@ -19,20 +19,20 @@
 package com.birkettenterprise.phonelocator.service;
 
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Date;
-
-import com.birkettenterprise.phonelocator.broadcastreceiver.LocationPollerBroadcastReceiver;
-import com.birkettenterprise.phonelocator.database.Database;
-
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.util.Log;
+
+import com.birkettenterprise.phonelocator.R;
+import com.birkettenterprise.phonelocator.broadcastreceiver.LocationPollerBroadcastReceiver;
+import com.birkettenterprise.phonelocator.database.Database;
+import com.birkettenterprise.phonelocator.domain.BeaconList;
+import com.birkettenterprise.phonelocator.domain.GpsBeacon;
+import com.birkettenterprise.phonelocator.protocol.Session;
 
 public class UpdateService extends WakefulIntentService {
 
@@ -54,9 +54,8 @@ public class UpdateService extends WakefulIntentService {
 		int command = intent.getIntExtra(COMMAND, -1);
 			
 		//if ((command & UPDATE_LOCATION) == UPDATE_LOCATION) {
-			handleUpdateLocation(intent);
-		//}
-
+		handleUpdateLocation(intent);
+	
 		if ((command & SYNCHRONIZE_SETTINGS) == SYNCHRONIZE_SETTINGS) {
 			handleSynchronizeSettings();
 		}
@@ -64,45 +63,35 @@ public class UpdateService extends WakefulIntentService {
 	
 	private void handleUpdateLocation(Intent intent) {
 		Log.v(TAG, "handleUpdateLocation");
-		File log = new File(Environment.getExternalStorageDirectory(),
-				"PhonelocatorLocationLog.txt");
-
+		
+		Session session = new Session();
 		try {
-			BufferedWriter out = new BufferedWriter(new FileWriter(
-					log.getAbsolutePath(), log.exists()));
-
-			out.write(new Date().toString());
-			out.write(" : ");
-
-			Bundle b = intent.getExtras();
-			Location loc = (Location) b
-					.get(LocationPollerBroadcastReceiver.EXTRA_LOCATION);
-			String msg;
-
-			if (loc == null) {
-				loc = (Location) b
-						.get(LocationPollerBroadcastReceiver.EXTRA_LASTKNOWN);
-
-				if (loc == null) {
-					msg = intent
-							.getStringExtra(LocationPollerBroadcastReceiver.EXTRA_ERROR);
-				} else {
-					msg = "TIMEOUT, lastKnown=" + loc.toString();
-				}
-			} else {
-				msg = loc.toString();
+			session.connect();
+			session.authenticate(getAuthenticationToken());
+			
+			Bundle bundle = intent.getExtras();
+			Location location = (Location) bundle.get(LocationPollerBroadcastReceiver.EXTRA_LOCATION);
+			if (location == null) {
+				location = (Location) bundle.get(LocationPollerBroadcastReceiver.EXTRA_LASTKNOWN);
 			}
-
-			if (msg == null) {
-				msg = "Invalid broadcast received!";
+			BeaconList beaconList = new BeaconList();
+			beaconList.add(new GpsBeacon(location, intent.getStringExtra(LocationPollerBroadcastReceiver.EXTRA_ERROR)));
+			session.sendPositionUpdate(beaconList);
+			
+		} catch (Exception e) {
+			
+		} finally {
+			try {
+				session.close();
+			} catch (IOException e) {
+				// ignore
 			}
-
-			out.write(msg);
-			out.write("\n");
-			out.close();
-		} catch (IOException e) {
-			Log.e(getClass().getName(), "Exception appending to log file", e);
 		}
+	}
+   
+	private String getAuthenticationToken() {
+		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+		return sharedPreferences.getString(getString(R.string.authentication_token_key), "");
 	}
 	
 	private void handleSynchronizeSettings() {
