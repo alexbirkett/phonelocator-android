@@ -19,52 +19,27 @@
 package com.birkettenterprise.phonelocator.activity;
 
 import com.birkettenterprise.phonelocator.R;
-import com.birkettenterprise.phonelocator.util.UpdateScheduler;
+import com.birkettenterprise.phonelocator.util.SettingsHelper;
 
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 
-public class SettingsActivity extends PreferenceActivity implements
-		OnSharedPreferenceChangeListener {
-
-	public static final String TIMESTAMP = "_timestamp";	
+public class SettingsActivity extends PreferenceActivity {
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
 		addPreferencesFromResource(R.xml.preferences);
-	}
-
-	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
-			String key) {
-		if (!key.endsWith(TIMESTAMP)) {
-			storeTimeStamp(sharedPreferences, key);
-		}
-		if (key.equals(getString(R.string.update_frequency_key)) || key.equals(getString(R.string.periodic_updates_key))) {
-			UpdateScheduler.scheduleUpdates(this);
-		}
-	}
-
-	private void storeTimeStamp(SharedPreferences sharedPreferences,
-			String key) {
-	      SharedPreferences.Editor editor = sharedPreferences.edit();
-	      editor.putLong(key + TIMESTAMP, System.currentTimeMillis());
-	      editor.commit();
 	}
 	
 	protected void onResume() {
 		super.onResume();
-		getPreferenceScreen().getSharedPreferences()
-				.registerOnSharedPreferenceChangeListener(this);
+		SettingsHelper.getInstance(this);
 	}
 	
 	protected void onPause() {
 		super.onPause();
-		getPreferenceScreen().getSharedPreferences()
-				.unregisterOnSharedPreferenceChangeListener(this);
+		SettingsHelper.releaseInstance();
 	}
 	
 }

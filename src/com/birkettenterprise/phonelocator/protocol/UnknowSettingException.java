@@ -16,18 +16,9 @@
  * 
  */
 
-package com.birkettenterprise.phonelocator.broadcastreceiver;
 
-import com.birkettenterprise.phonelocator.util.SettingsHelper;
+package com.birkettenterprise.phonelocator.protocol;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-
-public class BootCompletedBroadcastReceiver extends BroadcastReceiver {
-    @Override
-    public void onReceive(Context context, Intent intent) {
-    	SettingsHelper.getInstance(context).scheduleUpdates();
-    	SettingsHelper.releaseInstance();
-    }
+public class UnknowSettingException extends Exception {
+	private static final long serialVersionUID = 1L;
 }

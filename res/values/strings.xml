@@ -36,11 +36,4 @@
         
     <string name="update_frequency">Update Frequency</string>
     <string name="update_frequency_summary">How often updates are sent</string>
-    
-    <string name="update_frequency_key">update_frequency_key</string>
-    <string name="periodic_updates_key">periodic_updates_key</string>
-    <string name="authentication_token_key">authentication_token_key</string>
-    <string name="registration_url">registration_url</string>
-    
-
 </resources>

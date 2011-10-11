@@ -18,7 +18,6 @@
 
 package com.birkettenterprise.phonelocator.service;
 
-import java.io.IOException;
 import java.util.Iterator;
 import java.util.Vector;
 
@@ -49,12 +48,15 @@ public class RegistrationService extends Service {
 			try {
 				mSession.connect();
 				mRegistrationResponse = mSession.register();
+				mSession.authenticate(mRegistrationResponse.getAuthenticationToken());
+				mSession.synchronizeSettings(null);
+				
 			} catch (Throwable e) {
 				mException = e;
 			} finally {
 				try {
 					mSession.close();
-				} catch (IOException e) {
+				} catch (Throwable e) {
 					// ignore
 				}
 			}

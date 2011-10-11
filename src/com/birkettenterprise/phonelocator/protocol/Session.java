@@ -24,15 +24,15 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.Vector;
 
 import com.birkettenterprise.phonelocator.domain.BeaconList;
+import com.birkettenterprise.phonelocator.util.Setting;
 
 public class Session {
 
 	private Socket mSocket;
-
+	
 	// private static final String HOST = "server1.phonelocator.mobi";
 	private static final String HOST = "serverx.birkettenterprise.com";
 
@@ -118,15 +118,26 @@ public class Session {
 		}
 	}
 
-	Map<String, Object> synchonizeSettings(Map<String, Object> settingsToSend) {
+	/**
+	 * Synchronize settings
+	 * @param settingsToSend Setting to send (passing null will create default settings on the server)
+	 * @return settings changed on the server since last synchronization
+	 * @throws IOException
+	 */
+	public Vector<Setting> synchronizeSettings(Vector<Setting> settingsToSend) throws IOException {
+		DataOutputStream dataOutputStream = new DataOutputStream(
+				mSocket.getOutputStream());
+		
+		dataOutputStream.writeByte(Methods.SYNCHRONIZESETTINGS);
 
-		Iterator it = settingsToSend.entrySet().iterator();
-		while (it.hasNext()) {
-			Map.Entry<String, Object> pairs = (Map.Entry<String, Object>) it
-					.next();
-			System.out.println(pairs.getKey() + " = " + pairs.getValue());
-		}
-		return settingsToSend;
+		ByteArrayOutputStream settingsStream = new ByteArrayOutputStream();
+		
+		SettingsProtocol.writeSettings(settingsToSend, new DataOutputStream(settingsStream));
+
+		dataOutputStream.writeShort(settingsStream.size());
+		dataOutputStream.write(settingsStream.toByteArray());
+		dataOutputStream.flush();
+		return SettingsProtocol.readingSettings(new DataInputStream(mSocket.getInputStream()));
 	}
 
 }

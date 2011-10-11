@@ -18,9 +18,9 @@
 
 package com.birkettenterprise.phonelocator.activity;
 
-import com.birkettenterprise.phonelocator.R;
 import com.birkettenterprise.phonelocator.protocol.RegistrationResponse;
 import com.birkettenterprise.phonelocator.service.RegistrationService;
+import com.birkettenterprise.phonelocator.util.Setting;
 
 import android.app.Activity;
 import android.content.ComponentName;
@@ -146,15 +146,15 @@ public class SigninActivity extends Activity {
 		SharedPreferences sharedPreferences = PreferenceManager
 				.getDefaultSharedPreferences(this);
 		SharedPreferences.Editor editor = sharedPreferences.edit();
-		editor.putString(getString(R.string.authentication_token_key),
+		editor.putString(Setting.AUTHENTICATION_TOKEN,
 				response.getAuthenticationToken());
-		editor.putString(getString(R.string.registration_url),
+		editor.putString(Setting.REGISTRATION_URL,
 				response.getRegistrationUrl());
 		editor.commit();
 	}
 	
 	private boolean hasAuthenticationToken() {
 		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-		return sharedPreferences.getString(getString(R.string.authentication_token_key), null) != null;
+		return sharedPreferences.getString(Setting.AUTHENTICATION_TOKEN, null) != null;
 	}
 }

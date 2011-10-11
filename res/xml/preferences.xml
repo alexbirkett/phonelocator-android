@@ -20,15 +20,15 @@
 <PreferenceScreen
 	xmlns:android="http://schemas.android.com/apk/res/android">
 	<CheckBoxPreference
-		android:key="@string/periodic_updates_key"
+		android:key="periodic_updates_enabled"
 		android:title="@string/periodic_updates"
 		android:summary="@string/periodic_updates_summary" />
  	<ListPreference
-                android:key="@string/update_frequency_key"
+                android:key="update_frequency"
                 android:title="@string/update_frequency"
                 android:summary="@string/update_frequency_summary"
                 android:entries="@array/update_frequencies"
                 android:entryValues="@array/update_frequencies_values"
                 android:dialogTitle="@string/update_frequency"
-                android:dependency="periodic_updates_key" />
+                android:dependency="periodic_updates_enabled" />
 </PreferenceScreen>

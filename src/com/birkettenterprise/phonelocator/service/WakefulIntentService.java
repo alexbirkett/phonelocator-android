@@ -66,8 +66,9 @@ abstract public class WakefulIntentService extends IntentService {
 	final protected void onHandleIntent(Intent intent) {
 		try {
 			doWakefulWork(intent);
-		}
-		finally {
+		} catch (Throwable e) {
+			e.printStackTrace();
+		} finally {
 			getLock(this.getApplicationContext()).release();
 		}
 	}

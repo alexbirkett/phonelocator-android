@@ -27,12 +27,12 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-import com.birkettenterprise.phonelocator.R;
 import com.birkettenterprise.phonelocator.broadcastreceiver.LocationPollerBroadcastReceiver;
-import com.birkettenterprise.phonelocator.database.Database;
 import com.birkettenterprise.phonelocator.domain.BeaconList;
 import com.birkettenterprise.phonelocator.domain.GpsBeacon;
 import com.birkettenterprise.phonelocator.protocol.Session;
+import com.birkettenterprise.phonelocator.util.Setting;
+import com.birkettenterprise.phonelocator.util.SettingsHelper;
 
 public class UpdateService extends WakefulIntentService {
 
@@ -42,11 +42,11 @@ public class UpdateService extends WakefulIntentService {
 	public static final int SYNCHRONIZE_SETTINGS = 2;
 
 	private static final String TAG = "Phonelocator";
-	private Database mDatabase;
+	//private Database mDatabase;
 	
 	public UpdateService() {
 		super("PhonelocatorSerivce");
-		mDatabase = new Database(this);
+		//mDatabase = new Database(this);
 	}
 
 	@Override
@@ -65,6 +65,8 @@ public class UpdateService extends WakefulIntentService {
 		Log.v(TAG, "handleUpdateLocation");
 		
 		Session session = new Session();
+		SettingsHelper settingsHelper = SettingsHelper.getInstance(this);
+		
 		try {
 			session.connect();
 			session.authenticate(getAuthenticationToken());
@@ -77,11 +79,14 @@ public class UpdateService extends WakefulIntentService {
 			BeaconList beaconList = new BeaconList();
 			beaconList.add(new GpsBeacon(location, intent.getStringExtra(LocationPollerBroadcastReceiver.EXTRA_ERROR)));
 			session.sendPositionUpdate(beaconList);
+			session.synchronizeSettings(settingsHelper.getSettingsModifiedSinceLastSyncrhonization());
 			
 		} catch (Exception e) {
-			
+			e.printStackTrace();
+			Log.d(TAG,"error synchronizing settings " + e.toString());
 		} finally {
 			try {
+				SettingsHelper.releaseInstance();
 				session.close();
 			} catch (IOException e) {
 				// ignore
@@ -91,7 +96,7 @@ public class UpdateService extends WakefulIntentService {
    
 	private String getAuthenticationToken() {
 		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-		return sharedPreferences.getString(getString(R.string.authentication_token_key), "");
+		return sharedPreferences.getString(Setting.AUTHENTICATION_TOKEN, "");
 	}
 	
 	private void handleSynchronizeSettings() {
