@@ -19,13 +19,14 @@
 package com.birkettenterprise.phonelocator.activity;
 
 import com.birkettenterprise.phonelocator.R;
-import com.birkettenterprise.phonelocator.util.SettingsHelper;
+import com.birkettenterprise.phonelocator.util.SettingsManager;
 
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 
 public class SettingsActivity extends PreferenceActivity {
 	
+	private SettingsManager mSettingsManager;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -34,12 +35,13 @@ public class SettingsActivity extends PreferenceActivity {
 	
 	protected void onResume() {
 		super.onResume();
-		SettingsHelper.getInstance(this);
+		mSettingsManager = SettingsManager.getInstance(this, this);
 	}
 	
 	protected void onPause() {
 		super.onPause();
-		SettingsHelper.releaseInstance();
+		mSettingsManager.releaseInstance(this);
+		mSettingsManager = null;
 	}
 	
 }

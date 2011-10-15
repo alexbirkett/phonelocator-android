@@ -33,8 +33,8 @@ public class Session {
 
 	private Socket mSocket;
 	
-	// private static final String HOST = "server1.phonelocator.mobi";
-	private static final String HOST = "serverx.birkettenterprise.com";
+	private static final String HOST = "server1.phonelocator.mobi";
+	//private static final String HOST = "serverx.birkettenterprise.com";
 
 	private static final int PORT = 4952;
 

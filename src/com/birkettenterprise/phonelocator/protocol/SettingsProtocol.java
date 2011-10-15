@@ -89,11 +89,11 @@ public class SettingsProtocol {
 	}
 
 	private static byte getSettingIdForSettingName(String settingName) throws UnknowSettingException {
-		if (settingName.equals(Setting.PERIODIC_UPDATES_ENABLED)) {
+		if (settingName.equals(Setting.BooleanSettings.PERIODIC_UPDATES_ENABLED)) {
 			return ((byte)(BooleanSettings.PERIODIC_UPDATE_ENABLED + BOOLEAN_OFFSET));
-		} else if (settingName.equals(Setting.REGISTERED)) {
+		} else if (settingName.equals(Setting.BooleanSettings.REGISTERED)) {
 			return BooleanSettings.REGISTERED + BOOLEAN_OFFSET;
-		} else if (settingName.equals(Setting.UPDATE_FREQUENCY)) {
+		} else if (settingName.equals(Setting.StringSettings.UPDATE_FREQUENCY)) {
 			return IntegerSettings.UPDATE_FREQUENCY + INTEGER_OFFSET;
 		}
 		throw new UnknowSettingException();
@@ -101,11 +101,11 @@ public class SettingsProtocol {
 	
 	private static String getSettingsNameForId(int settingsId) throws UnknowSettingException {
 		if (settingsId == BooleanSettings.PERIODIC_UPDATE_ENABLED + BOOLEAN_OFFSET) {
-			return Setting.PERIODIC_UPDATES_ENABLED;
+			return Setting.BooleanSettings.PERIODIC_UPDATES_ENABLED;
 		} else if (settingsId == BooleanSettings.REGISTERED + BOOLEAN_OFFSET) {
-			return Setting.REGISTERED;
+			return Setting.BooleanSettings.REGISTERED;
 		} else if (settingsId ==  IntegerSettings.UPDATE_FREQUENCY + INTEGER_OFFSET) {
-			return Setting.UPDATE_FREQUENCY;
+			return Setting.StringSettings.UPDATE_FREQUENCY;
 		}
 		throw new UnknowSettingException();
 	}
@@ -113,12 +113,14 @@ public class SettingsProtocol {
 	
 	private static Setting readSetting(DataInputStream dataInputStream, int settingId) throws IOException, UnknowSettingException {
 		Setting setting = new Setting();
-		setting.setTimestamp(dataInputStream.readInt() *1000);
+		int timeStampInSeconds = dataInputStream.readInt();
+		long timeStampInMilliseconds = timeStampInSeconds * 1000L;
+		setting.setTimestamp(timeStampInMilliseconds);
 		
 		if (BOOLEAN_OFFSET <= settingId && settingId <  INTEGER_OFFSET) {
 			setting.setValue(dataInputStream.readByte() > 0);
 		} else if (INTEGER_OFFSET <= settingId && settingId < INT64_OFFSET) {
-			setting.setValue(dataInputStream.readInt());
+			setting.setValue(dataInputStream.readInt() + "");
 		} else if (INT64_OFFSET <= settingId && settingId < STRING_OFFSET) {
 			setting.setValue(readBigInteger(dataInputStream));
 		} else if (STRING_OFFSET <= settingId && settingId < END_OF_SETTINGS_MARKER) {
@@ -131,11 +133,11 @@ public class SettingsProtocol {
 	
 	private static void writeSetting(int settingId, long timeStamp, Object value,  DataOutputStream outputStream) throws IOException {
 		outputStream.writeByte(settingId);
-		writeTimeStamp(timeStamp, outputStream);
+		writeTimestamp(timeStamp, outputStream);
 		writeSettingValue(settingId,value, outputStream);
 	}
 	
-	private static void writeTimeStamp(long timestamp, DataOutputStream outputStream) throws IOException {
+	private static void writeTimestamp(long timestamp, DataOutputStream outputStream) throws IOException {
 		long timeStampInSeconds = timestamp/1000;
 		outputStream.writeInt((int) timeStampInSeconds);
 	}

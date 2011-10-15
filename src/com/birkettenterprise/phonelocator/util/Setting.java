@@ -21,11 +21,16 @@ package com.birkettenterprise.phonelocator.util;
 
 public class Setting {
 	
-    public static final String UPDATE_FREQUENCY = "update_frequency";
-    public static final String PERIODIC_UPDATES_ENABLED = "periodic_updates_enabled";
-    public static final String AUTHENTICATION_TOKEN = "authentication_token";
-    public static final String REGISTRATION_URL = "registration_url";
-    public static final String REGISTERED = "registered";
+	public class StringSettings {
+		public static final String UPDATE_FREQUENCY = "update_frequency";   		
+		public static final String AUTHENTICATION_TOKEN = "authentication_token";
+	    public static final String REGISTRATION_URL = "registration_url";
+	}
+    
+	public class BooleanSettings {
+		public static final String PERIODIC_UPDATES_ENABLED = "periodic_updates_enabled"; 
+	    public static final String REGISTERED = "registered";
+	}
 	
 	private long mTimestamp;
 	private String mName;
@@ -59,5 +64,4 @@ public class Setting {
 	public void setValue(Object value) {
 		this.mValue = value;
 	}
-	
 }

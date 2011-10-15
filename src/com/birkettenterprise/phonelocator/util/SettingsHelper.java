@@ -18,152 +18,44 @@
 
 package com.birkettenterprise.phonelocator.util;
 
-import java.util.Map;
-import java.util.Vector;
-
 import com.birkettenterprise.phonelocator.broadcastreceiver.AlarmBroadcastReceiver;
 import com.birkettenterprise.phonelocator.broadcastreceiver.LocationPollerBroadcastReceiver;
+import com.birkettenterprise.phonelocator.util.Setting.BooleanSettings;
+import com.birkettenterprise.phonelocator.util.Setting.StringSettings;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.location.LocationManager;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-public class SettingsHelper implements OnSharedPreferenceChangeListener {
+public class SettingsHelper {
 
-	private SharedPreferences mSharedPreferences;
-	private Context mContext;
-	private static int mUsageCount; 
-	private static SettingsHelper mInstance;
-	
-	private static final int MILLISECONDS_IN_SECOND = 1000;
-	private static final long DEFAULT_UPDATE_FREQUENCY = 3600;
-	private static final String TIMESTAMP = "_timestamp";
-	private static final String SETTINGS_SYNCHRONIZATION_TIMESTAMP = "settings_synchronization_timestamp";
-	
 	private static final String TAG = "Phonelocator";
 
+	private static final int MILLISECONDS_IN_SECOND = 1000;
+	private static final long DEFAULT_UPDATE_FREQUENCY = 3600;
 	
-	public static SettingsHelper getInstance(Context context) {
-		mUsageCount++;
-		if (mInstance == null) {
-			mInstance = new SettingsHelper(context);
-		}
-		return mInstance;
-	}
 	
-	public static void releaseInstance() {
-		mUsageCount--;
-		if (mUsageCount == 0) {
-			mInstance.destroy();
-		}
-		mInstance = null;
-		System.gc();
-	}
-	
-	SettingsHelper(Context context) {
-		mContext = context;
-		mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-		mSharedPreferences.registerOnSharedPreferenceChangeListener(this);
-	}
-
-	private void destroy() {
-		mSharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
-	}
-		
-	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
-			String key) {
-		if (!isTimeStamp(key)) {
-			storeTimeStamp(key);
-		}
-		if (key.equals(Setting.UPDATE_FREQUENCY) || key.equals(Setting.PERIODIC_UPDATES_ENABLED)) {
-			scheduleUpdates();
-		}
-	}
-	
-	private void storeTimeStamp(String key) {
-	      SharedPreferences.Editor editor = mSharedPreferences.edit();
-	      editor.putLong(key + TIMESTAMP, System.currentTimeMillis());
-	      editor.commit();
-	}
-
-	private long getTimeStamp(String key) {
-		return getSettingAsLong(key + TIMESTAMP, 0);
-	}
-	
-	private static boolean isTimeStamp(String key) {
-		return key.endsWith(TIMESTAMP);
-	}
-	
-	public Vector<Setting> getSettingsModifiedSinceLastSyncrhonization() {
-		long lastSyncrhonizationTimeStamp = getLastSynchronizationTimeStamp();
-		Vector<Setting> settingsModifiedSinceLastSyncrhonization =  new Vector<Setting>();
-		Map<String, ?> settings = mSharedPreferences.getAll();
-		
-		for (String key : settings.keySet()) {
-			if (!isTimeStamp(key)) {
-				long timeStamp = getTimeStamp(key);
-				if (timeStamp >= lastSyncrhonizationTimeStamp) {
-					settingsModifiedSinceLastSyncrhonization.add(new Setting(key, (Object)settings.get(key), timeStamp));
-				}
-			}
-		}
-		return settingsModifiedSinceLastSyncrhonization;
-	}
-
-	public void updateSettingsSynchronizationTimestamp() {
-		storeTimeStamp(SETTINGS_SYNCHRONIZATION_TIMESTAMP);
-	}
-	
-	public long getLastSynchronizationTimeStamp() {
-		return getSettingAsLong(SETTINGS_SYNCHRONIZATION_TIMESTAMP, 0);
-	}
-	private long getUpdateIntervalInMicroSeconds(Context context) {
-		return getSettingAsLong(Setting.UPDATE_FREQUENCY,
-								DEFAULT_UPDATE_FREQUENCY)  * MILLISECONDS_IN_SECOND;
-	}
-	
-	private long getSettingAsLong(String key, long defaultValue) {
-		try {
-			return mSharedPreferences.getLong(
-					key,
-					defaultValue);
-		} catch (ClassCastException e) {
-			String value = mSharedPreferences.getString(
-					key,
-					defaultValue + "");
-			return Long.parseLong(value);
-		}
-	}
-	
-	private static boolean periodicUpdatesEnabled(Context context) {
-		SharedPreferences sharedPreferences = PreferenceManager
-		.getDefaultSharedPreferences(context);
-		return sharedPreferences.getBoolean(Setting.PERIODIC_UPDATES_ENABLED, false);
-	}
-
-	
-	public void scheduleUpdates() {
-		AlarmManager alamManager = (AlarmManager) mContext
+	public static void scheduleUpdates(Context context) {
+		AlarmManager alamManager = (AlarmManager) context
 				.getSystemService(Context.ALARM_SERVICE);
 				
-		Intent intent = new Intent(mContext, LocationPollerBroadcastReceiver.class);
+		Intent intent = new Intent(context, LocationPollerBroadcastReceiver.class);
 		
 		intent.putExtra(LocationPollerBroadcastReceiver.EXTRA_INTENT,
-							 new Intent(mContext, AlarmBroadcastReceiver.class));
+							 new Intent(context, AlarmBroadcastReceiver.class));
 		intent.putExtra(LocationPollerBroadcastReceiver.EXTRA_PROVIDER,
-							 LocationManager.GPS_PROVIDER);
+							 LocationManager.NETWORK_PROVIDER);
 		
-		PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+		PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-		if (periodicUpdatesEnabled(mContext)) {
-			long intervalInMicroseconds = getUpdateIntervalInMicroSeconds(mContext);
+		if (periodicUpdatesEnabled(PreferenceManager.getDefaultSharedPreferences(context))) {
+			long intervalInMicroseconds = getUpdateIntervalInMicroSeconds(PreferenceManager.getDefaultSharedPreferences(context));
 			alamManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
 					SystemClock.elapsedRealtime(),
 					intervalInMicroseconds, pendingIntent);
@@ -175,4 +67,48 @@ public class SettingsHelper implements OnSharedPreferenceChangeListener {
 		}
 	}
 
+	public static boolean periodicUpdatesEnabled(SharedPreferences sharedPreferences) {
+		return sharedPreferences.getBoolean(BooleanSettings.PERIODIC_UPDATES_ENABLED, false);
+	}	
+
+	private static long getUpdateIntervalInMicroSeconds(SharedPreferences sharedPreferences) {
+		return getSettingAsLong(sharedPreferences, Setting.StringSettings.UPDATE_FREQUENCY,
+								DEFAULT_UPDATE_FREQUENCY)  * MILLISECONDS_IN_SECOND;
+	}
+	
+	public static long getSettingAsLong(SharedPreferences sharedPreferences, String key, long defaultValue) {
+		try {
+			return sharedPreferences.getLong(
+					key,
+					defaultValue);
+		} catch (ClassCastException e) {
+			String value = sharedPreferences.getString(
+					key,
+					defaultValue + "");
+			return Long.parseLong(value);
+		}
+	}
+	
+	public static void storeResponse(SharedPreferences sharedPreferences, String authenticationToken, String registrationUrl) {
+		SharedPreferences.Editor editor = sharedPreferences.edit();
+		editor.putString(Setting.StringSettings.AUTHENTICATION_TOKEN,
+				authenticationToken);
+		editor.putString(Setting.StringSettings.REGISTRATION_URL,
+				registrationUrl);
+		editor.commit();
+	}
+	
+	public static String getAuthenticationToken(SharedPreferences sharedPreferences) {
+		return sharedPreferences.getString(StringSettings.AUTHENTICATION_TOKEN, null);
+	}
+
+	public static String getRegistrationUrl(SharedPreferences sharedPreferences) {
+		return sharedPreferences.getString(StringSettings.REGISTRATION_URL, null);
+	}
+	
+	public static void storeLong(SharedPreferences sharedPreferences, String key, long value) {
+	      SharedPreferences.Editor editor = sharedPreferences.edit();
+	      editor.putLong(key, value);
+	      editor.commit();
+	}
 }

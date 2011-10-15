@@ -23,12 +23,16 @@ import java.util.Vector;
 
 import com.birkettenterprise.phonelocator.protocol.RegistrationResponse;
 import com.birkettenterprise.phonelocator.protocol.Session;
+import com.birkettenterprise.phonelocator.util.Setting;
+import com.birkettenterprise.phonelocator.util.SettingsHelper;
+import com.birkettenterprise.phonelocator.util.SettingsManager;
 
 import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 
 public class RegistrationService extends Service {
 
@@ -40,20 +44,27 @@ public class RegistrationService extends Service {
     private Vector<Runnable> mObservers;
     private RegistrationResponse mRegistrationResponse;
     private RegisrationRunnable mRegisrationRunnable;
-    private Thread mRegistrationThread;
+    private Thread mWorkerThread;
     
     private class RegisrationRunnable implements Runnable {
 
 		public void run() {
+			SettingsManager settingsManager = SettingsManager.getInstance(this, RegistrationService.this);
+			
 			try {
 				mSession.connect();
 				mRegistrationResponse = mSession.register();
 				mSession.authenticate(mRegistrationResponse.getAuthenticationToken());
-				mSession.synchronizeSettings(null);
 				
+				Vector<Setting> settings =  mSession.synchronizeSettings(null);
+				settingsManager.setSettings(settings);
+				
+				SettingsHelper.storeResponse(PreferenceManager.getDefaultSharedPreferences(RegistrationService.this), mRegistrationResponse.getAuthenticationToken(), mRegistrationResponse.getRegistrationUrl());
 			} catch (Throwable e) {
 				mException = e;
 			} finally {
+				settingsManager.releaseInstance(this);
+				settingsManager = null;
 				try {
 					mSession.close();
 				} catch (Throwable e) {
@@ -62,7 +73,7 @@ public class RegistrationService extends Service {
 			}
 			updateObservers();
 
-			mRegistrationThread = null;
+			mWorkerThread = null;
 		}
     	
     }
@@ -110,13 +121,13 @@ public class RegistrationService extends Service {
     }
     
     public void register() {
-    	if (mRegistrationThread != null) {
+    	if (mWorkerThread != null) {
     		throw new RuntimeException("already registering");
     	}
     	mRegistrationResponse = null;
     	mException = null;
-    	mRegistrationThread = new Thread(mRegisrationRunnable);
-    	mRegistrationThread.start();
+    	mWorkerThread = new Thread(mRegisrationRunnable);
+    	mWorkerThread.start();
     }
     
     public void addObserver(Runnable observer) {
@@ -144,6 +155,6 @@ public class RegistrationService extends Service {
     }
     
     public boolean isRunning() {
-    	return mRegistrationThread != null;
+    	return mWorkerThread != null;
     }
 }

@@ -18,9 +18,8 @@
 
 package com.birkettenterprise.phonelocator.activity;
 
-import com.birkettenterprise.phonelocator.protocol.RegistrationResponse;
 import com.birkettenterprise.phonelocator.service.RegistrationService;
-import com.birkettenterprise.phonelocator.util.Setting;
+import com.birkettenterprise.phonelocator.util.SettingsHelper;
 
 import android.app.Activity;
 import android.content.ComponentName;
@@ -83,7 +82,6 @@ public class SigninActivity extends Activity {
 		}		
 	}
 	
-	
 	@Override
 	protected void onDestroy() {
 	    super.onDestroy();
@@ -94,11 +92,6 @@ public class SigninActivity extends Activity {
 		finish();
 		Intent intent = new Intent(this, TabsAcitvity.class);
         startActivity(intent);
-	}
-	
-	private void openUrl(String url) {
-		Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-		startActivity(browserIntent);
 	}
 	
 	private ServiceConnection mConnection = new ServiceConnection() {
@@ -131,30 +124,24 @@ public class SigninActivity extends Activity {
 
 	private void handleRegistrationComplete() {
 		if (mRegisrationService.isSuccess()) {
-			
-			RegistrationResponse response = mRegisrationService.getResponse();
-			storeResponse(response);
-			openUrl(response.getRegistrationUrl());
-			
-			
+			openRegistrationUrl();
 		} else {
 			// show re-try / exit dialog
 		}
 	}
 
-	private void storeResponse(RegistrationResponse response) {
-		SharedPreferences sharedPreferences = PreferenceManager
-				.getDefaultSharedPreferences(this);
-		SharedPreferences.Editor editor = sharedPreferences.edit();
-		editor.putString(Setting.AUTHENTICATION_TOKEN,
-				response.getAuthenticationToken());
-		editor.putString(Setting.REGISTRATION_URL,
-				response.getRegistrationUrl());
-		editor.commit();
+	private void openRegistrationUrl() {
+		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+		openUrl(SettingsHelper.getRegistrationUrl(sharedPreferences));
+	}
+	
+	private void openUrl(String url) {
+		Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+		startActivity(browserIntent);
 	}
 	
 	private boolean hasAuthenticationToken() {
 		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-		return sharedPreferences.getString(Setting.AUTHENTICATION_TOKEN, null) != null;
+		return SettingsHelper.getAuthenticationToken(sharedPreferences) != null;
 	}
 }
