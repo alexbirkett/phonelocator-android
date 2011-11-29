@@ -28,12 +28,14 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 /**
- * One instance of this class should exist when settings are being modified (locally or remotely)
+ * An instance of SettingsManager should always exist when settings are modified
+ * (either locally or remotely). It's responsible for updating time stamps when
+ * settings are modified.
  * 
- * It's responsible for managing timestamp and scheduling updates when settings are modified.
- * 
- * @author Alex
- * 
+ * When settings are modified locally, the corresponding timestamps are set to
+ * the current time. When settings are received from the server, the timestamp
+ * set on the server is preserved.
+ *
  */
 public class SettingsManager implements OnSharedPreferenceChangeListener {
 
