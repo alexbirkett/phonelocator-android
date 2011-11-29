@@ -106,6 +106,10 @@ public class SettingsHelper {
 		return sharedPreferences.getString(StringSettings.REGISTRATION_URL, null);
 	}
 	
+	public static boolean isRegistered(SharedPreferences sharedPreferences) {
+		return sharedPreferences.getBoolean(BooleanSettings.REGISTERED, false);
+	}
+	
 	public static void storeLong(SharedPreferences sharedPreferences, String key, long value) {
 	      SharedPreferences.Editor editor = sharedPreferences.edit();
 	      editor.putLong(key, value);

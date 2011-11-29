@@ -43,8 +43,41 @@ public class RegistrationService extends Service {
     private Throwable mException;
     private Vector<Runnable> mObservers;
     private RegistrationResponse mRegistrationResponse;
+    
     private RegisrationRunnable mRegisrationRunnable;
+    private SynchronizeRunnable mSynchronizeRunnable;
     private Thread mWorkerThread;
+    
+    private class SynchronizeRunnable implements Runnable {
+
+		public void run() {
+		SettingsManager settingsManager = SettingsManager.getInstance(this, RegistrationService.this);
+			
+			try {
+				mSession.connect();
+				mSession.authenticate(SettingsHelper.getAuthenticationToken(PreferenceManager.getDefaultSharedPreferences(RegistrationService.this)));		
+				Vector<Setting> settings =  mSession.synchronizeSettings(settingsManager.getSettingsModifiedSinceLastSyncrhonization());
+				settingsManager.setSettings(settings);
+			} catch (Throwable e) {
+				mException = e;
+			} finally {
+				settingsManager.releaseInstance(this);
+				settingsManager = null;
+				try {
+					mSession.close();
+				} catch (Throwable e) {
+					// ignore
+				}
+			}
+			
+			synchronized(this) {
+				mWorkerThread = null;
+			}
+			
+			updateObservers();
+		}
+    	
+    }
     
     private class RegisrationRunnable implements Runnable {
 
@@ -71,9 +104,13 @@ public class RegistrationService extends Service {
 					// ignore
 				}
 			}
+			
+			synchronized(this) {
+				mWorkerThread = null;
+			}
+			
 			updateObservers();
 
-			mWorkerThread = null;
 		}
     	
     }
@@ -91,7 +128,6 @@ public class RegistrationService extends Service {
 				Runnable nextRunnable = iterator.next();
 				mHandler.post(nextRunnable);
 			}
-			mObservers.removeAllElements();
 		}
 
 	}
@@ -103,6 +139,7 @@ public class RegistrationService extends Service {
     	mSession = new Session();
     	mObservers = new Vector<Runnable>();
     	mRegisrationRunnable = new RegisrationRunnable();
+    	mSynchronizeRunnable = new SynchronizeRunnable();
     }
 
     @Override
@@ -121,19 +158,32 @@ public class RegistrationService extends Service {
     }
     
     public void register() {
+    	startRunnable(mRegisrationRunnable);
+    }
+    
+    public void synchronize() {
+    	startRunnable(mSynchronizeRunnable);
+    }
+    
+    private void startRunnable(Runnable runnable) {
     	if (mWorkerThread != null) {
-    		throw new RuntimeException("already registering");
+    		throw new RuntimeException();
     	}
-    	mRegistrationResponse = null;
-    	mException = null;
-    	mWorkerThread = new Thread(mRegisrationRunnable);
+    	clearResponse();
+    	mWorkerThread = new Thread(runnable);
     	mWorkerThread.start();
     }
     
     public void addObserver(Runnable observer) {
     	synchronized (mObservers) {
+    		mObservers.remove(observer);
     		mObservers.add(observer);
     	}
+    }
+    
+    public void clearResponse() {
+    	mRegistrationResponse = null;
+    	mException = null;
     }
     
     public void removeObserver(Runnable observer) {
@@ -154,7 +204,13 @@ public class RegistrationService extends Service {
     	return mException;
     }
     
+    public boolean isErrorOccured() {
+    	return mException != null;
+    }
+    
     public boolean isRunning() {
+    	synchronized(this) {
     	return mWorkerThread != null;
+    	}
     }
 }
