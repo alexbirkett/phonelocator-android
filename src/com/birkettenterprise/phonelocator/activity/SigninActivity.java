@@ -18,12 +18,16 @@
 
 package com.birkettenterprise.phonelocator.activity;
 
+import com.birkettenterprise.phonelocator.R;
 import com.birkettenterprise.phonelocator.service.RegistrationService;
 import com.birkettenterprise.phonelocator.util.SettingsHelper;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
@@ -31,15 +35,17 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 public class SigninActivity extends Activity {
     
 	private RegistrationService mRegisrationService;
-	public enum State {
-	    IDLE,
-	    REGISTERING
-	};
-	private State mState;
+	
+	private static final int RETRY_DIALOG = 1;
+	private static final String TAG = "SIGNIN_ACTIVITY";
+	private static final String PHONELOCATOR_SCHEME = "phonelocator";
+	
+	private boolean activityInvokedFromWebLink;
 	
 	private Runnable mRegistationObsever = new Runnable() {
 		public void run() {
@@ -50,21 +56,13 @@ public class SigninActivity extends Activity {
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-       // setContentView(R.layout.signin);
-	    mState = State.IDLE;
-        if (hasAuthenticationToken()) {
-        	startStatusActvity();
-        } else {
-        	mState = State.REGISTERING;
-            doBindService();
-        }
-
+        activityInvokedFromWebLink = isActivityInvokedFromWebLink(getIntent());
     }
 
 	@Override
 	public void onPause() {
 		super.onPause();
-		if (isServiceBound() && mState == State.REGISTERING) {
+		if (isServiceBound() && mRegisrationService.isRunning()) {
 			mRegisrationService.removeObserver(mRegistationObsever);		
 		}
 	}
@@ -72,14 +70,7 @@ public class SigninActivity extends Activity {
 	@Override
 	public void onResume() {
 		super.onResume();
-		if (isServiceBound() && mState == State.REGISTERING) {
-			if (mRegisrationService.isRunning()) {
-				mRegisrationService.addObserver(mRegistationObsever);						
-			} else {
-				// registration completed while we were away
-				handleRegistrationComplete();
-			}
-		}		
+		performNextRegistrationStep();
 	}
 	
 	@Override
@@ -88,19 +79,40 @@ public class SigninActivity extends Activity {
 	    doUnbindService();
 	}
 	
+	@Override
+	protected void onNewIntent (Intent intent) {
+		activityInvokedFromWebLink = isActivityInvokedFromWebLink(intent);
+	}
+	
+	private static boolean isActivityInvokedFromWebLink(Intent intent) {
+		Uri data = intent.getData();
+		if (data!=null) {
+			String scheme = data.getScheme();
+			if (scheme.equals(PHONELOCATOR_SCHEME)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	private void startStatusActvity() {
 		finish();
 		Intent intent = new Intent(this, TabsAcitvity.class);
         startActivity(intent);
 	}
 	
+	private void openUrl(String url) {
+		finish();
+		Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+		intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+	 	startActivity(intent);
+	}
+	
 	private ServiceConnection mConnection = new ServiceConnection() {
 	    public void onServiceConnected(ComponentName className, IBinder service) {
 	        mRegisrationService = ((RegistrationService.RegistrationServiceBinder)service).getService();
-	        if (!mRegisrationService.isRunning()) {
-	            mRegisrationService.register();   	
-	        }
 	        mRegisrationService.addObserver(mRegistationObsever);
+	        performNextRegistrationStep();
 	    }
 
 	    public void onServiceDisconnected(ComponentName className) {
@@ -123,25 +135,73 @@ public class SigninActivity extends Activity {
 	}
 
 	private void handleRegistrationComplete() {
-		if (mRegisrationService.isSuccess()) {
-			openRegistrationUrl();
-		} else {
-			// show re-try / exit dialog
-		}
+		performNextRegistrationStep();
 	}
 
 	private void openRegistrationUrl() {
+		openUrl(mRegisrationService.getResponse().getRegistrationUrl());
+	}
+		
+	private boolean isRegistered() {
 		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-		openUrl(SettingsHelper.getRegistrationUrl(sharedPreferences));
+		return SettingsHelper.isRegistered(sharedPreferences);
 	}
 	
-	private void openUrl(String url) {
-		Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-		startActivity(browserIntent);
+	private void performNextRegistrationStep() {
+
+		if (isRegistered()) {
+			Log.d(TAG, "performNextRegistrationStep registered");
+			startStatusActvity();
+			return;
+		} else {
+			if (isServiceBound()) {
+				if (mRegisrationService.isRunning()) {
+					mRegisrationService.addObserver(mRegistationObsever);
+					Log.d(TAG, "performNextRegistrationStep service running (adding observer");
+				} else {
+					if (activityInvokedFromWebLink) {
+						Log.d(TAG, "performNextRegistrationStep activity is invoked from web link");
+						mRegisrationService.synchronize();
+					} else {
+						if (mRegisrationService.isSuccess()) {
+							Log.d(TAG, "performNextRegistrationStep registration success");
+							openRegistrationUrl();
+						} else if (mRegisrationService.isErrorOccured()) {
+							Log.d(TAG, "performNextRegistrationStep registration error");
+							showDialog(RETRY_DIALOG);
+						} else {
+							Log.d(TAG, "performNextRegistrationStep registering");
+							mRegisrationService.register();
+							// show retry dialog
+						}
+					}
+				}
+			} else {
+				Log.d(TAG, "performNextRegistrationStep bind service");
+				doBindService();
+			}
+		}
 	}
 	
-	private boolean hasAuthenticationToken() {
-		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-		return SettingsHelper.getAuthenticationToken(sharedPreferences) != null;
-	}
+	protected Dialog onCreateDialog(int id) {
+		   switch(id) {
+		      case RETRY_DIALOG:
+		         return new AlertDialog.Builder(this).setTitle(R.string.connection_failed)
+		         .setPositiveButton(R.string.retry, new DialogInterface.OnClickListener() {
+	
+		                public void onClick(DialogInterface dialog, int which) {
+		                	mRegisrationService.clearResponse();
+		                	performNextRegistrationStep();
+		                }
+		            })
+		            .setNegativeButton(R.string.quit, new DialogInterface.OnClickListener() {
+		                public void onClick(DialogInterface dialog, int which) {
+		                    finish();
+		                }
+		            })
+		            .create();
+		    }
+
+		    return null;
+		}
 }

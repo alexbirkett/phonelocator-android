@@ -36,4 +36,9 @@
         
     <string name="update_frequency">Update Frequency</string>
     <string name="update_frequency_summary">How often updates are sent</string>
+    
+    <string name="connection_failed">Connection failed</string>
+    <string name="retry">Retry</string>
+    <string name="quit">Quit</string>
+    
 </resources>
