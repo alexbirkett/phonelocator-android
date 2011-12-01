@@ -25,6 +25,7 @@ import com.birkettenterprise.phonelocator.util.SettingsHelper;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -46,6 +47,8 @@ public class SigninActivity extends Activity {
 	private static final String PHONELOCATOR_SCHEME = "phonelocator";
 	
 	private boolean activityInvokedFromWebLink;
+	
+	ProgressDialog mProgressDialog;
 	
 	private Runnable mRegistationObsever = new Runnable() {
 		public void run() {
@@ -152,8 +155,10 @@ public class SigninActivity extends Activity {
 		if (isRegistered()) {
 			Log.d(TAG, "performNextRegistrationStep registered");
 			startStatusActvity();
+			stopProgressIfNotStopped();
 			return;
 		} else {
+			startProgressIfNotStarted();
 			if (isServiceBound()) {
 				if (mRegisrationService.isRunning()) {
 					mRegisrationService.addObserver(mRegistationObsever);
@@ -204,4 +209,29 @@ public class SigninActivity extends Activity {
 
 		    return null;
 		}
+	
+	private void startProgressIfNotStarted() {
+
+		if (!isProgressDialogActive()) {
+			DialogInterface.OnCancelListener listener = new DialogInterface.OnCancelListener() {
+
+				public void onCancel(DialogInterface dialog) {
+					finish();
+				}
+			};
+
+			mProgressDialog = ProgressDialog.show(this, "",getString(R.string.registering_progress_dialog_message),
+					true, true, listener);
+		}
+	}
+	
+	private void stopProgressIfNotStopped() {
+		if (isProgressDialogActive()) {
+			mProgressDialog.dismiss();
+		}
+	}
+	
+	private boolean isProgressDialogActive() {
+		return mProgressDialog != null;
+	}
 }
