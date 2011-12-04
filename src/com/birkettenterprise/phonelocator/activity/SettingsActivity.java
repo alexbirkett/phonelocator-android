@@ -30,18 +30,22 @@ public class SettingsActivity extends PreferenceActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		addPreferencesFromResource(R.xml.preferences);
 	}
 	
 	protected void onResume() {
 		super.onResume();
 		mSettingsManager = SettingsManager.getInstance(this, this);
+		
+		// If the shared preferences are updated elsewhere, i.e. from the network. The view does not automatically refresh to reflect the new values.
+		// as a temporary work around, we add the settings every time the activity is resumed and remove them when it is destroyed
+		addPreferencesFromResource(R.xml.preferences);
 	}
 	
 	protected void onPause() {
 		super.onPause();
 		mSettingsManager.releaseInstance(this);
 		mSettingsManager = null;
+		getPreferenceScreen().removeAll();
 	}
 	
 }
