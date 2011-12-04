@@ -68,6 +68,7 @@ public class SigninActivity extends Activity {
 		if (isServiceBound() && mRegisrationService.isRunning()) {
 			mRegisrationService.removeObserver(mRegistationObsever);		
 		}
+		stopProgressIfNotStopped();
 	}
 	
 	@Override
