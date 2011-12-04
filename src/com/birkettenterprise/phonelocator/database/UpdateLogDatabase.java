@@ -46,7 +46,7 @@ public class UpdateLogDatabase extends SQLiteOpenHelper {
 	private static final String ERROR_COLUMN = "error";
 	
 	private static final String CREATE_UPDATE_TABLE_QUERY = "CREATE TABLE " + UPDATE_TABLE + " (_id INTEGER PRIMARY KEY AUTOINCREMENT, " + TIMESTAMP_COLUMN + " INTEGER, " + ERROR_COLUMN + " TEXT );";
-	private static final String CREATE_LOCATION_QUERY =   "CREATE TABLE " + LOCATION_TABLE + " (_id INTEGER PRIMARY KEY AUTOINCREMENT, " + TIMESTAMP_COLUMN + " INTEGER, " + PROVIDER_COLUMN + "TEXT );";
+	private static final String CREATE_LOCATION_QUERY =   "CREATE TABLE " + LOCATION_TABLE + " (_id INTEGER PRIMARY KEY AUTOINCREMENT, " + TIMESTAMP_COLUMN + " INTEGER, " + PROVIDER_COLUMN + " TEXT );";
 	
 	
 	public UpdateLogDatabase(Context context) {
