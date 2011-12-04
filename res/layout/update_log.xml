@@ -22,24 +22,17 @@
  	android:paddingTop="20px"
 	android:orientation="vertical">
 
-	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-		android:orientation="horizontal" android:layout_width="wrap_content"
-		android:layout_height="wrap_content">
-		<ImageView android:id="@+id/picture" android:scaleType="fitCenter"
-			android:layout_width="wrap_content" android:layout_height="wrap_content"
-			android:src="@drawable/green_light" android:paddingRight="5px" />
 
-		<TextView android:layout_width="fill_parent"
-			android:layout_height="fill_parent" android:text="@string/udpate_sucess"
-			android:gravity="center" android:textSize="30sp" />
-	</LinearLayout>
+    <ListView android:id="@android:id/list"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_weight="1"
+               android:drawSelectorOnTop="false"/>
 
-	<TextView android:layout_width="fill_parent"
-		android:layout_height="wrap_content" android:text="GPS, WiFi x4, Cell Id x1"
-		android:gravity="center" android:textSize="20sp"/>
-
-	<TextView android:layout_width="fill_parent"
-		android:layout_height="wrap_content" android:text="Last update: 12:50:59"
-		android:gravity="center" android:textSize="20sp"/>
+     <TextView android:id="@android:id/empty"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:background="#FF0000"
+               android:text="No data"/>
 </LinearLayout>
 

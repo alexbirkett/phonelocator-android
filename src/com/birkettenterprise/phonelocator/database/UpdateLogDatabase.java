@@ -20,6 +20,7 @@ package com.birkettenterprise.phonelocator.database;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.location.Location;
@@ -41,12 +42,15 @@ public class UpdateLogDatabase extends SQLiteOpenHelper {
 	 */
 	private static final String LOCATION_TABLE = "locations";
 	
-	private static final String TIMESTAMP_COLUMN = "timestamp";
-	private static final String PROVIDER_COLUMN = "provider";
-	private static final String ERROR_COLUMN = "error";
+	public static final String TIMESTAMP_COLUMN = "timestamp";
+	public static final String PROVIDER_COLUMN = "provider";
+	public static final String ERROR_COLUMN = "error";
+	public static final String ID_COLUMN = "_id";
 	
-	private static final String CREATE_UPDATE_TABLE_QUERY = "CREATE TABLE " + UPDATE_TABLE + " (_id INTEGER PRIMARY KEY AUTOINCREMENT, " + TIMESTAMP_COLUMN + " INTEGER, " + ERROR_COLUMN + " TEXT );";
-	private static final String CREATE_LOCATION_QUERY =   "CREATE TABLE " + LOCATION_TABLE + " (_id INTEGER PRIMARY KEY AUTOINCREMENT, " + TIMESTAMP_COLUMN + " INTEGER, " + PROVIDER_COLUMN + " TEXT );";
+	public static final String DESC = " DESC";
+	
+	private static final String CREATE_UPDATE_TABLE_QUERY = "CREATE TABLE " + UPDATE_TABLE + " (" + ID_COLUMN + " INTEGER PRIMARY KEY AUTOINCREMENT, " + TIMESTAMP_COLUMN + " INTEGER, " + ERROR_COLUMN + " TEXT );";
+	private static final String CREATE_LOCATION_QUERY =   "CREATE TABLE " + LOCATION_TABLE + " (" + ID_COLUMN + " INTEGER PRIMARY KEY AUTOINCREMENT, " + TIMESTAMP_COLUMN + " INTEGER, " + PROVIDER_COLUMN + " TEXT );";
 	
 	
 	public UpdateLogDatabase(Context context) {
@@ -92,6 +96,11 @@ public class UpdateLogDatabase extends SQLiteOpenHelper {
 	
 	public void close() {
 		getWritableDatabase().close();
+	}
+	
+	public Cursor getUpdateTable() {
+		return getReadableDatabase().query(UPDATE_TABLE, null, null, null, null, null, ID_COLUMN + DESC, null);
+		
 	}
  
 }
