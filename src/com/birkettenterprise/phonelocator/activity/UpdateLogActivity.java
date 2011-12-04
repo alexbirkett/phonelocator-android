@@ -23,21 +23,14 @@ import java.util.Date;
 import com.birkettenterprise.phonelocator.R;
 import com.birkettenterprise.phonelocator.database.UpdateLogDatabase;
 
-import android.app.Dialog;
 import android.app.ListActivity;
-import android.content.Intent;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
-public class UpdateLogActivity extends ListActivity implements OnClickListener {
+public class UpdateLogActivity extends ListActivity {
     
 	private Cursor mCursor;
 	
@@ -84,65 +77,17 @@ public class UpdateLogActivity extends ListActivity implements OnClickListener {
         adapter.setViewBinder(binder);
     }
     
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.status_menu, menu);
-        return true;
-    }
     
     @Override
 	protected void onDestroy() {
 	    super.onDestroy();
 	}
-    
-    @Override
-	public Dialog onCreateDialog(int id) {
-		Dialog dialog = new Dialog(this);
 
-		dialog.setContentView(R.layout.signin);
-		dialog.setTitle(getString(R.string.sign_in_dialog_title));
-		dialog.findViewById(R.id.sign_in).setOnClickListener(this);
-		dialog.findViewById(R.id.sign_up).setOnClickListener(this);
-		setButtonWidths(dialog);
-		return dialog;
-	}
-	
     @Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		showDialog(1);
-		return true;
-	}
-	
-	public void onClick(View view) {
-		if (view == findViewById(R.id.sign_in)) {
-			activeStatus();
-		} else {
-			activateSignup();
-		}
-	}
-	
-	private void setButtonWidths(Dialog view) {
-		View button1 = view.findViewById(R.id.sign_in);
-		View button2 = view.findViewById(R.id.sign_up);
-		if (button1.getWidth() > button2.getWidth()) {
-			button2.setMinimumWidth(button1.getWidth());
-			button2.invalidate();
-		} else {
-			button1.setMinimumWidth(button2.getWidth());
-			button1.invalidate();
-		}
-	}
-	
-	private void activeStatus() {
-		finish();
-		Intent intent = new Intent(this, UpdateLogActivity.class);
-        startActivity(intent);
-	}
-	
-	private void activateSignup() {
-		Uri uri = Uri.parse(getString(R.string.sign_up_url));
-		Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-		startActivity(intent);
-	}
+    public void onResume() {
+    	super.onResume();
+    	mCursor.requery();
+    	((SimpleCursorAdapter)getListAdapter()).notifyDataSetChanged();
+    }
+    
 }
