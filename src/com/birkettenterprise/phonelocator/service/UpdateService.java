@@ -28,8 +28,10 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.birkettenterprise.phonelocator.broadcastreceiver.LocationPollerBroadcastReceiver;
+import com.birkettenterprise.phonelocator.database.UpdateLogDatabase;
 import com.birkettenterprise.phonelocator.domain.BeaconList;
 import com.birkettenterprise.phonelocator.domain.GpsBeacon;
+import com.birkettenterprise.phonelocator.protocol.CorruptStreamException;
 import com.birkettenterprise.phonelocator.protocol.Session;
 import com.birkettenterprise.phonelocator.util.Setting;
 import com.birkettenterprise.phonelocator.util.SettingsHelper;
@@ -43,11 +45,11 @@ public class UpdateService extends WakefulIntentService {
 	public static final int SYNCHRONIZE_SETTINGS = 2;
 
 	private static final String TAG = "Phonelocator";
-	//private Database mDatabase;
+	private UpdateLogDatabase mDatabase;
 	
 	public UpdateService() {
 		super("PhonelocatorSerivce");
-		//mDatabase = new Database(this);
+		mDatabase = new UpdateLogDatabase(this);
 	}
 
 	@Override
@@ -58,8 +60,9 @@ public class UpdateService extends WakefulIntentService {
 		handleUpdateLocation(intent);
 	
 		if ((command & SYNCHRONIZE_SETTINGS) == SYNCHRONIZE_SETTINGS) {
-			handleSynchronizeSettings();
+			//handleSynchronizeSettings();
 		}
+		mDatabase.close();
 	}
 	
 	private void handleUpdateLocation(Intent intent) {
@@ -72,18 +75,13 @@ public class UpdateService extends WakefulIntentService {
 			session.connect();
 			session.authenticate(SettingsHelper.getAuthenticationToken(PreferenceManager.getDefaultSharedPreferences(this)));
 			
-			Bundle bundle = intent.getExtras();
-			Location location = (Location) bundle.get(LocationPollerBroadcastReceiver.EXTRA_LOCATION);
-			if (location == null) {
-				location = (Location) bundle.get(LocationPollerBroadcastReceiver.EXTRA_LASTKNOWN);
-			}
-			BeaconList beaconList = new BeaconList();
-			beaconList.add(new GpsBeacon(location, intent.getStringExtra(LocationPollerBroadcastReceiver.EXTRA_ERROR)));
-			session.sendPositionUpdate(beaconList);
-			Vector<Setting> settings = session.synchronizeSettings(settingsManager.getSettingsModifiedSinceLastSyncrhonization());
-			settingsManager.setSettings(settings);
+			Location location = getLocationFromIntent(intent);
+			sendUpdate(session, location, intent.getStringExtra(LocationPollerBroadcastReceiver.EXTRA_ERROR));
+			synchronizeSettings(session, settingsManager);
+			updateLog(location);
 			
 		} catch (Exception e) {
+			updateLog(e);
 			e.printStackTrace();
 			Log.d(TAG,"error synchronizing settings " + e.toString());
 		} finally {
@@ -96,9 +94,31 @@ public class UpdateService extends WakefulIntentService {
 		}
 	}
    
-
+	private static Location getLocationFromIntent(Intent intent) {
+		Bundle bundle = intent.getExtras();
+		Location location = (Location) bundle.get(LocationPollerBroadcastReceiver.EXTRA_LOCATION);
+		if (location == null) {
+			location = (Location) bundle.get(LocationPollerBroadcastReceiver.EXTRA_LASTKNOWN);
+		}
+		return location;
+	}
 	
-	private void handleSynchronizeSettings() {
-		
+	private static void synchronizeSettings(Session session, SettingsManager settingsManager) throws IOException {
+		Vector<Setting> settings = session.synchronizeSettings(settingsManager.getSettingsModifiedSinceLastSyncrhonization());
+		settingsManager.setSettings(settings);
+	}
+	
+	private static  void sendUpdate(Session session, Location location, String error) throws IOException, CorruptStreamException {
+		BeaconList beaconList = new BeaconList();
+		beaconList.add(new GpsBeacon(location, error));
+		session.sendPositionUpdate(beaconList);
+	}
+	
+	private void updateLog(Location location) {
+		mDatabase.updateLog(location);
+	}
+	
+	private void updateLog(Exception e) {
+		mDatabase.updateLog(e);
 	}
 }
