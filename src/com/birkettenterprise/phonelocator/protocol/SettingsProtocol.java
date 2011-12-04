@@ -24,10 +24,15 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Vector;
 
+import android.util.Log;
+
+import com.birkettenterprise.phonelocator.application.PhonelocatorApplication;
 import com.birkettenterprise.phonelocator.util.Setting;
 
 public class SettingsProtocol {
 
+	public static final String LOG_TAG = PhonelocatorApplication.LOG_TAG + "_SETTINGS_PROTOCOL";
+	
 	public static final short BOOLEAN_OFFSET = 0;
 	public static final short INTEGER_OFFSET = 64;
 	public static final short INT64_OFFSET = 128;
@@ -126,7 +131,14 @@ public class SettingsProtocol {
 		} else if (STRING_OFFSET <= settingId && settingId < END_OF_SETTINGS_MARKER) {
 			setting.setValue(dataInputStream.readUTF());			
 		}
-		setting.setName(getSettingsNameForId(settingId));
+		
+		try {
+			setting.setName(getSettingsNameForId(settingId));
+			Log.d(LOG_TAG, "read setting id: " + settingId + " name: " + setting.getName() + " value: " + setting.getValue().toString() + " timestamp: " + setting.getTimestamp());
+		} catch (UnknowSettingException e) {
+			Log.d(LOG_TAG, "ignored setting id: " + settingId + " value: " + setting.getValue().toString() + " timestamp: " + setting.getTimestamp());
+			throw e;		
+		}
 		
 		return setting;
 	}
@@ -135,6 +147,8 @@ public class SettingsProtocol {
 		outputStream.writeByte(settingId);
 		writeTimestamp(timeStamp, outputStream);
 		writeSettingValue(settingId,value, outputStream);
+		Log.d(LOG_TAG, "written setting id: " + settingId + " value: " + value.toString() + " timestamp: " + timeStamp);
+
 	}
 	
 	private static void writeTimestamp(long timestamp, DataOutputStream outputStream) throws IOException {

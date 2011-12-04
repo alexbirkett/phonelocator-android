@@ -22,6 +22,8 @@ import android.app.Application;
 
 public class PhonelocatorApplication extends Application {
 
+	public static String LOG_TAG = "PHONELOCATOR";
+	
 	private static PhonelocatorApplication mInstance;
 	
 	@Override
