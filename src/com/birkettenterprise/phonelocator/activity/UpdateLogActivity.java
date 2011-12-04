@@ -31,12 +31,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 
-public class StatusActivity extends Activity implements OnClickListener {
+public class UpdateLogActivity extends Activity implements OnClickListener {
     
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.status);
+        setContentView(R.layout.update_log);
     }
     
     @Override
@@ -91,7 +91,7 @@ public class StatusActivity extends Activity implements OnClickListener {
 	
 	private void activeStatus() {
 		finish();
-		Intent intent = new Intent(this, StatusActivity.class);
+		Intent intent = new Intent(this, UpdateLogActivity.class);
         startActivity(intent);
 	}
 	

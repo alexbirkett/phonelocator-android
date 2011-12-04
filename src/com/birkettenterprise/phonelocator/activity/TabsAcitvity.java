@@ -39,7 +39,7 @@ public class TabsAcitvity extends TabActivity {
     private void createStatusTabSpec(final TabHost tabHost) {
     	TabHost.TabSpec statusTabSpec = tabHost.newTabSpec("status");
         statusTabSpec.setIndicator(getString(R.string.status));
-        statusTabSpec.setContent(new Intent(this, StatusActivity.class));
+        statusTabSpec.setContent(new Intent(this, UpdateLogActivity.class));
         tabHost.addTab(statusTabSpec);
     }
     
