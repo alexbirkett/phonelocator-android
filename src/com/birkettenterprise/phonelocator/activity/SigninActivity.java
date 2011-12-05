@@ -100,16 +100,16 @@ public class SigninActivity extends Activity {
 	}
 	
 	private void startStatusActvity() {
-		finish();
 		Intent intent = new Intent(this, TabsAcitvity.class);
         startActivity(intent);
+		finish();
 	}
 	
 	private void openUrl(String url) {
-		finish();
 		Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
 		intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
 	 	startActivity(intent);
+		finish();
 	}
 	
 	private ServiceConnection mConnection = new ServiceConnection() {
