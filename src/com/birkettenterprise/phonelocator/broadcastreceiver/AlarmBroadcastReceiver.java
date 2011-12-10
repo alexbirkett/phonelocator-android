@@ -18,17 +18,25 @@
 
 package com.birkettenterprise.phonelocator.broadcastreceiver;
 
-import com.birkettenterprise.phonelocator.service.UpdateService;
+import com.commonsware.cwac.locpoll.LocationPoller;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.location.LocationManager;
 
 
 public class AlarmBroadcastReceiver extends BroadcastReceiver {
+	
+	private long TIMEOUT = 20 * 1000;
+	
 	@Override
-	public void onReceive(Context context, Intent intent) {
-		intent.setClass(context, com.birkettenterprise.phonelocator.service.UpdateService.class);
-		UpdateService.sendWakefulWork(context, intent);
+	public void onReceive(Context context, Intent i) {
+		
+		Intent intent = new Intent(context, LocationPoller.class);
+		intent.putExtra(LocationPoller.EXTRA_INTENT_TO_BROADCAST_ON_COMPLETION, new Intent(context, LocationBroadcastReceiver.class));
+		intent.putExtra(LocationPoller.EXTRA_PROVIDER, LocationManager.GPS_PROVIDER);
+		intent.putExtra(LocationPoller.EXTRA_TIMEOUT, TIMEOUT);
+		context.sendBroadcast(intent);
 	}
 }

@@ -54,7 +54,8 @@
 	
 		<service android:name=".service.UpdateService"/>
 		<service android:name=".service.RegistrationService"/>
-		<service android:name=".service.LocationPollerService"/>
+		<service android:name="com.commonsware.cwac.locpoll.LocationPollerService" />
+	
 
 		
 		<receiver android:name=".broadcastreceiver.BootCompletedBroadcastReceiver">  
@@ -63,7 +64,8 @@
 		    </intent-filter>
 		</receiver>
 		<receiver android:name=".broadcastreceiver.AlarmBroadcastReceiver"/>  
-		<receiver android:name=".broadcastreceiver.LocationPollerBroadcastReceiver"/>
+		<receiver android:name=".broadcastreceiver.LocationBroadcastReceiver"/>
+		<receiver android:name="com.commonsware.cwac.locpoll.LocationPoller" />
 
 	</application>
 

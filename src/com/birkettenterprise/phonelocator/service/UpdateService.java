@@ -23,12 +23,10 @@ import java.util.Vector;
 
 import android.content.Intent;
 import android.location.Location;
-import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.birkettenterprise.phonelocator.application.PhonelocatorApplication;
-import com.birkettenterprise.phonelocator.broadcastreceiver.LocationPollerBroadcastReceiver;
 import com.birkettenterprise.phonelocator.database.UpdateLogDatabase;
 import com.birkettenterprise.phonelocator.domain.BeaconList;
 import com.birkettenterprise.phonelocator.domain.GpsBeacon;
@@ -38,6 +36,7 @@ import com.birkettenterprise.phonelocator.protocol.Session;
 import com.birkettenterprise.phonelocator.util.Setting;
 import com.birkettenterprise.phonelocator.util.SettingsHelper;
 import com.birkettenterprise.phonelocator.util.SettingsManager;
+import com.commonsware.cwac.locpoll.LocationPoller;
 
 public class UpdateService extends WakefulIntentService {
 
@@ -47,6 +46,7 @@ public class UpdateService extends WakefulIntentService {
 	public static final int SYNCHRONIZE_SETTINGS = 2;
 
 	private static final String LOG_TAG = PhonelocatorApplication.LOG_TAG + "_UPDATE_SERVICE";
+	
 	private UpdateLogDatabase mDatabase;
 	
 	public UpdateService() {
@@ -56,14 +56,8 @@ public class UpdateService extends WakefulIntentService {
 
 	@Override
 	protected void doWakefulWork(Intent intent) {
-		int command = intent.getIntExtra(COMMAND, -1);
-			
-		//if ((command & UPDATE_LOCATION) == UPDATE_LOCATION) {
+	//	int command = intent.getIntExtra(COMMAND, -1);		
 		handleUpdateLocation(intent);
-	
-		if ((command & SYNCHRONIZE_SETTINGS) == SYNCHRONIZE_SETTINGS) {
-			//handleSynchronizeSettings();
-		}
 		mDatabase.close();
 	}
 	
@@ -107,13 +101,9 @@ public class UpdateService extends WakefulIntentService {
 	}
    
 	private static Location getLocationFromIntent(Intent intent) throws LocationPollFailedException {
-		Bundle bundle = intent.getExtras();
-		Location location = (Location) bundle.get(LocationPollerBroadcastReceiver.EXTRA_LOCATION);
+		Location location = LocationPoller.getBestAvailableLocation(intent);
 		if (location == null) {
-			location = (Location) bundle.get(LocationPollerBroadcastReceiver.EXTRA_LASTKNOWN);
-		}
-		if (location == null) {
-			throw new LocationPollFailedException(intent.getStringExtra(LocationPollerBroadcastReceiver.EXTRA_ERROR));
+			throw new LocationPollFailedException(LocationPoller.getError(intent));
 		}
 		return location;
 	}

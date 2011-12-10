@@ -19,7 +19,6 @@
 package com.birkettenterprise.phonelocator.util;
 
 import com.birkettenterprise.phonelocator.broadcastreceiver.AlarmBroadcastReceiver;
-import com.birkettenterprise.phonelocator.broadcastreceiver.LocationPollerBroadcastReceiver;
 import com.birkettenterprise.phonelocator.util.Setting.BooleanSettings;
 import com.birkettenterprise.phonelocator.util.Setting.StringSettings;
 
@@ -28,7 +27,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.location.LocationManager;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -45,13 +43,7 @@ public class SettingsHelper {
 		AlarmManager alamManager = (AlarmManager) context
 				.getSystemService(Context.ALARM_SERVICE);
 				
-		Intent intent = new Intent(context, LocationPollerBroadcastReceiver.class);
-		
-		intent.putExtra(LocationPollerBroadcastReceiver.EXTRA_INTENT,
-							 new Intent(context, AlarmBroadcastReceiver.class));
-		intent.putExtra(LocationPollerBroadcastReceiver.EXTRA_PROVIDER,
-							 LocationManager.NETWORK_PROVIDER);
-		
+		Intent intent = new Intent(context, AlarmBroadcastReceiver.class);
 		PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
 		if (periodicUpdatesEnabled(PreferenceManager.getDefaultSharedPreferences(context))) {
