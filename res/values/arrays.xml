@@ -45,4 +45,17 @@
 		<item>43200</item> <!-- 12 Hours -->
 		<item>86400</item> <!-- Day -->
 	</string-array>
+	
+	<string-array name="gps_timeouts">
+		<item>30 seconds</item>
+		<item>Minute</item>
+		<item>2 Minutes</item>
+	</string-array>
+	
+	<string-array name="gps_timeout_values">
+		<item>30000</item> <!-- 30 seconds -->
+		<item>60000</item> <!-- 60 seconds -->
+		<item>120000</item> <!-- 2 minutes -->
+	</string-array>
+
 </resources>

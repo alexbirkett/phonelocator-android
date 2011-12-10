@@ -46,5 +46,9 @@
 	<string name="error_corrupt_stream">Corrupt stream</string>
 	<string name="error_authentication_failed">Authentication failed</string>
 	<string name="error_location_poll_failed">Could not determine location</string>
+	
+	<string name="gps_timeout">GPS timeout</string>
+	<string name="gps_timeout_summary">How long to wait for a GPS lock</string>
+	
 
 </resources>

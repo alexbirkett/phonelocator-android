@@ -23,12 +23,15 @@ import com.commonsware.cwac.locpoll.LocationPoller;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.LocationManager;
+import android.preference.PreferenceManager;
 
 
 public class AlarmBroadcastReceiver extends BroadcastReceiver {
 	
-	private long TIMEOUT = 20 * 1000;
+	private static long TIMEOUT = 20 * 1000;
+	private static String GPS_TIMEOUT_KEY = "gps_timeout";
 	
 	@Override
 	public void onReceive(Context context, Intent i) {
@@ -36,7 +39,14 @@ public class AlarmBroadcastReceiver extends BroadcastReceiver {
 		Intent intent = new Intent(context, LocationPoller.class);
 		intent.putExtra(LocationPoller.EXTRA_INTENT_TO_BROADCAST_ON_COMPLETION, new Intent(context, LocationBroadcastReceiver.class));
 		intent.putExtra(LocationPoller.EXTRA_PROVIDER, LocationManager.GPS_PROVIDER);
-		intent.putExtra(LocationPoller.EXTRA_TIMEOUT, TIMEOUT);
+		intent.putExtra(LocationPoller.EXTRA_TIMEOUT, getGpsTimeout(context));
 		context.sendBroadcast(intent);
+	}
+	
+	private long getGpsTimeout(Context context) {
+		SharedPreferences preferenceManager = PreferenceManager.getDefaultSharedPreferences(context);
+		String timeOutString = preferenceManager.getString(GPS_TIMEOUT_KEY,TIMEOUT+ "");
+		long timeout = Long.parseLong(timeOutString);
+		return timeout;
 	}
 }
