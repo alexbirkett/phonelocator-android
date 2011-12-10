@@ -13,7 +13,6 @@
 	android:stretchColumns="1">
 
 	<TableRow>
-<<<<<<< HEAD
 		<TextView android:text="@string/update_timestamp_description" android:textSize="16sp"
 										  android:layout_width="wrap_content"
 										  android:layout_height="wrap_content"
@@ -53,33 +52,9 @@
 										  android:layout_height="wrap_content"
 										  android:gravity="right"
 										  android:padding="3dip"/>
-=======
-		<TextView android:text="@string/update_timestamp_description" android:padding="3dip" />
-
-		<TextView android:id="@+id/update_timestamp"
-			android:textSize="16sp" android:layout_width="wrap_content"
-			android:layout_height="wrap_content" />
-	</TableRow>
-
-	<TableRow android:id="@+id/location_timestamp_row">
-		<TextView android:text="@string/location_timestamp_description" android:padding="3dip"  />
-
-		<TextView android:id="@+id/location_timestamp"
-			android:textSize="16sp" android:layout_width="wrap_content"
-			android:layout_height="wrap_content" />
-	</TableRow>
-
-	<TableRow android:id="@+id/location_provider_row">
-		<TextView android:text="@string/location_provider_description" android:padding="3dip" />
-
-		<TextView android:id="@+id/location_provider" android:textSize="16sp"
-			android:layout_width="wrap_content" android:layout_height="wrap_content" />
->>>>>>> ddcba3036736a8cb94187433ac387955d7efcf53
-
 	</TableRow>
 
 	<TableRow android:id="@+id/error_row">
-<<<<<<< HEAD
 		<TextView android:text="@string/error_description" android:textSize="16sp"
 										  android:layout_width="wrap_content"
 										  android:layout_height="wrap_content"
@@ -91,12 +66,10 @@
 										  android:layout_height="wrap_content"
 										  android:gravity="right"
 										  android:padding="3dip"/>
-=======
 		<TextView android:text="@string/error_description" android:padding="3dip" />
 
 		<TextView android:id="@+id/error" android:textSize="16sp"
 			android:layout_width="wrap_content" android:layout_height="wrap_content" />
->>>>>>> ddcba3036736a8cb94187433ac387955d7efcf53
 
 	</TableRow>
 
