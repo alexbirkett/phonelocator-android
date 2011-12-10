@@ -28,7 +28,7 @@ import android.location.Location;
 public class UpdateLogDatabase extends SQLiteOpenHelper {
 
 	private static final String DATABASE_NAME = "phonelocator_update_log";
-	private static final int DATABASE_VERSION = 1;
+	private static final int DATABASE_VERSION = 4;
 	
 	/**
 	 * Update table stores successful and unsuccessful update attempts. Each
@@ -42,16 +42,33 @@ public class UpdateLogDatabase extends SQLiteOpenHelper {
 	 */
 	private static final String LOCATION_TABLE = "locations";
 	
-	public static final String TIMESTAMP_COLUMN = "timestamp";
+	public static final String UPDATE_TIMESTAMP_COLUMN = "update_timestamp";
+	public static final String LOCATION_TIMESTAMP_COLUMN = "location_timestamp";
+	
 	public static final String PROVIDER_COLUMN = "provider";
-	public static final String ERROR_COLUMN = "error";
+	public static final String ERROR_TYPE_COLUMN = "error_type";
+	public static final String ERROR_MESSAGE_COLUMN = "error_message";
 	public static final String ID_COLUMN = "_id";
+	public static final String UPDATE_ID_COLUMN = "update_id";
+	
 	
 	public static final String DESC = " DESC";
 	
-	private static final String CREATE_UPDATE_TABLE_QUERY = "CREATE TABLE " + UPDATE_TABLE + " (" + ID_COLUMN + " INTEGER PRIMARY KEY AUTOINCREMENT, " + TIMESTAMP_COLUMN + " INTEGER, " + ERROR_COLUMN + " TEXT );";
-	private static final String CREATE_LOCATION_QUERY =   "CREATE TABLE " + LOCATION_TABLE + " (" + ID_COLUMN + " INTEGER PRIMARY KEY AUTOINCREMENT, " + TIMESTAMP_COLUMN + " INTEGER, " + PROVIDER_COLUMN + " TEXT );";
+	private static final String CREATE_UPDATE_TABLE_QUERY = "CREATE TABLE " + UPDATE_TABLE + " (" + ID_COLUMN + " INTEGER PRIMARY KEY AUTOINCREMENT, " + UPDATE_TIMESTAMP_COLUMN + " INTEGER, " + ERROR_MESSAGE_COLUMN + " TEXT, " + ERROR_TYPE_COLUMN + " TEXT );";	private static final String CREATE_LOCATION_QUERY =   "CREATE TABLE " + LOCATION_TABLE + " (" + ID_COLUMN + " INTEGER PRIMARY KEY AUTOINCREMENT, " + UPDATE_ID_COLUMN + " INTEGER, " + LOCATION_TIMESTAMP_COLUMN + " INTEGER, " + PROVIDER_COLUMN + " TEXT );";
 	
+	private static final String ADD_UPDATE_ID_COLUMN_INDEX_QUERY = "CREATE INDEX "+ UPDATE_ID_COLUMN + "_INDEX ON " + LOCATION_TABLE + "("+ UPDATE_ID_COLUMN + ");";
+	
+	private static String SELECT_UPDATES_QUERY = "SELECT "  + 
+						UPDATE_TABLE + "." + ID_COLUMN + " , " +
+						UPDATE_TIMESTAMP_COLUMN + " , " + 
+						ERROR_TYPE_COLUMN + " , " + 
+						ERROR_MESSAGE_COLUMN + " , " + 
+						LOCATION_TIMESTAMP_COLUMN + " , " + 
+						PROVIDER_COLUMN +
+	  " FROM "  + UPDATE_TABLE +
+	  " LEFT OUTER JOIN " + LOCATION_TABLE + " ON " + UPDATE_TABLE + "." + ID_COLUMN + " = " + LOCATION_TABLE + "." + UPDATE_ID_COLUMN +
+	  " ORDER BY " + UPDATE_TABLE + "." + ID_COLUMN + DESC;
+
 	
 	public UpdateLogDatabase(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -59,38 +76,47 @@ public class UpdateLogDatabase extends SQLiteOpenHelper {
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		db.execSQL(CREATE_UPDATE_TABLE_QUERY);
-		db.execSQL(CREATE_LOCATION_QUERY);
+		createDb(db);
 	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+		dropTables(db);
+		createDb(db);
 	}
 	
-	void addLocation(Location location) {
-		getWritableDatabase();
+	private void createDb(SQLiteDatabase db) {
+		db.execSQL(CREATE_UPDATE_TABLE_QUERY);
+		db.execSQL(CREATE_LOCATION_QUERY);
+		db.execSQL(ADD_UPDATE_ID_COLUMN_INDEX_QUERY);
+	}
+	
+	private void dropTables(SQLiteDatabase db) {
+		db.execSQL("DROP TABLE IF EXISTS " + UPDATE_TABLE);
+		db.execSQL("DROP TABLE IF EXISTS " + LOCATION_TABLE);
 	}
 
 	public void updateLog(Location location) {
-		ContentValues contentValues = new ContentValues();
-		contentValues.put(TIMESTAMP_COLUMN, System.currentTimeMillis());
-		contentValues.put(ERROR_COLUMN, ""); // no error
-		long id = getWritableDatabase().insert(UPDATE_TABLE, null, contentValues);
-	
+		long id = updateLog(null, null);
 		addLocation(id, location);
 	}
 
-	public void updateLog(Exception e) {
-		ContentValues contentValues = new ContentValues();
-		contentValues.put(TIMESTAMP_COLUMN, System.currentTimeMillis());
-		contentValues.put(ERROR_COLUMN, e.getMessage());
-		getWritableDatabase().insert(UPDATE_TABLE, null, contentValues);
+	public void updateLog(Exception exception) {
+		updateLog(exception.toString(), exception.getMessage());
 	}
 	
+	public long updateLog(String errorType, String errorMessage) {
+		ContentValues contentValues = new ContentValues();
+		contentValues.put(UPDATE_TIMESTAMP_COLUMN, System.currentTimeMillis());
+		contentValues.put(ERROR_TYPE_COLUMN, errorType);
+		contentValues.put(ERROR_MESSAGE_COLUMN, errorMessage);
+		return getWritableDatabase().insert(UPDATE_TABLE, null, contentValues);
+	}
 	private void addLocation(long updateId, Location location) {
 		ContentValues contentValues = new ContentValues();
-		contentValues.put(TIMESTAMP_COLUMN, location.getTime());
+		contentValues.put(LOCATION_TIMESTAMP_COLUMN, location.getTime());
 		contentValues.put(PROVIDER_COLUMN, location.getProvider());
+		contentValues.put(UPDATE_ID_COLUMN, updateId);
 		getWritableDatabase().insert(LOCATION_TABLE, null, contentValues);
 	}
 	
@@ -98,9 +124,10 @@ public class UpdateLogDatabase extends SQLiteOpenHelper {
 		getWritableDatabase().close();
 	}
 	
+	//
+	
 	public Cursor getUpdateTable() {
-		return getReadableDatabase().query(UPDATE_TABLE, null, null, null, null, null, ID_COLUMN + DESC, null);
-		
+		return getReadableDatabase().rawQuery(SELECT_UPDATES_QUERY, null);
 	}
  
 }

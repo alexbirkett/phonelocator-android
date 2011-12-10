@@ -24,70 +24,132 @@ import com.birkettenterprise.phonelocator.R;
 import com.birkettenterprise.phonelocator.database.UpdateLogDatabase;
 
 import android.app.ListActivity;
+import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.SimpleCursorAdapter;
+import android.widget.ResourceCursorAdapter;
 import android.widget.TextView;
+import android.view.ViewGroup;
 
 public class UpdateLogActivity extends ListActivity {
     
+	private class ErrorNotResolvedException extends Exception {
+		private static final long serialVersionUID = 1L;
+	}
+	
 	private Cursor mCursor;
+	
+	//private static int ID_COLUMN_INDEX = 0;
+	private static int UPDATE_TIMESTAMP_COLUMN_INDEX = 1;
+	private static int ERROR_TYPE_COLUMN_INDEX = 2;
+	private static int ERROR_MESSAGE_COLUMN_INDEX = 3;
+	private static int LOCATION_TIMESTAMP_COLUMN_INDEX = 4;
+	private static int PROVIDER_COLUMN_INDEX = 5;
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-        // We'll define a custom screen layout here (the one shown above), but
-        // typically, you could just use the standard ListActivity layout.
         setContentView(R.layout.update_log);
-
-        // Query for all people contacts using the Contacts.People convenience class.
-        // Put a managed wrapper around the retrieved cursor so we don't have to worry about
-        // requerying or closing it as the activity changes state.
         mCursor = new UpdateLogDatabase(this).getUpdateTable();
+          
         startManagingCursor(mCursor);
 
-        // Now create a new list adapter bound to the cursor.
-        // SimpleListAdapter is designed for binding to a Cursor.
-        SimpleCursorAdapter adapter = new SimpleCursorAdapter(
-                this, // Context.
-                R.layout.update_log_list_item,  // Specify the row template to use (here, two columns bound to the two retrieved cursor rows).
-                mCursor,                                              // Pass in the cursor to bind to.
-                new String[] { UpdateLogDatabase.ERROR_COLUMN, 
-                		       UpdateLogDatabase.TIMESTAMP_COLUMN },           // Array of cursor columns to bind to.
-                new int[] {R.id.error,
-                		   R.id.timestamp});  // Parallel array of which template objects to bind to those columns.
-
-        // Bind to our new adapter.
-        setListAdapter(adapter);
         
-        SimpleCursorAdapter.ViewBinder binder = new SimpleCursorAdapter.ViewBinder() {
+        ResourceCursorAdapter resourceCursorAdapter = new ResourceCursorAdapter(UpdateLogActivity.this, R.layout.update_log_list_item, mCursor) {
 
-			public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
-				if (columnIndex == 1) {
-					TextView textView = (TextView) view;
-					textView.setText(new Date(cursor.getLong(1)).toLocaleString());
-					return true;
-				}
-				return false;
-			}
-        	
+     
+            @Override
+            public View newView(Context context, Cursor cur, ViewGroup parent) {
+                LayoutInflater li = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                return li.inflate(R.layout.update_log_list_item, parent, false);
+            }
+
+            @Override
+            public void bindView(View view, Context context, Cursor cursor) {
+              String error = cursor.getString(ERROR_TYPE_COLUMN_INDEX);
+     
+              TextView updateTimestampView = (TextView) view.findViewById(R.id.update_timestamp);
+              setTimeStamp(updateTimestampView,cursor,UPDATE_TIMESTAMP_COLUMN_INDEX);
+              
+              View errorRow = view.findViewById(R.id.error_row);
+              View locationProviderRow = view.findViewById(R.id.location_provider_row);
+              View locationTimestampRow = view.findViewById(R.id.location_timestamp_row);
+              if (error == null) {
+            	  errorRow.setVisibility(View.GONE); 
+            	  locationProviderRow.setVisibility(View.VISIBLE);
+            	  locationTimestampRow.setVisibility(View.VISIBLE);
+            	  
+            	  setTimeStamp((TextView) view.findViewById(R.id.location_timestamp), cursor, LOCATION_TIMESTAMP_COLUMN_INDEX);
+            	  TextView locationProviderTextView = (TextView) view.findViewById(R.id.location_provider);
+            	  locationProviderTextView.setText(cursor.getString(PROVIDER_COLUMN_INDEX));
+                  
+              } else {
+            	  errorRow.setVisibility(View.VISIBLE);
+            	  locationProviderRow.setVisibility(View.GONE);
+            	  locationTimestampRow.setVisibility(View.GONE);
+            	  
+            	  TextView errorView = (TextView) view.findViewById(R.id.error);
+            	  setError(errorView, cursor);
+              }
+            }
         };
-
-        adapter.setViewBinder(binder);
+       
+        setListAdapter(resourceCursorAdapter);
+        
     }
     
+	private void setTimeStamp(TextView view, Cursor cursor, int columnIndex) {
+		view.setText(new Date(cursor.getLong(columnIndex)).toLocaleString());
+
+	}
+	
+	private void setError(TextView view, Cursor cursor) {
+		String errorType = cursor.getString(ERROR_TYPE_COLUMN_INDEX);
+		if (errorType == null) {
+			view.setVisibility(View.GONE);
+		} else {
+			try {
+				String resolvedError = resolveErrorType(errorType);
+				view.setText(resolvedError);
+			} catch (ErrorNotResolvedException e) {
+				view.setText(cursor.getString(ERROR_MESSAGE_COLUMN_INDEX));	
+			}
+		}
+	}
+	
+	private String resolveErrorType(String errorType) throws ErrorNotResolvedException {
+		if (errorType.indexOf("IOException") > 0) {
+			return getString(R.string.error_io_exception);
+		} else if (errorType.indexOf("CorruptStreamException") > 0) {
+			return getString(R.string.error_corrupt_stream);
+		} else if (errorType.indexOf("AuthenticationFailedException") > 0) {
+			return getString(R.string.error_authentication_failed);
+		} else if (errorType.indexOf("LocationPollFailedException") > 0) {
+			return getString(R.string.error_location_poll_failed);
+		}  
+		
+		throw new ErrorNotResolvedException();
+		
+	}
     
     @Override
 	protected void onDestroy() {
 	    super.onDestroy();
 	}
+    
+    @Override
+    public void onNewIntent(Intent intent) {
+    	super.onNewIntent(intent);
+    }
 
     @Override
     public void onResume() {
     	super.onResume();
     	mCursor.requery();
-    	((SimpleCursorAdapter)getListAdapter()).notifyDataSetChanged();
+    	((ResourceCursorAdapter)getListAdapter()).notifyDataSetChanged();
     }
     
 }
