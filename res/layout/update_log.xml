@@ -32,7 +32,7 @@
      <TextView android:id="@android:id/empty"
                android:layout_width="wrap_content"
                android:layout_height="wrap_content"
-               android:background="#FF0000"
-               android:text="No data"/>
+               android:text="@string/no_updates_sent_message"
+               android:textSize="20sp"/>
 </LinearLayout>
 

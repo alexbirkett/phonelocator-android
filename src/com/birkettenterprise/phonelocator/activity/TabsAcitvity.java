@@ -37,15 +37,15 @@ public class TabsAcitvity extends TabActivity {
     }
     
     private void createStatusTabSpec(final TabHost tabHost) {
-    	TabHost.TabSpec statusTabSpec = tabHost.newTabSpec("status");
-        statusTabSpec.setIndicator(getString(R.string.status));
+    	TabHost.TabSpec statusTabSpec = tabHost.newTabSpec("updates");
+        statusTabSpec.setIndicator(getString(R.string.updates_tab));
         statusTabSpec.setContent(new Intent(this, UpdateLogActivity.class));
         tabHost.addTab(statusTabSpec);
     }
     
     private void createSettingsTabSpec(final TabHost tabHost) {
     	TabHost.TabSpec statusTabSpec = tabHost.newTabSpec("settings");
-        statusTabSpec.setIndicator(getString(R.string.settings), getResources().getDrawable(R.drawable.ic_tab_options));
+        statusTabSpec.setIndicator(getString(R.string.settings_tab), getResources().getDrawable(R.drawable.ic_tab_options));
         statusTabSpec.setContent(new Intent(this, SettingsActivity.class));
         tabHost.addTab(statusTabSpec);
     }

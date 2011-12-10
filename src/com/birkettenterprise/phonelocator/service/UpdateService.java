@@ -27,10 +27,12 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.birkettenterprise.phonelocator.application.PhonelocatorApplication;
 import com.birkettenterprise.phonelocator.broadcastreceiver.LocationPollerBroadcastReceiver;
 import com.birkettenterprise.phonelocator.database.UpdateLogDatabase;
 import com.birkettenterprise.phonelocator.domain.BeaconList;
 import com.birkettenterprise.phonelocator.domain.GpsBeacon;
+import com.birkettenterprise.phonelocator.protocol.AuthenticationFailedException;
 import com.birkettenterprise.phonelocator.protocol.CorruptStreamException;
 import com.birkettenterprise.phonelocator.protocol.Session;
 import com.birkettenterprise.phonelocator.util.Setting;
@@ -44,7 +46,7 @@ public class UpdateService extends WakefulIntentService {
 	public static final int UPDATE_LOCATION = 1;
 	public static final int SYNCHRONIZE_SETTINGS = 2;
 
-	private static final String TAG = "Phonelocator";
+	private static final String LOG_TAG = PhonelocatorApplication.LOG_TAG + "_UPDATE_SERVICE";
 	private UpdateLogDatabase mDatabase;
 	
 	public UpdateService() {
@@ -66,7 +68,7 @@ public class UpdateService extends WakefulIntentService {
 	}
 	
 	private void handleUpdateLocation(Intent intent) {
-		Log.v(TAG, "handleUpdateLocation");
+		Log.v(LOG_TAG, "handleUpdateLocation");
 		
 		Session session = new Session();
 		SettingsManager settingsManager = SettingsManager.getInstance(this, this);
@@ -75,15 +77,25 @@ public class UpdateService extends WakefulIntentService {
 			session.connect();
 			session.authenticate(SettingsHelper.getAuthenticationToken(PreferenceManager.getDefaultSharedPreferences(this)));
 			
-			Location location = getLocationFromIntent(intent);
-			sendUpdate(session, location, intent.getStringExtra(LocationPollerBroadcastReceiver.EXTRA_ERROR));
 			synchronizeSettings(session, settingsManager);
-			updateLog(location);
+			try {
+				Location location = getLocationFromIntent(intent);
+				sendUpdate(session, location, null);
+				updateLog(location);
+			} catch (LocationPollFailedException e) {
+				sendUpdate(session, null, e.getMessage());
+				updateLog(e);
+			}
 			
-		} catch (Exception e) {
+		} catch (IOException e) {
 			updateLog(e);
-			e.printStackTrace();
-			Log.d(TAG,"error synchronizing settings " + e.toString());
+			Log.d(LOG_TAG,"error sending updates settings " + e.toString());
+		} catch (CorruptStreamException e) {
+			updateLog(e);
+			Log.d(LOG_TAG,"error sending updates settings " + e.toString());
+		} catch (AuthenticationFailedException e) {
+			updateLog(e);
+			Log.d(LOG_TAG,"authentication failed");
 		} finally {
 			try {
 				settingsManager.releaseInstance(this);
@@ -94,11 +106,14 @@ public class UpdateService extends WakefulIntentService {
 		}
 	}
    
-	private static Location getLocationFromIntent(Intent intent) {
+	private static Location getLocationFromIntent(Intent intent) throws LocationPollFailedException {
 		Bundle bundle = intent.getExtras();
 		Location location = (Location) bundle.get(LocationPollerBroadcastReceiver.EXTRA_LOCATION);
 		if (location == null) {
 			location = (Location) bundle.get(LocationPollerBroadcastReceiver.EXTRA_LASTKNOWN);
+		}
+		if (location == null) {
+			throw new LocationPollFailedException(intent.getStringExtra(LocationPollerBroadcastReceiver.EXTRA_ERROR));
 		}
 		return location;
 	}

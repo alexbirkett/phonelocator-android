@@ -1,16 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
- <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-     android:layout_width="wrap_content"
-     android:layout_height="wrap_content"
-     android:orientation="vertical">
+<!-- - - Copyright 2011 Birkett Enterprise Ltd - - Licensed under the Apache 
+	License, Version 2.0 (the "License"); - you may not use this file except 
+	in compliance with the License. - You may obtain a copy of the License at 
+	- - http://www.apache.org/licenses/LICENSE-2.0 - - Unless required by applicable 
+	law or agreed to in writing, software - distributed under the License is 
+	distributed on an "AS IS" BASIS, - WITHOUT WARRANTIES OR CONDITIONS OF ANY 
+	KIND, either express or implied. - See the License for the specific language 
+	governing permissions and - limitations under the License. - -->
 
-     <TextView android:id="@+id/error"
-         android:textSize="16sp"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"/>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent"
+	android:stretchColumns="1">
 
-     <TextView android:id="@+id/timestamp"
-         android:textSize="16sp"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"/>
- </LinearLayout>
+	<TableRow>
+		<TextView android:text="@string/update_timestamp_description" android:padding="3dip" />
+
+		<TextView android:id="@+id/update_timestamp"
+			android:textSize="16sp" android:layout_width="wrap_content"
+			android:layout_height="wrap_content" />
+	</TableRow>
+
+	<TableRow android:id="@+id/location_timestamp_row">
+		<TextView android:text="@string/location_timestamp_description" android:padding="3dip"  />
+
+		<TextView android:id="@+id/location_timestamp"
+			android:textSize="16sp" android:layout_width="wrap_content"
+			android:layout_height="wrap_content" />
+	</TableRow>
+
+	<TableRow android:id="@+id/location_provider_row">
+		<TextView android:text="@string/location_provider_description" android:padding="3dip" />
+
+		<TextView android:id="@+id/location_provider" android:textSize="16sp"
+			android:layout_width="wrap_content" android:layout_height="wrap_content" />
+
+	</TableRow>
+
+	<TableRow android:id="@+id/error_row">
+		<TextView android:text="@string/error_description" android:padding="3dip" />
+
+		<TextView android:id="@+id/error" android:textSize="16sp"
+			android:layout_width="wrap_content" android:layout_height="wrap_content" />
+
+	</TableRow>
+
+</TableLayout>
