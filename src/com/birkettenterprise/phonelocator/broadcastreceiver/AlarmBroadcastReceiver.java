@@ -19,6 +19,7 @@
 package com.birkettenterprise.phonelocator.broadcastreceiver;
 
 import com.commonsware.cwac.locpoll.LocationPoller;
+import com.commonsware.cwac.locpoll.LocationPollerParameter;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -32,14 +33,22 @@ public class AlarmBroadcastReceiver extends BroadcastReceiver {
 	
 	private static long TIMEOUT = 20 * 1000;
 	private static String GPS_TIMEOUT_KEY = "gps_timeout";
+	private static String GPS_ENABLED = "gps_enabled";
 	
 	@Override
 	public void onReceive(Context context, Intent i) {
 		
+		LocationPollerParameter parameter = new LocationPollerParameter();
+		parameter.setIntentToBroadcastOnCompletion(new Intent(context, LocationBroadcastReceiver.class));
+		parameter.setTimeout(getGpsTimeout(context));
+		if (isGpsEnabled(context)) {
+			parameter.addProvider(LocationManager.GPS_PROVIDER);
+		}
+		parameter.addProvider(LocationManager.NETWORK_PROVIDER);
+		
+		
 		Intent intent = new Intent(context, LocationPoller.class);
-		intent.putExtra(LocationPoller.EXTRA_INTENT_TO_BROADCAST_ON_COMPLETION, new Intent(context, LocationBroadcastReceiver.class));
-		intent.putExtra(LocationPoller.EXTRA_PROVIDER, LocationManager.GPS_PROVIDER);
-		intent.putExtra(LocationPoller.EXTRA_TIMEOUT, getGpsTimeout(context));
+		intent.putExtra(LocationPollerParameter.KEY, parameter);
 		context.sendBroadcast(intent);
 	}
 	
@@ -48,5 +57,11 @@ public class AlarmBroadcastReceiver extends BroadcastReceiver {
 		String timeOutString = preferenceManager.getString(GPS_TIMEOUT_KEY,TIMEOUT+ "");
 		long timeout = Long.parseLong(timeOutString);
 		return timeout;
+	}
+	
+	private boolean isGpsEnabled(Context context) {
+		SharedPreferences preferenceManager = PreferenceManager.getDefaultSharedPreferences(context);
+		boolean gpsEnabled = preferenceManager.getBoolean(GPS_ENABLED, false);
+		return gpsEnabled;
 	}
 }

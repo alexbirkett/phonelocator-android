@@ -48,7 +48,7 @@
 	
 	<string-array name="gps_timeouts">
 		<item>30 seconds</item>
-		<item>Minute</item>
+		<item>1 Minute</item>
 		<item>2 Minutes</item>
 	</string-array>
 	

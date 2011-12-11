@@ -31,6 +31,11 @@
                 android:entryValues="@array/update_frequencies_values"
                 android:dialogTitle="@string/update_frequency"
                 android:dependency="periodic_updates_enabled" />
+   	<CheckBoxPreference
+		android:key="gps_enabled"
+		android:title="@string/gps_enabled"
+		android:summary="@string/gps_enabled_summary"
+		android:dependency="periodic_updates_enabled" />
    	<ListPreference
                 android:key="gps_timeout"
                 android:title="@string/gps_timeout"
@@ -38,5 +43,6 @@
                 android:entries="@array/gps_timeouts"
                 android:entryValues="@array/gps_timeout_values"
                 android:dialogTitle="@string/gps_timeout"
-                android:dependency="periodic_updates_enabled" />
+                android:dependency="gps_enabled"
+                />
 </PreferenceScreen>

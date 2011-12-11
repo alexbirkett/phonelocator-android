@@ -50,5 +50,7 @@
 	<string name="gps_timeout">GPS timeout</string>
 	<string name="gps_timeout_summary">How long to wait for a GPS lock</string>
 	
+	<string name="gps_enabled">GPS enabled</string>
+	<string name="gps_enabled_summary">Requires more battery and a clear view of the sky. Will fall back to network location if GPS not available.</string>		
 
 </resources>
