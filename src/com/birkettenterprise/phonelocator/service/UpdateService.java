@@ -36,7 +36,7 @@ import com.birkettenterprise.phonelocator.protocol.Session;
 import com.birkettenterprise.phonelocator.util.Setting;
 import com.birkettenterprise.phonelocator.util.SettingsHelper;
 import com.birkettenterprise.phonelocator.util.SettingsManager;
-import com.commonsware.cwac.locpoll.LocationPoller;
+import com.commonsware.cwac.locpoll.LocationPollerResult;
 
 public class UpdateService extends WakefulIntentService {
 
@@ -101,9 +101,10 @@ public class UpdateService extends WakefulIntentService {
 	}
    
 	private static Location getLocationFromIntent(Intent intent) throws LocationPollFailedException {
-		Location location = LocationPoller.getBestAvailableLocation(intent);
+		LocationPollerResult locationPollerResult = new LocationPollerResult(intent.getExtras());
+		Location location = locationPollerResult.getBestAvailableLocation();
 		if (location == null) {
-			throw new LocationPollFailedException(LocationPoller.getError(intent));
+			throw new LocationPollFailedException(locationPollerResult.getError());
 		}
 		return location;
 	}
