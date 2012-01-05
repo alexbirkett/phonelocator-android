@@ -66,10 +66,6 @@
 										  android:layout_height="wrap_content"
 										  android:gravity="right"
 										  android:padding="3dip"/>
-		<TextView android:text="@string/error_description" android:padding="3dip" />
-
-		<TextView android:id="@+id/error" android:textSize="16sp"
-			android:layout_width="wrap_content" android:layout_height="wrap_content" />
 
 	</TableRow>
 
