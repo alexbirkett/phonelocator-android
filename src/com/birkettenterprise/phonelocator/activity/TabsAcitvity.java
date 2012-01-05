@@ -18,6 +18,8 @@
 
 package com.birkettenterprise.phonelocator.activity;
 
+import net.hockeyapp.android.CheckUpdateTask;
+
 import com.birkettenterprise.phonelocator.R;
 
 import android.app.TabActivity;
@@ -26,14 +28,18 @@ import android.widget.TabHost;
 import android.content.Intent;
 
 public class TabsAcitvity extends TabActivity {
-
-    @Override
+	private CheckUpdateTask checkUpdateTask;
+	
+	private static final String HOCKEY_DOWNLOAD_URL = "https://rink.hockeyapp.net/apps/72d68762ad573f797a19899eb1df27a2";
+    
+	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         final TabHost tabHost = getTabHost();
         createStatusTabSpec(tabHost);
         createSettingsTabSpec(tabHost);
+        checkForUpdates();
     }
     
     private void createStatusTabSpec(final TabHost tabHost) {
@@ -49,4 +55,22 @@ public class TabsAcitvity extends TabActivity {
         statusTabSpec.setContent(new Intent(this, SettingsActivity.class));
         tabHost.addTab(statusTabSpec);
     }
+    
+    private void checkForUpdates() {
+        checkUpdateTask = (CheckUpdateTask)getLastNonConfigurationInstance();
+        if (checkUpdateTask != null) {
+          checkUpdateTask.attach(this);
+        }
+        else {
+          checkUpdateTask = new CheckUpdateTask(this, HOCKEY_DOWNLOAD_URL);
+          checkUpdateTask.execute();
+        }
+      }
+
+      @Override
+      public Object onRetainNonConfigurationInstance() {
+        checkUpdateTask.detach();
+        return checkUpdateTask;
+      }
+      
 }
