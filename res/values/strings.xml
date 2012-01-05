@@ -9,15 +9,7 @@
 	governing permissions and - limitations under the License. - -->
 
 <resources>
-	<string name="udpate_sucess">Update success!</string>
 	<string name="app_name">Phonelocator</string>
-	<string name="sign_in_dialog_title">One time sign in</string>
-	<string name="user_name">User name</string>
-	<string name="password">Password</string>
-	<string name="sign_up">Sign up</string>
-	<string name="sign_in">Sign in</string>
-	<string name="no_account">Don\'t have an account?</string>
-	<string name="sign_up_url">http://periodic.phonelocator.mobi/signup</string>
 	
 	<string name="updates_tab">Updates</string>
 	<string name="settings_tab">Settings</string>
@@ -32,11 +24,10 @@
 	<string name="retry">Retry</string>
 	<string name="quit">Quit</string>
 
-	<string name="registering_progress_dialog_message">Registering...</string>
+	<string name="registering_progress_dialog_message">Registering&#8230;</string>
 
 	<string name="no_updates_sent_message">Congratulations on installing Phonelocator!\n\nTo enable updates tap the settings tab and then tap enable updates.</string>
-
-
+	
 	<string name="update_timestamp_description">Update at: </string>
 	<string name="location_timestamp_description">Location acquired: </string>
 	<string name="location_provider_description">Location provider: </string>

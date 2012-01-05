@@ -26,8 +26,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.LocationManager;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
-
 
 public class AlarmBroadcastReceiver extends BroadcastReceiver {
 	
@@ -38,17 +38,20 @@ public class AlarmBroadcastReceiver extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent i) {
 		
-		LocationPollerParameter parameter = new LocationPollerParameter();
-		parameter.setIntentToBroadcastOnCompletion(new Intent(context, LocationBroadcastReceiver.class));
+
+		Bundle bundle = new Bundle();
+	
+		LocationPollerParameter parameter = new LocationPollerParameter(bundle);
 		parameter.setTimeout(getGpsTimeout(context));
 		if (isGpsEnabled(context)) {
 			parameter.addProvider(LocationManager.GPS_PROVIDER);
 		}
 		parameter.addProvider(LocationManager.NETWORK_PROVIDER);
-		
+		parameter.setIntentToBroadcastOnCompletion(new Intent(context, LocationBroadcastReceiver.class));
 		
 		Intent intent = new Intent(context, LocationPoller.class);
-		intent.putExtra(LocationPollerParameter.KEY, parameter);
+		intent.putExtras(bundle);
+		
 		context.sendBroadcast(intent);
 	}
 	
