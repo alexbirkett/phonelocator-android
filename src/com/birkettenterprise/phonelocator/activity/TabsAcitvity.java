@@ -32,7 +32,7 @@ public class TabsAcitvity extends TabActivity {
 	private CheckUpdateTask checkUpdateTask;
 	
 	private static final String HOCKEY_DOWNLOAD_URL = "https://rink.hockeyapp.net/";
-	private static final String APP_ID = "72d68762ad573f797a19899eb1df27a2";
+	private static final String APP_ID = "3f7ef8dc87d197b81fb86ff41dcc1314";
 	
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
