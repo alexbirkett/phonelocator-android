@@ -19,6 +19,7 @@
 package com.birkettenterprise.phonelocator.activity;
 
 import net.hockeyapp.android.CheckUpdateTask;
+import net.hockeyapp.android.CrashManager;
 
 import com.birkettenterprise.phonelocator.R;
 
@@ -30,8 +31,9 @@ import android.content.Intent;
 public class TabsAcitvity extends TabActivity {
 	private CheckUpdateTask checkUpdateTask;
 	
-	private static final String HOCKEY_DOWNLOAD_URL = "https://rink.hockeyapp.net/apps/72d68762ad573f797a19899eb1df27a2";
-    
+	private static final String HOCKEY_DOWNLOAD_URL = "https://rink.hockeyapp.net/";
+	private static final String APP_ID = "72d68762ad573f797a19899eb1df27a2";
+	
 	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,7 +64,7 @@ public class TabsAcitvity extends TabActivity {
           checkUpdateTask.attach(this);
         }
         else {
-          checkUpdateTask = new CheckUpdateTask(this, HOCKEY_DOWNLOAD_URL);
+          checkUpdateTask = new CheckUpdateTask(this, HOCKEY_DOWNLOAD_URL, APP_ID);
           checkUpdateTask.execute();
         }
       }
@@ -73,4 +75,14 @@ public class TabsAcitvity extends TabActivity {
         return checkUpdateTask;
       }
       
+      @Override
+      public void onResume() {
+        super.onResume();
+        checkForCrashes();
+      }
+
+      private void checkForCrashes() {
+        CrashManager.register(this, APP_ID);
+      }
+
 }
