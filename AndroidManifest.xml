@@ -20,7 +20,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 		package="com.birkettenterprise.phonelocator"
 		android:versionCode="1"
-		android:versionName="0.7">
+		android:versionName="0.11">
 	
 	<uses-sdk android:minSdkVersion="7" />
 	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
