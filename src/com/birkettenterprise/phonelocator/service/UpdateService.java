@@ -33,9 +33,9 @@ import com.birkettenterprise.phonelocator.domain.GpsBeacon;
 import com.birkettenterprise.phonelocator.protocol.AuthenticationFailedException;
 import com.birkettenterprise.phonelocator.protocol.CorruptStreamException;
 import com.birkettenterprise.phonelocator.protocol.Session;
-import com.birkettenterprise.phonelocator.util.Setting;
-import com.birkettenterprise.phonelocator.util.SettingsHelper;
-import com.birkettenterprise.phonelocator.util.SettingsManager;
+import com.birkettenterprise.phonelocator.settings.Setting;
+import com.birkettenterprise.phonelocator.settings.SettingsHelper;
+import com.birkettenterprise.phonelocator.settings.SettingsManager;
 import com.commonsware.cwac.locpoll.LocationPollerResult;
 
 public class UpdateService extends WakefulIntentService {

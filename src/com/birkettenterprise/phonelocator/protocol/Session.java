@@ -27,7 +27,7 @@ import java.net.UnknownHostException;
 import java.util.Vector;
 
 import com.birkettenterprise.phonelocator.domain.BeaconList;
-import com.birkettenterprise.phonelocator.util.Setting;
+import com.birkettenterprise.phonelocator.settings.Setting;
 
 public class Session {
 

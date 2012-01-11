@@ -16,7 +16,7 @@
  * 
  */
 
-package com.birkettenterprise.phonelocator.util;
+package com.birkettenterprise.phonelocator.settings;
 
 import java.util.Map;
 import java.util.Vector;

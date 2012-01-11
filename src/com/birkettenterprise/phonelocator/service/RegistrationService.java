@@ -23,9 +23,9 @@ import java.util.Vector;
 
 import com.birkettenterprise.phonelocator.protocol.RegistrationResponse;
 import com.birkettenterprise.phonelocator.protocol.Session;
-import com.birkettenterprise.phonelocator.util.Setting;
-import com.birkettenterprise.phonelocator.util.SettingsHelper;
-import com.birkettenterprise.phonelocator.util.SettingsManager;
+import com.birkettenterprise.phonelocator.settings.Setting;
+import com.birkettenterprise.phonelocator.settings.SettingsHelper;
+import com.birkettenterprise.phonelocator.settings.SettingsManager;
 
 import android.app.Service;
 import android.content.Intent;

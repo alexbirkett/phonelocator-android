@@ -16,11 +16,11 @@
  * 
  */
 
-package com.birkettenterprise.phonelocator.util;
+package com.birkettenterprise.phonelocator.settings;
 
 import com.birkettenterprise.phonelocator.broadcastreceiver.AlarmBroadcastReceiver;
-import com.birkettenterprise.phonelocator.util.Setting.BooleanSettings;
-import com.birkettenterprise.phonelocator.util.Setting.StringSettings;
+import com.birkettenterprise.phonelocator.settings.Setting.BooleanSettings;
+import com.birkettenterprise.phonelocator.settings.Setting.StringSettings;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;

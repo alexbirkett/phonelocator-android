@@ -27,7 +27,7 @@ import java.util.Vector;
 import android.util.Log;
 
 import com.birkettenterprise.phonelocator.application.PhonelocatorApplication;
-import com.birkettenterprise.phonelocator.util.Setting;
+import com.birkettenterprise.phonelocator.settings.Setting;
 
 public class SettingsProtocol {
 

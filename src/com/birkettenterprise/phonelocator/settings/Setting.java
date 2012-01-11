@@ -17,7 +17,7 @@
  */
 
 
-package com.birkettenterprise.phonelocator.util;
+package com.birkettenterprise.phonelocator.settings;
 
 public class Setting {
 	

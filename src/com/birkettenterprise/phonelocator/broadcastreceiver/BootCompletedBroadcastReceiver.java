@@ -18,7 +18,8 @@
 
 package com.birkettenterprise.phonelocator.broadcastreceiver;
 
-import com.birkettenterprise.phonelocator.util.SettingsHelper;
+import com.birkettenterprise.phonelocator.settings.SettingsHelper;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;

@@ -19,7 +19,7 @@
 package com.birkettenterprise.phonelocator.activity;
 
 import com.birkettenterprise.phonelocator.R;
-import com.birkettenterprise.phonelocator.util.SettingsManager;
+import com.birkettenterprise.phonelocator.settings.SettingsManager;
 
 import android.os.Bundle;
 import android.preference.PreferenceActivity;

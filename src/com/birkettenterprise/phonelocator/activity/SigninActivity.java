@@ -20,7 +20,7 @@ package com.birkettenterprise.phonelocator.activity;
 
 import com.birkettenterprise.phonelocator.R;
 import com.birkettenterprise.phonelocator.service.RegistrationService;
-import com.birkettenterprise.phonelocator.util.SettingsHelper;
+import com.birkettenterprise.phonelocator.settings.SettingsHelper;
 
 import android.app.Activity;
 import android.app.AlertDialog;
