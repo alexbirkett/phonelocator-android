@@ -32,6 +32,11 @@ public class Setting {
 	    public static final String REGISTERED = "registered";
 	}
 	
+	public class Integer64Settings {
+		public static final String IMEI = "imei"; 
+	    public static final String IMSI = "imsi";
+	}
+	
 	private long mTimestamp;
 	private String mName;
 	private Object mValue;

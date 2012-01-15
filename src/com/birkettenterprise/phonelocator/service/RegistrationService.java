@@ -134,6 +134,7 @@ public class RegistrationService extends Service {
 
     @Override
     public void onCreate() {
+		//android.os.Debug.waitForDebugger();
     	super.onCreate();
     	mHandler = new Handler();
     	mSession = new Session();

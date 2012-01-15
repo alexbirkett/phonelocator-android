@@ -36,6 +36,7 @@ public class SettingsProtocol {
 	public static final short BOOLEAN_OFFSET = 0;
 	public static final short INTEGER_OFFSET = 64;
 	public static final short INT64_OFFSET = 128;
+	
 	public static final short STRING_OFFSET = 160;
 	public static final short END_OF_SETTINGS_MARKER = 255;
 	
@@ -54,6 +55,11 @@ public class SettingsProtocol {
 	private class IntegerSettings {
 		public static final int UPDATE_FREQUENCY = 3;
 	}
+	
+	private class Integer64Settings {
+		public static final int IMEI = 0;
+		public static final int IMSI = 1;
+	}
 
 	public static void writeSettings(Vector<Setting> settings, DataOutputStream outputStream) throws IOException {
 		outputStream.writeByte(PROTOCOL_VERSION_2);
@@ -63,8 +69,7 @@ public class SettingsProtocol {
 		} else {
 			for (Setting setting : settings) {
 				try {
-					byte settingId = getSettingIdForSettingName(setting
-							.getName());
+					int settingId = getSettingIdForSettingName(setting.getName());
 					writeSetting(settingId, setting.getTimestamp(),
 							setting.getValue(), outputStream);
 				} catch (UnknowSettingException e) {
@@ -93,13 +98,17 @@ public class SettingsProtocol {
 		return settings;
 	}
 
-	private static byte getSettingIdForSettingName(String settingName) throws UnknowSettingException {
+	private static int getSettingIdForSettingName(String settingName) throws UnknowSettingException {
 		if (settingName.equals(Setting.BooleanSettings.PERIODIC_UPDATES_ENABLED)) {
-			return ((byte)(BooleanSettings.PERIODIC_UPDATE_ENABLED + BOOLEAN_OFFSET));
+			return BooleanSettings.PERIODIC_UPDATE_ENABLED + BOOLEAN_OFFSET;
 		} else if (settingName.equals(Setting.BooleanSettings.REGISTERED)) {
 			return BooleanSettings.REGISTERED + BOOLEAN_OFFSET;
 		} else if (settingName.equals(Setting.StringSettings.UPDATE_FREQUENCY)) {
 			return IntegerSettings.UPDATE_FREQUENCY + INTEGER_OFFSET;
+		} else if (settingName.equals(Setting.Integer64Settings.IMEI)) {
+			return Integer64Settings.IMEI + INT64_OFFSET;
+		} else if (settingName.equals(Setting.Integer64Settings.IMSI)) {
+			return Integer64Settings.IMSI + INT64_OFFSET;
 		}
 		throw new UnknowSettingException();
 	}
@@ -171,7 +180,16 @@ public class SettingsProtocol {
 	
 			outputStream.writeInt(intToWrite);	
 		} else if (INT64_OFFSET <= settingId && settingId < STRING_OFFSET) {
-			writeBigInteger(outputStream, (BigInteger)setting);
+			
+			BigInteger bigIntegerToWrite = null;
+			if (setting instanceof String) {
+				bigIntegerToWrite = new BigInteger((String)setting);
+			} else if (setting instanceof BigInteger){
+				bigIntegerToWrite = (BigInteger)setting;
+			}
+			if (bigIntegerToWrite != null) {
+				writeBigInteger(outputStream, bigIntegerToWrite);
+			}
 		} else if (STRING_OFFSET <= settingId && settingId < END_OF_SETTINGS_MARKER) {
 			String stringToWrite = (String)setting;
 			outputStream.writeUTF(stringToWrite);
@@ -202,7 +220,7 @@ public class SettingsProtocol {
 	private static void writeBigInteger(DataOutputStream stream, BigInteger value) throws IOException {
 		byte[] bigIntegerAsByteArray = ((BigInteger)value).toByteArray();
         byte[] byteArray = new byte[8];
-        System.arraycopy(bigIntegerAsByteArray, 0, byteArray, 0, bigIntegerAsByteArray.length);
+        System.arraycopy(bigIntegerAsByteArray, 0, byteArray, 8 - bigIntegerAsByteArray.length, bigIntegerAsByteArray.length);
 		stream.write(byteArray);
 	}
 }

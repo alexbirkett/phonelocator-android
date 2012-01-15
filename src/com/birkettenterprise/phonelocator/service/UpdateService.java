@@ -21,9 +21,12 @@ package com.birkettenterprise.phonelocator.service;
 import java.io.IOException;
 import java.util.Vector;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.preference.PreferenceManager;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.birkettenterprise.phonelocator.application.PhonelocatorApplication;
@@ -33,6 +36,7 @@ import com.birkettenterprise.phonelocator.domain.GpsBeacon;
 import com.birkettenterprise.phonelocator.protocol.AuthenticationFailedException;
 import com.birkettenterprise.phonelocator.protocol.CorruptStreamException;
 import com.birkettenterprise.phonelocator.protocol.Session;
+import com.birkettenterprise.phonelocator.settings.EnvironmentalSettingsSetter;
 import com.birkettenterprise.phonelocator.settings.Setting;
 import com.birkettenterprise.phonelocator.settings.SettingsHelper;
 import com.birkettenterprise.phonelocator.settings.SettingsManager;
@@ -51,6 +55,7 @@ public class UpdateService extends WakefulIntentService {
 	
 	public UpdateService() {
 		super("PhonelocatorSerivce");
+		//android.os.Debug.waitForDebugger();
 		mDatabase = new UpdateLogDatabase(this);
 	}
 
@@ -67,9 +72,15 @@ public class UpdateService extends WakefulIntentService {
 		Session session = new Session();
 		SettingsManager settingsManager = SettingsManager.getInstance(this, this);
 		
+		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+		
+	    TelephonyManager telephonyManager = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
+		
+		EnvironmentalSettingsSetter.setIMEIIMSI(sharedPreferences, telephonyManager);
+		
 		try {
 			session.connect();
-			session.authenticate(SettingsHelper.getAuthenticationToken(PreferenceManager.getDefaultSharedPreferences(this)));
+			session.authenticate(SettingsHelper.getAuthenticationToken(sharedPreferences));
 			
 			synchronizeSettings(session, settingsManager);
 			try {
