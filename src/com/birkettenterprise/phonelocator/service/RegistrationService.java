@@ -23,12 +23,14 @@ import java.util.Vector;
 
 import com.birkettenterprise.phonelocator.protocol.RegistrationResponse;
 import com.birkettenterprise.phonelocator.protocol.Session;
+import com.birkettenterprise.phonelocator.settings.EnvironmentalSettingsSetter;
 import com.birkettenterprise.phonelocator.settings.Setting;
 import com.birkettenterprise.phonelocator.settings.SettingsHelper;
 import com.birkettenterprise.phonelocator.settings.SettingsManager;
 
 import android.app.Service;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
@@ -51,13 +53,14 @@ public class RegistrationService extends Service {
     private class SynchronizeRunnable implements Runnable {
 
 		public void run() {
+		
 		SettingsManager settingsManager = SettingsManager.getInstance(this, RegistrationService.this);
-			
 			try {
 				mSession.connect();
 				mSession.authenticate(SettingsHelper.getAuthenticationToken(PreferenceManager.getDefaultSharedPreferences(RegistrationService.this)));		
 				Vector<Setting> settings =  mSession.synchronizeSettings(settingsManager.getSettingsModifiedSinceLastSyncrhonization());
 				settingsManager.setSettings(settings);
+				settingsManager.updateSettingsSynchronizationTimestamp();
 			} catch (Throwable e) {
 				mException = e;
 			} finally {
@@ -89,10 +92,17 @@ public class RegistrationService extends Service {
 				mRegistrationResponse = mSession.register();
 				mSession.authenticate(mRegistrationResponse.getAuthenticationToken());
 				
-				Vector<Setting> settings =  mSession.synchronizeSettings(null);
-				settingsManager.setSettings(settings);
+				Vector<Setting> settings =  mSession.createDefaultSettings();
 				
-				SettingsHelper.storeResponse(PreferenceManager.getDefaultSharedPreferences(RegistrationService.this), mRegistrationResponse.getAuthenticationToken(), mRegistrationResponse.getRegistrationUrl());
+				SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(RegistrationService.this);
+				EnvironmentalSettingsSetter.updateEnvironmentalSettingsIfRequired(sharedPreferences, RegistrationService.this);
+			
+				settingsManager.setSettings(settings);
+				settings = mSession.synchronizeSettings(settingsManager.getSettingsModifiedSinceLastSyncrhonization());
+				settingsManager.setSettings(settings);
+				settingsManager.updateSettingsSynchronizationTimestamp();
+				
+				SettingsHelper.storeResponse(sharedPreferences, mRegistrationResponse.getAuthenticationToken(), mRegistrationResponse.getRegistrationUrl());
 			} catch (Throwable e) {
 				mException = e;
 			} finally {

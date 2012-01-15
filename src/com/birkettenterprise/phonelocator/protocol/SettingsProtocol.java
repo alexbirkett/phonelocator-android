@@ -92,8 +92,7 @@ public class SettingsProtocol {
 			for (Setting setting : settings) {
 				try {
 					int settingId = getSettingIdForSettingName(setting.getName());
-					writeSetting(settingId, setting.getTimestamp(),
-							setting.getValue(), outputStream);
+					writeSetting(settingId, setting.getTimestamp(), setting.getValue(), outputStream);
 				} catch (UnknowSettingException e) {
 					// ignore unknown settings
 				}

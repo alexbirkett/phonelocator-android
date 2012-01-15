@@ -181,10 +181,9 @@ public class SettingsManager implements OnSharedPreferenceChangeListener {
 			}
 			editor.commit();
 		}
-		updateSettingsSynchronizationTimestamp(mSharedPreferences);
 	}	
 	
-	public void updateSettingsSynchronizationTimestamp(SharedPreferences sharedPreferences) {
+	public void updateSettingsSynchronizationTimestamp() {
 		SettingsHelper.storeLong(mSharedPreferences, SETTINGS_SYNCHRONIZATION_TIMESTAMP, System.currentTimeMillis());
 	}
 	

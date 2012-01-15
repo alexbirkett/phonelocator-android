@@ -3,15 +3,29 @@ package com.birkettenterprise.phonelocator.settings;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
-import android.provider.Contacts.Settings;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.telephony.TelephonyManager;
 
 
 public class EnvironmentalSettingsSetter {
 	
 	public static Pattern mPattern = Pattern.compile("(\\d+)\\.(\\d+)");
+	
+	public static void updateEnvironmentalSettingsIfRequired(SharedPreferences sharedPreferences, Context context) {
+
+		
+	    TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+		EnvironmentalSettingsSetter.setIMEIIMSIIfRequired(sharedPreferences, telephonyManager);
+		
+		try {
+			EnvironmentalSettingsSetter.setVersionIfRequired(sharedPreferences, context.getPackageManager().getPackageInfo(context.getPackageName(), 0));
+		} catch (NameNotFoundException e1) {
+		}
+		
+	}
 	
 	public static void setIMEIIMSIIfRequired(SharedPreferences sharedPreferences, TelephonyManager telephonyManager) {
 		String imei = telephonyManager.getDeviceId();

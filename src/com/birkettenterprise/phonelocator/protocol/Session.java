@@ -139,5 +139,9 @@ public class Session {
 		dataOutputStream.flush();
 		return SettingsProtocol.readingSettings(new DataInputStream(mSocket.getInputStream()));
 	}
+	
+	public Vector<Setting> createDefaultSettings() throws IOException {
+		return synchronizeSettings(null);
+	}
 
 }
