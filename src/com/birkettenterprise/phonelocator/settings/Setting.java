@@ -34,7 +34,13 @@ public class Setting {
 	
 	public class Integer64Settings {
 		public static final String IMEI = "imei"; 
-	    public static final String IMSI = "imsi";
+		public static final String IMSI = "imsi";
+	}
+	
+	public class IntegerSettings {
+		public static final String VERSION_MINOR = "version_minor"; 
+		public static final String VERSION_MAJOR = "version_major"; 
+		public static final String VERSION_REVISION = "version_revision";
 	}
 	
 	private long mTimestamp;

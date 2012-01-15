@@ -53,14 +53,36 @@ public class SettingsProtocol {
 	}
 	
 	private class IntegerSettings {
-		public static final int UPDATE_FREQUENCY = 3;
+
+		public static final int VERSION_MAJOR = 0;
+		public static final int VERSION_MINOR = 1;
+		public static final int VERSION_REVISION = 2;
+		public static final int SERVER_UPDATE_INTERVAL = 3;
+		public static final int IAPID = 4;
+		public static final int RESERVED = 5;
+		public static final int CONNECTION_TIMEOUT = 6;
+		public static final int GPS_SESSION_TIMEOUT = 7;
+		public static final int GPS_UPDATE_TIMEOUT = 8;
+		public static final int GPS_UPDATE_LOWSIGNAL_TIMEOUT = 9;
+		public static final int GPS_POLL_INTERVAL = 10;
+		public static final int GPS_LOW_SIGNAL_THRESHOLD = 11;
+		public static final int GPS_MINGOODSATELLITECOUNT = 12;
+		public static final int TRANSACTION_CONTROLLER_TIMEOUT = 13;
+		public static final int LANGUAGE = 14;
+		public static final int VARIANT = 15;
+		public static final int PORT_NUMBER = 16;
+		public static final int POSITIONING_MODULE_UID = 17;
+		public static final int SMS_GPS_REST_TIME = 18;
+		public static final int SMS_SENDING_FAILED_RETRY_TIMEOUT = 19;
+		public static final int GPS_LOCK_WAIT_TIME = 20;
+		public static final int UPDATE_FREQUENCY_WHEN_POWER_CONNECTED = 21;
 	}
 	
 	private class Integer64Settings {
 		public static final int IMEI = 0;
 		public static final int IMSI = 1;
 	}
-
+	
 	public static void writeSettings(Vector<Setting> settings, DataOutputStream outputStream) throws IOException {
 		outputStream.writeByte(PROTOCOL_VERSION_2);
 		
@@ -104,11 +126,17 @@ public class SettingsProtocol {
 		} else if (settingName.equals(Setting.BooleanSettings.REGISTERED)) {
 			return BooleanSettings.REGISTERED + BOOLEAN_OFFSET;
 		} else if (settingName.equals(Setting.StringSettings.UPDATE_FREQUENCY)) {
-			return IntegerSettings.UPDATE_FREQUENCY + INTEGER_OFFSET;
+			return IntegerSettings.SERVER_UPDATE_INTERVAL + INTEGER_OFFSET;
 		} else if (settingName.equals(Setting.Integer64Settings.IMEI)) {
 			return Integer64Settings.IMEI + INT64_OFFSET;
 		} else if (settingName.equals(Setting.Integer64Settings.IMSI)) {
 			return Integer64Settings.IMSI + INT64_OFFSET;
+		} else if (settingName.equals(Setting.IntegerSettings.VERSION_MAJOR)) {
+			return IntegerSettings.VERSION_MAJOR + INTEGER_OFFSET;
+		} else if (settingName.equals(Setting.IntegerSettings.VERSION_MINOR)) {
+			return IntegerSettings.VERSION_MINOR + INTEGER_OFFSET;
+		} else if (settingName.equals(Setting.IntegerSettings.VERSION_REVISION)) {
+			return IntegerSettings.VERSION_REVISION + INTEGER_OFFSET;
 		}
 		throw new UnknowSettingException();
 	}
@@ -118,7 +146,7 @@ public class SettingsProtocol {
 			return Setting.BooleanSettings.PERIODIC_UPDATES_ENABLED;
 		} else if (settingsId == BooleanSettings.REGISTERED + BOOLEAN_OFFSET) {
 			return Setting.BooleanSettings.REGISTERED;
-		} else if (settingsId ==  IntegerSettings.UPDATE_FREQUENCY + INTEGER_OFFSET) {
+		} else if (settingsId ==  IntegerSettings.SERVER_UPDATE_INTERVAL + INTEGER_OFFSET) {
 			return Setting.StringSettings.UPDATE_FREQUENCY;
 		}
 		throw new UnknowSettingException();

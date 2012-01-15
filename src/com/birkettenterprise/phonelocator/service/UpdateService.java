@@ -24,6 +24,7 @@ import java.util.Vector;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.location.Location;
 import android.preference.PreferenceManager;
 import android.telephony.TelephonyManager;
@@ -66,6 +67,19 @@ public class UpdateService extends WakefulIntentService {
 		mDatabase.close();
 	}
 	
+	private void updateEnvironmentalSettingsIfRequired(SharedPreferences sharedPreferences) {
+
+		
+	    TelephonyManager telephonyManager = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
+		EnvironmentalSettingsSetter.setIMEIIMSIIfRequired(sharedPreferences, telephonyManager);
+		
+		try {
+			EnvironmentalSettingsSetter.setVersionIfRequired(sharedPreferences, getPackageManager().getPackageInfo(getPackageName(), 0));
+		} catch (NameNotFoundException e1) {
+		}
+		
+	}
+	
 	private void handleUpdateLocation(Intent intent) {
 		Log.v(LOG_TAG, "handleUpdateLocation");
 		
@@ -73,10 +87,7 @@ public class UpdateService extends WakefulIntentService {
 		SettingsManager settingsManager = SettingsManager.getInstance(this, this);
 		
 		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-		
-	    TelephonyManager telephonyManager = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
-		
-		EnvironmentalSettingsSetter.setIMEIIMSI(sharedPreferences, telephonyManager);
+		updateEnvironmentalSettingsIfRequired(sharedPreferences);
 		
 		try {
 			session.connect();

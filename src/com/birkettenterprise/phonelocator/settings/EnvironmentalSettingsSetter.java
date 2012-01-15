@@ -1,20 +1,34 @@
 package com.birkettenterprise.phonelocator.settings;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.provider.Contacts.Settings;
 import android.telephony.TelephonyManager;
 
 
 public class EnvironmentalSettingsSetter {
 	
-	public static void setIMEIIMSI(SharedPreferences sharedPreferences, TelephonyManager telephonyManager) {
+	public static Pattern mPattern = Pattern.compile("(\\d+)\\.(\\d+)");
+	
+	public static void setIMEIIMSIIfRequired(SharedPreferences sharedPreferences, TelephonyManager telephonyManager) {
 		String imei = telephonyManager.getDeviceId();
-		setIfRequired(sharedPreferences, Setting.Integer64Settings.IMEI, imei);
+		setStringIfRequired(sharedPreferences, Setting.Integer64Settings.IMEI, imei);
 		
 		String imsi = telephonyManager.getSimSerialNumber();
-		setIfRequired(sharedPreferences, Setting.Integer64Settings.IMSI, imsi);
+		setStringIfRequired(sharedPreferences, Setting.Integer64Settings.IMSI, imsi);
 	}
 	
-	private static void setIfRequired(SharedPreferences sharedPreferences, String key, String value) {
+	public static void setVersionIfRequired(SharedPreferences sharedPreferences, PackageInfo packageInfo) {
+		Version version = getVersion(packageInfo);
+		setIntIfRequired(sharedPreferences, Setting.IntegerSettings.VERSION_MAJOR, version.mMajor);
+		setIntIfRequired(sharedPreferences, Setting.IntegerSettings.VERSION_MINOR, version.mMinor);
+		setIntIfRequired(sharedPreferences, Setting.IntegerSettings.VERSION_REVISION, version.mRevision);
+	}
+	
+	private static void setStringIfRequired(SharedPreferences sharedPreferences, String key, String value) {
 		String valueStoredInSettings = sharedPreferences.getString(key, "");
 
 		if (!valueStoredInSettings.equals(value)) {
@@ -22,5 +36,30 @@ public class EnvironmentalSettingsSetter {
 			editor.putString(key, value);
 			editor.commit();
 		}
+	}
+	
+	private static void setIntIfRequired(SharedPreferences sharedPreferences, String key, int value) {
+		int valueStoredInSettings = sharedPreferences.getInt(key, 0);
+
+		if (value != valueStoredInSettings) {
+			SharedPreferences.Editor editor = sharedPreferences.edit();
+			editor.putInt(key, value);
+			editor.commit();
+		}
+	}
+	
+	static Version getVersion(PackageInfo packageInfo) {
+		return getVersion(packageInfo.versionName, packageInfo.versionCode);	
+	}
+	
+	static Version getVersion(String versionName, int versionCode) {
+		Version version = new Version();
+		version.mRevision = versionCode;
+		Matcher matcher = mPattern.matcher(versionName);
+		if (matcher.matches()) {
+			version.mMajor = Integer.parseInt(matcher.group(1));
+			version.mMinor =  Integer.parseInt(matcher.group(2));
+		}
+		return version;
 	}
 }
