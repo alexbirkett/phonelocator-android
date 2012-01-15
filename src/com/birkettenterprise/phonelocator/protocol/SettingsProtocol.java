@@ -246,8 +246,9 @@ public class SettingsProtocol {
 	
 	private static void writeBigInteger(DataOutputStream stream, BigInteger value) throws IOException {
 		byte[] bigIntegerAsByteArray = ((BigInteger)value).toByteArray();
+		int desPos = 8 - bigIntegerAsByteArray.length;
         byte[] byteArray = new byte[8];
-        System.arraycopy(bigIntegerAsByteArray, 0, byteArray, 8 - bigIntegerAsByteArray.length, bigIntegerAsByteArray.length);
+        System.arraycopy(bigIntegerAsByteArray, 0, byteArray, desPos > 0 ? desPos: 0, bigIntegerAsByteArray.length > 8 ? 8 : bigIntegerAsByteArray.length);
 		stream.write(byteArray);
 	}
 }
