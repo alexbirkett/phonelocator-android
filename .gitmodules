@@ -1,0 +1,6 @@
+[submodule "HockeyKit"]
+	path = HockeyKit
+	url = git@github.com:alexbirkett/HockeyKit.git
+[submodule "cwac-locpoll"]
+	path = cwac-locpoll
+	url = git@github.com:alexbirkett/cwac-locpoll.git
