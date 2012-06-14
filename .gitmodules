@@ -4,3 +4,6 @@
 [submodule "cwac-locpoll"]
 	path = cwac-locpoll
 	url = git@github.com:alexbirkett/cwac-locpoll.git
+[submodule "ActionBarSherlock"]
+	path = ActionBarSherlock
+	url = git://github.com/alexbirkett/ActionBarSherlock.git

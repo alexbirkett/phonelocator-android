@@ -100,7 +100,7 @@ public class SigninActivity extends Activity {
 	}
 	
 	private void startStatusActvity() {
-		Intent intent = new Intent(this, TabsAcitvity.class);
+		Intent intent = new Intent(this, UpdateLogActivity.class);
         startActivity(intent);
 		finish();
 	}

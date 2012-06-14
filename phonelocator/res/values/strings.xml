@@ -14,6 +14,9 @@
 	<string name="updates_tab">Updates</string>
 	<string name="settings_tab">Settings</string>
 
+	<string name="settings_menu_item">settings</string>
+	<string name="web_site_menu_item">web site</string>
+		
 	<string name="periodic_updates">Enable updates</string>
 	<string name="periodic_updates_summary">Send location to server periodically</string>
 

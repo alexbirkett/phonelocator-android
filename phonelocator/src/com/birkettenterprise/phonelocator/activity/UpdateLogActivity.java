@@ -1,6 +1,6 @@
 /**
  * 
- *  Copyright 2011 Birkett Enterprise Ltd
+ *  Copyright 2011, 2012 Birkett Enterprise Ltd
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,13 +20,17 @@ package com.birkettenterprise.phonelocator.activity;
 
 import java.util.Date;
 
+import com.actionbarsherlock.app.SherlockListActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 import com.birkettenterprise.phonelocator.R;
 import com.birkettenterprise.phonelocator.database.UpdateLogDatabase;
 
-import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,8 +38,15 @@ import android.widget.ResourceCursorAdapter;
 import android.widget.TextView;
 import android.view.ViewGroup;
 
-public class UpdateLogActivity extends ListActivity {
+public class UpdateLogActivity extends SherlockListActivity {
     
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+	    MenuInflater inflater = getSupportMenuInflater();
+	    inflater.inflate(R.menu.update_log_activity_menu, menu);
+	    return true;
+	}
+	
 	private class ErrorNotResolvedException extends Exception {
 		private static final long serialVersionUID = 1L;
 	}
@@ -52,7 +63,8 @@ public class UpdateLogActivity extends ListActivity {
 	@Override
     public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-        setContentView(R.layout.update_log);
+		
+		setContentView(R.layout.update_log);
         mCursor = new UpdateLogDatabase(this).getUpdateTable();
           
         startManagingCursor(mCursor);
@@ -152,4 +164,31 @@ public class UpdateLogActivity extends ListActivity {
     	((ResourceCursorAdapter)getListAdapter()).notifyDataSetChanged();
     }
     
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+    	
+    	// Handle item selection
+        switch (item.getItemId()) {
+        case R.id.web_site:
+        	startWebSite();
+        	return true;
+        
+        case R.id.settings:
+        	startSettings();
+        	return true;
+        	
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+    private static final String WEB_SITE_URL = "http://phonelocator.mobi";
+    void startWebSite() {
+    	Intent viewIntent = new Intent("android.intent.action.VIEW", Uri.parse(WEB_SITE_URL));
+    	startActivity(viewIntent);
+    }
+    
+    void startSettings() {
+    	Intent intent = new Intent(this, SettingsActivity.class);
+    	startActivity(intent);
+    }
 }
