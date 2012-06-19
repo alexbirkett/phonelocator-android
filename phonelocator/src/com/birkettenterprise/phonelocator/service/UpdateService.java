@@ -29,6 +29,7 @@ import android.util.Log;
 
 import com.birkettenterprise.phonelocator.application.PhonelocatorApplication;
 import com.birkettenterprise.phonelocator.database.UpdateLogDatabase;
+import com.birkettenterprise.phonelocator.database.UpdateLogDatabaseContentProvider;
 import com.birkettenterprise.phonelocator.domain.BeaconList;
 import com.birkettenterprise.phonelocator.domain.GpsBeacon;
 import com.birkettenterprise.phonelocator.protocol.AuthenticationFailedException;
@@ -132,6 +133,8 @@ public class UpdateService extends WakefulIntentService {
 	
 	private void updateLog(Location location) {
 		mDatabase.updateLog(location);
+		
+		getContentResolver().notifyChange(UpdateLogDatabaseContentProvider.URI, null);
 	}
 	
 	private void updateLog(Exception e) {

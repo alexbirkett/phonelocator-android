@@ -27,10 +27,12 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.birkettenterprise.phonelocator.R;
-import com.birkettenterprise.phonelocator.database.UpdateLogDatabase;
+import com.birkettenterprise.phonelocator.database.UpdateLogDatabaseContentProvider;
 
 import android.content.Context;
+import android.content.CursorLoader;
 import android.content.Intent;
+import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -41,7 +43,7 @@ import android.widget.TextView;
 import android.view.ViewGroup;
 import net.hockeyapp.android.HockeyAppController;
 
-public class UpdateLogActivity extends SherlockControllerActivity {
+public class UpdateLogActivity extends SherlockControllerActivity implements android.app.LoaderManager.LoaderCallbacks<Cursor>{
     
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -54,8 +56,6 @@ public class UpdateLogActivity extends SherlockControllerActivity {
 		private static final long serialVersionUID = 1L;
 	}
 	
-	private Cursor mCursor;
-	
 	//private static int ID_COLUMN_INDEX = 0;
 	private static int UPDATE_TIMESTAMP_COLUMN_INDEX = 1;
 	private static int ERROR_TYPE_COLUMN_INDEX = 2;
@@ -65,7 +65,8 @@ public class UpdateLogActivity extends SherlockControllerActivity {
 	
 	private ListController mListController;
 	
-	
+	private ResourceCursorAdapter mResourceCursorAdapter;
+    
 	@Override
     public void onCreate(Bundle savedInstanceState) {
 		// add controllers before you call super.onCreate()
@@ -80,53 +81,52 @@ public class UpdateLogActivity extends SherlockControllerActivity {
 		
 		setContentView(mListController.getView());
 		
-        mCursor = new UpdateLogDatabase(this).getUpdateTable();
-          
-        startManagingCursor(mCursor);
 
+		mResourceCursorAdapter = new ResourceCursorAdapter(UpdateLogActivity.this, R.layout.update_log_list_item, null, 0) {
+
+		     
+	        @Override
+	        public View newView(Context context, Cursor cur, ViewGroup parent) {
+	            LayoutInflater li = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+	            return li.inflate(R.layout.update_log_list_item, parent, false);
+	        }
+
+	        @Override
+	        public void bindView(View view, Context context, Cursor cursor) {
+	          String error = cursor.getString(ERROR_TYPE_COLUMN_INDEX);
+	 
+	          TextView updateTimestampView = (TextView) view.findViewById(R.id.update_timestamp);
+	          setTimeStamp(updateTimestampView,cursor,UPDATE_TIMESTAMP_COLUMN_INDEX);
+	          
+	          View errorRow = view.findViewById(R.id.error_row);
+	          View locationProviderRow = view.findViewById(R.id.location_provider_row);
+	          View locationTimestampRow = view.findViewById(R.id.location_timestamp_row);
+	          if (error == null) {
+	        	  errorRow.setVisibility(View.GONE); 
+	        	  locationProviderRow.setVisibility(View.VISIBLE);
+	        	  locationTimestampRow.setVisibility(View.VISIBLE);
+	        	  
+	        	  setTimeStamp((TextView) view.findViewById(R.id.location_timestamp), cursor, LOCATION_TIMESTAMP_COLUMN_INDEX);
+	        	  TextView locationProviderTextView = (TextView) view.findViewById(R.id.location_provider);
+	        	  locationProviderTextView.setText(cursor.getString(PROVIDER_COLUMN_INDEX));
+	              
+	          } else {
+	        	  errorRow.setVisibility(View.VISIBLE);
+	        	  locationProviderRow.setVisibility(View.GONE);
+	        	  locationTimestampRow.setVisibility(View.GONE);
+	        	  
+	        	  TextView errorView = (TextView) view.findViewById(R.id.error);
+	        	  setError(errorView, cursor);
+	          }
+	        }
+	    };
+   
+        getLoaderManager().initLoader(0, null, this);
         
-        ResourceCursorAdapter resourceCursorAdapter = new ResourceCursorAdapter(UpdateLogActivity.this, R.layout.update_log_list_item, mCursor) {
-
-     
-            @Override
-            public View newView(Context context, Cursor cur, ViewGroup parent) {
-                LayoutInflater li = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                return li.inflate(R.layout.update_log_list_item, parent, false);
-            }
-
-            @Override
-            public void bindView(View view, Context context, Cursor cursor) {
-              String error = cursor.getString(ERROR_TYPE_COLUMN_INDEX);
-     
-              TextView updateTimestampView = (TextView) view.findViewById(R.id.update_timestamp);
-              setTimeStamp(updateTimestampView,cursor,UPDATE_TIMESTAMP_COLUMN_INDEX);
-              
-              View errorRow = view.findViewById(R.id.error_row);
-              View locationProviderRow = view.findViewById(R.id.location_provider_row);
-              View locationTimestampRow = view.findViewById(R.id.location_timestamp_row);
-              if (error == null) {
-            	  errorRow.setVisibility(View.GONE); 
-            	  locationProviderRow.setVisibility(View.VISIBLE);
-            	  locationTimestampRow.setVisibility(View.VISIBLE);
-            	  
-            	  setTimeStamp((TextView) view.findViewById(R.id.location_timestamp), cursor, LOCATION_TIMESTAMP_COLUMN_INDEX);
-            	  TextView locationProviderTextView = (TextView) view.findViewById(R.id.location_provider);
-            	  locationProviderTextView.setText(cursor.getString(PROVIDER_COLUMN_INDEX));
-                  
-              } else {
-            	  errorRow.setVisibility(View.VISIBLE);
-            	  locationProviderRow.setVisibility(View.GONE);
-            	  locationTimestampRow.setVisibility(View.GONE);
-            	  
-            	  TextView errorView = (TextView) view.findViewById(R.id.error);
-            	  setError(errorView, cursor);
-              }
-            }
-        };
-       
-        mListController.setListAdapter(resourceCursorAdapter);
-        
+        mListController.setListAdapter(mResourceCursorAdapter);
     }
+	
+	 
     
 	private void setTimeStamp(TextView view, Cursor cursor, int columnIndex) {
 		view.setText(new Date(cursor.getLong(columnIndex)).toLocaleString());
@@ -175,7 +175,6 @@ public class UpdateLogActivity extends SherlockControllerActivity {
     @Override
     public void onResume() {
     	super.onResume();
-    	mCursor.requery();
     	((ResourceCursorAdapter)mListController.getListAdapter()).notifyDataSetChanged();
 	}
 
@@ -207,5 +206,19 @@ public class UpdateLogActivity extends SherlockControllerActivity {
 	void startSettings() {
 		Intent intent = new Intent(this, SettingsActivity.class);
     	startActivity(intent);
+	}
+
+	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+		
+		return new CursorLoader(this, UpdateLogDatabaseContentProvider.URI, null, null, null, null);
+	}
+
+	public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+		mResourceCursorAdapter.swapCursor(data);
+		
+	}
+
+	public void onLoaderReset(Loader<Cursor> loader) {
+    	mResourceCursorAdapter.swapCursor(null);
 	}
 }
