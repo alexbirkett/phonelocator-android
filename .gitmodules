@@ -7,3 +7,6 @@
 [submodule "ActionBarSherlock"]
 	path = ActionBarSherlock
 	url = git://github.com/alexbirkett/ActionBarSherlock.git
+[submodule "android-controllers"]
+	path = android-controllers
+	url = git@github.com:alexbirkett/android-controllers.git

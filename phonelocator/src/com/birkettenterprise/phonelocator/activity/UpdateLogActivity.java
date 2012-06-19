@@ -20,7 +20,9 @@ package com.birkettenterprise.phonelocator.activity;
 
 import java.util.Date;
 
-import com.actionbarsherlock.app.SherlockListActivity;
+import no.birkettconsulting.controllers.ListController;
+
+import com.actionbarsherlock.app.SherlockControllerActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
@@ -37,8 +39,9 @@ import android.view.View;
 import android.widget.ResourceCursorAdapter;
 import android.widget.TextView;
 import android.view.ViewGroup;
+import net.hockeyapp.android.HockeyAppController;
 
-public class UpdateLogActivity extends SherlockListActivity {
+public class UpdateLogActivity extends SherlockControllerActivity {
     
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -60,11 +63,23 @@ public class UpdateLogActivity extends SherlockListActivity {
 	private static int LOCATION_TIMESTAMP_COLUMN_INDEX = 4;
 	private static int PROVIDER_COLUMN_INDEX = 5;
 	
+	private ListController mListController;
+	
+	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
+		// add controllers before you call super.onCreate()
+		
+		mListController = new ListController(this); 
+		mListController.setContentView(R.layout.update_log);
+	
+		addController(mListController);
+		addController(new HockeyAppController(this, "https://rink.hockeyapp.net/", "3f7ef8dc87d197b81fb86ff41dcc1314"));
+		
 		super.onCreate(savedInstanceState);
 		
-		setContentView(R.layout.update_log);
+		setContentView(mListController.getView());
+		
         mCursor = new UpdateLogDatabase(this).getUpdateTable();
           
         startManagingCursor(mCursor);
@@ -109,7 +124,7 @@ public class UpdateLogActivity extends SherlockListActivity {
             }
         };
        
-        setListAdapter(resourceCursorAdapter);
+        mListController.setListAdapter(resourceCursorAdapter);
         
     }
     
@@ -161,34 +176,36 @@ public class UpdateLogActivity extends SherlockListActivity {
     public void onResume() {
     	super.onResume();
     	mCursor.requery();
-    	((ResourceCursorAdapter)getListAdapter()).notifyDataSetChanged();
-    }
-    
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-    	
-    	// Handle item selection
-        switch (item.getItemId()) {
-        case R.id.web_site:
-        	startWebSite();
-        	return true;
-        
-        case R.id.settings:
-        	startSettings();
-        	return true;
-        	
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-    private static final String WEB_SITE_URL = "http://phonelocator.mobi";
-    void startWebSite() {
-    	Intent viewIntent = new Intent("android.intent.action.VIEW", Uri.parse(WEB_SITE_URL));
-    	startActivity(viewIntent);
-    }
-    
-    void startSettings() {
-    	Intent intent = new Intent(this, SettingsActivity.class);
+    	((ResourceCursorAdapter)mListController.getListAdapter()).notifyDataSetChanged();
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+
+		// Handle item selection
+		switch (item.getItemId()) {
+		case R.id.web_site:
+			startWebSite();
+			return true;
+
+		case R.id.settings:
+			startSettings();
+			return true;
+
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+	private static final String WEB_SITE_URL = "http://phonelocator.mobi";
+	
+	void startWebSite() {
+		throw new RuntimeException("do something stupid");
+    	//Intent viewIntent = new Intent("android.intent.action.VIEW", Uri.parse(WEB_SITE_URL));
+    	//startActivity(viewIntent);
+	}
+
+	void startSettings() {
+		Intent intent = new Intent(this, SettingsActivity.class);
     	startActivity(intent);
-    }
+	}
 }
