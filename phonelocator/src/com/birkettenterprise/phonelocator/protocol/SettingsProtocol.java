@@ -183,7 +183,7 @@ public class SettingsProtocol {
 		outputStream.writeByte(settingId);
 		writeTimestamp(timeStamp, outputStream);
 		writeSettingValue(settingId,value, outputStream);
-		Log.d(LOG_TAG, "written setting id: " + settingId + " value: " + value.toString() + " timestamp: " + timeStamp);
+		Log.d(LOG_TAG, "written setting id: " + settingId + " value: " + value + " timestamp: " + timeStamp);
 
 	}
 	
@@ -208,15 +208,14 @@ public class SettingsProtocol {
 			outputStream.writeInt(intToWrite);	
 		} else if (INT64_OFFSET <= settingId && settingId < STRING_OFFSET) {
 			
-			BigInteger bigIntegerToWrite = null;
+			BigInteger bigIntegerToWrite = BigInteger.ZERO;
 			if (setting instanceof String) {
 				bigIntegerToWrite = new BigInteger((String)setting);
 			} else if (setting instanceof BigInteger){
 				bigIntegerToWrite = (BigInteger)setting;
 			}
-			if (bigIntegerToWrite != null) {
-				writeBigInteger(outputStream, bigIntegerToWrite);
-			}
+			writeBigInteger(outputStream, bigIntegerToWrite);
+			
 		} else if (STRING_OFFSET <= settingId && settingId < END_OF_SETTINGS_MARKER) {
 			String stringToWrite = (String)setting;
 			outputStream.writeUTF(stringToWrite);
