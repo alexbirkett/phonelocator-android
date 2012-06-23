@@ -30,11 +30,11 @@ import com.birkettenterprise.phonelocator.R;
 import com.birkettenterprise.phonelocator.database.UpdateLogDatabaseContentProvider;
 
 import android.content.Context;
-import android.content.CursorLoader;
+import android.support.v4.app.LoaderManager.LoaderCallbacks;
+import android.support.v4.content.CursorLoader;
 import android.content.Intent;
-import android.content.Loader;
+import android.support.v4.content.Loader;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,7 +43,7 @@ import android.widget.TextView;
 import android.view.ViewGroup;
 import net.hockeyapp.android.HockeyAppController;
 
-public class UpdateLogActivity extends SherlockControllerActivity implements android.app.LoaderManager.LoaderCallbacks<Cursor>{
+public class UpdateLogActivity extends SherlockControllerActivity implements LoaderCallbacks<Cursor>{
     
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -82,7 +82,7 @@ public class UpdateLogActivity extends SherlockControllerActivity implements and
 		setContentView(mListController.getView());
 		
 
-		mResourceCursorAdapter = new ResourceCursorAdapter(UpdateLogActivity.this, R.layout.update_log_list_item, null, 0) {
+		mResourceCursorAdapter = new ResourceCursorAdapter(UpdateLogActivity.this, R.layout.update_log_list_item, null, true) {
 
 		     
 	        @Override
@@ -121,7 +121,7 @@ public class UpdateLogActivity extends SherlockControllerActivity implements and
 	        }
 	    };
    
-        getLoaderManager().initLoader(0, null, this);
+        getSupportLoaderManager().initLoader(0, null, this);
         
         mListController.setListAdapter(mResourceCursorAdapter);
     }
@@ -214,11 +214,11 @@ public class UpdateLogActivity extends SherlockControllerActivity implements and
 	}
 
 	public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-		mResourceCursorAdapter.swapCursor(data);
+		 mResourceCursorAdapter.changeCursor(data);
 		
 	}
 
 	public void onLoaderReset(Loader<Cursor> loader) {
-    	mResourceCursorAdapter.swapCursor(null);
+		 mResourceCursorAdapter.changeCursor(null);
 	}
 }
