@@ -40,6 +40,7 @@ import com.birkettenterprise.phonelocator.settings.Setting;
 import com.birkettenterprise.phonelocator.settings.SettingsHelper;
 import com.birkettenterprise.phonelocator.settings.SettingsManager;
 import com.commonsware.cwac.locpoll.LocationPollerResult;
+import com.commonsware.cwac.wakeful.WakefulIntentService;
 
 public class UpdateService extends WakefulIntentService {
 

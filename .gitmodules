@@ -10,3 +10,6 @@
 [submodule "android-controllers"]
 	path = android-controllers
 	url = git://github.com/alexbirkett/android-controllers.git
+[submodule "cwac-wakeful"]
+	path = cwac-wakeful
+	url = git://github.com/alexbirkett/cwac-wakeful.git

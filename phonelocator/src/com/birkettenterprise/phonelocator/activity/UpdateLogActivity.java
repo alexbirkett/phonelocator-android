@@ -28,6 +28,7 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.birkettenterprise.phonelocator.R;
 import com.birkettenterprise.phonelocator.database.UpdateLogDatabaseContentProvider;
+import com.birkettenterprise.phonelocator.service.AudioAlarmService;
 
 import android.content.Context;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
@@ -190,6 +191,10 @@ public class UpdateLogActivity extends SherlockControllerActivity implements Loa
 		case R.id.settings:
 			startSettings();
 			return true;
+			
+		case R.id.test_alarm:
+			testAlarm();
+			return true;
 
 		default:
 			return super.onOptionsItemSelected(item);
@@ -206,6 +211,11 @@ public class UpdateLogActivity extends SherlockControllerActivity implements Loa
 	void startSettings() {
 		Intent intent = new Intent(this, SettingsActivity.class);
     	startActivity(intent);
+	}
+	
+	void testAlarm() {
+		Intent intent = new Intent(this, AudioAlarmService.class);
+    	startService(intent);
 	}
 
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
