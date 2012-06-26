@@ -1,48 +1,82 @@
 package com.birkettenterprise.phonelocator.controller;
 
 import com.birkettenterprise.phonelocator.R;
+import com.birkettenterprise.phonelocator.settings.SettingsHelper;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.DialogInterface.OnClickListener;
 import android.content.DialogInterface.OnDismissListener;
+import android.preference.PreferenceManager;
 import android.text.method.DigitsKeyListener;
 import android.text.method.PasswordTransformationMethod;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.Toast;
 import no.birkettconsulting.controllers.Controller;
 
 public class PasscodeController extends Controller implements OnDismissListener {
 
 	private Dialog mDialog;
-
+	private SharedPreferences mSharedPreferences;
+	private EditText mPasscodeEditText;
+	private boolean mCorrectPasswordEntered;
+	private boolean mOkClicked;
+	
 	public PasscodeController(Activity context) {
 		super(context);
+		mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
 	}
 
 	@Override
 	protected void onResume() {
-		buildDialogIfRequired();
-		mDialog.show();
+		
+		boolean passcodeEnabled = isPasscodeEnabled();
+		if (passcodeEnabled) {
+			buildDialogIfNotAlreadyExists();
+			showDialog();
+		}
+
 	}
 
+	private void showDialog() {
+		mDialog.show();
+		mOkClicked = false;
+		mCorrectPasswordEntered = false;
+	}
+	
 	@Override
 	protected void onPause() {
-		mDialog.hide();
+		hideDialogIfExists();
 	}
 
 	private Activity getActivity() {
 		return (Activity) mContext;
 	}
 
-	private void buildDialogIfRequired() {
+	private void buildDialogIfNotAlreadyExists() {
 		if (mDialog == null) {
 			buildDialog();
 		}
 	}
+	
+	private void hideDialogIfExists() {
+		if (mDialog != null) {
+			mDialog.hide();
+		}
+	}
+	
+	private boolean isPasscodeEnabled() {
+		return SettingsHelper.isPasscodeEnabled(mSharedPreferences);
+	}
 
+	private String getPasscode() {
+		return SettingsHelper.getPasscode(mSharedPreferences);
+	}
+	
 	private void buildDialog() {
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(mContext)
@@ -55,11 +89,11 @@ public class PasscodeController extends Controller implements OnDismissListener 
 						mContext.getString(R.string.passcode_dialog_cancel),
 						mCancelClickListener);
 
-		EditText input = new EditText(mContext);
-		input.setTransformationMethod(new PasswordTransformationMethod());
-		input.setKeyListener(new DigitsKeyListener());
+		mPasscodeEditText = new EditText(mContext);
+		mPasscodeEditText.setTransformationMethod(new PasswordTransformationMethod());
+		mPasscodeEditText.setKeyListener(new DigitsKeyListener());
 
-		builder.setView(input);
+		builder.setView(mPasscodeEditText);
 
 		mDialog = builder.create();
 		mDialog.setOnDismissListener(this);
@@ -69,14 +103,28 @@ public class PasscodeController extends Controller implements OnDismissListener 
 
 	@Override
 	public void onDismiss(DialogInterface dialog) {
+		if (mOkClicked) {
+			if (!mCorrectPasswordEntered) {
+				showIncorrectToast();
+				showDialog();
+			}
+		} else {
+			getActivity().finish();
+		}
 
 	}
 
+	private void showIncorrectToast() {
+		Toast toast = Toast.makeText(mContext, R.string.incorrect_passcode, Toast.LENGTH_LONG);
+		toast.show();
+	}
+	
 	private OnClickListener mOkClickListener = new OnClickListener() {
 
 		@Override
 		public void onClick(DialogInterface dialog, int which) {
-
+			mCorrectPasswordEntered = mPasscodeEditText.getText().toString().equals(getPasscode());
+			mOkClicked = true;
 		}
 
 	};
@@ -85,7 +133,7 @@ public class PasscodeController extends Controller implements OnDismissListener 
 
 		@Override
 		public void onClick(DialogInterface dialog, int which) {
-			getActivity().finish();
+		
 		}
 
 	};

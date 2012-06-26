@@ -98,12 +98,20 @@ public class SettingsHelper {
 		return sharedPreferences.getString(StringSettings.REGISTRATION_URL, null);
 	}
 	
+	public static String getPasscode(SharedPreferences sharedPreferences) {
+		return sharedPreferences.getString(StringSettings.PASSCODE, null);
+	}
+	
 	public static boolean isRegistered(SharedPreferences sharedPreferences) {
 		return sharedPreferences.getBoolean(BooleanSettings.REGISTERED, false);
 	}
 	
 	public static boolean isHideTriggerMessage(SharedPreferences sharedPreferences) {
 		return sharedPreferences.getBoolean(BooleanSettings.HIDE_SMS_TRIGGER, false);
+	}
+	
+	public static boolean isPasscodeEnabled(SharedPreferences sharedPreferences) {
+		return sharedPreferences.getBoolean(BooleanSettings.PASSCODE_ENABLED, false);
 	}
 	
 	public static void storeLong(SharedPreferences sharedPreferences, String key, long value) {

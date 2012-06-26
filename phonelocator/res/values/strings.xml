@@ -71,5 +71,6 @@
 	<string name="passcode_dialog_ok">OK</string>
 	<string name="passcode_dialog_cancel">Cancel</string>
 	
+	<string name="incorrect_passcode">Incorrect passcode</string>
 	
 </resources>
