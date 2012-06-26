@@ -38,6 +38,7 @@ import android.support.v4.content.CursorLoader;
 import android.content.Intent;
 import android.support.v4.content.Loader;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
@@ -214,9 +215,8 @@ public class UpdateLogActivity extends SherlockControllerActivity implements Loa
 	private static final String WEB_SITE_URL = "http://phonelocator.mobi";
 	
 	void startWebSite() {
-		throw new RuntimeException("do something stupid");
-    	//Intent viewIntent = new Intent("android.intent.action.VIEW", Uri.parse(WEB_SITE_URL));
-    	//startActivity(viewIntent);
+   	 	Intent viewIntent = new Intent("android.intent.action.VIEW", Uri.parse(WEB_SITE_URL));
+    	startActivity(viewIntent);
 	}
 
 	void startSettings() {
