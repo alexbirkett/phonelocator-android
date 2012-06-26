@@ -76,6 +76,7 @@
 		</receiver>  
 		<receiver android:name=".broadcastreceiver.AlarmBroadcastReceiver"/>  
 		<receiver android:name=".broadcastreceiver.LocationBroadcastReceiver"/>
+		<receiver android:name=".broadcastreceiver.StopAudioAlarmBroadcastReceiver"/>
 		<receiver android:name="com.commonsware.cwac.locpoll.LocationPoller" />
 		
 		<provider

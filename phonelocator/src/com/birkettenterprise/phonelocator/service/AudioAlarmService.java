@@ -3,7 +3,11 @@ package com.birkettenterprise.phonelocator.service;
 import java.io.IOException;
 
 import com.birkettenterprise.phonelocator.R;
+import com.birkettenterprise.phonelocator.broadcastreceiver.StopAudioAlarmBroadcastReceiver;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -16,10 +20,12 @@ import android.util.Log;
 public class AudioAlarmService extends Service {
 	
 	private static final String LOG_TAG = "AudioAlarmService";
+	private static final int NOTIFICATION_ID = 1;
 	
 	private int mStreamId;
 	private MediaPlayer mMediaPlayer;
-	
+	private NotificationManager mNotificationManager;
+
 	
 	public static void startAlarmService(Context context) {
 		Intent intent = new Intent(context, AudioAlarmService.class);
@@ -35,7 +41,7 @@ public class AudioAlarmService extends Service {
 	public void onCreate() {
 		super.onCreate();
 		mMediaPlayer = createAndConfigureMediaPlayer(this, R.raw.alarm);
-
+		mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		Log.d(LOG_TAG, "onCreate()");
 	}
 	
@@ -45,12 +51,14 @@ public class AudioAlarmService extends Service {
 		super.onDestroy();
 		stopAlarm();
 		releaseSoundPool();
+		cancelNotification();
 	}
 	
 	@Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 		Log.d(LOG_TAG, "onStartCommand()");
 		startAlarm();
+		showNotification();
 		return START_STICKY;
 	}
 
@@ -104,5 +112,18 @@ public class AudioAlarmService extends Service {
 			throw new RuntimeException(ex);
 		}
 	    
+	}
+
+	@SuppressWarnings("deprecation")
+	private void showNotification() {
+		Notification notification = new Notification(R.drawable.icon, getString(R.string.alarm_notification_ticker_text), System.currentTimeMillis());
+		notification.flags = Notification.FLAG_ONGOING_EVENT | Notification.FLAG_SHOW_LIGHTS;
+		PendingIntent contentIntent = PendingIntent.getBroadcast(this, 0, new Intent(this,StopAudioAlarmBroadcastReceiver.class), PendingIntent.FLAG_UPDATE_CURRENT);
+		notification.setLatestEventInfo(this,  getString(R.string.alarm_notification_content_title), getString(R.string.alarm_notification_content_text), contentIntent);
+		mNotificationManager.notify(NOTIFICATION_ID, notification);
+	}
+	
+	private void cancelNotification() {
+		mNotificationManager.cancel(NOTIFICATION_ID);
 	}
 }

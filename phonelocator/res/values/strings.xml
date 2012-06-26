@@ -52,4 +52,8 @@
 	
 	<string name="trigger_message_udpate">update</string>
 	<string name="trigger_message_alarm">alarm</string>
+	
+	<string name="alarm_notification_ticker_text">Phonelocator alarm activated</string>
+	<string name="alarm_notification_content_title">Phonelocator</string>
+	<string name="alarm_notification_content_text">Tap to decactivate alarm</string>
 </resources>
