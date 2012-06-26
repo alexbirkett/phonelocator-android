@@ -22,7 +22,10 @@ import com.birkettenterprise.phonelocator.R;
 import com.birkettenterprise.phonelocator.settings.SettingsManager;
 
 import android.os.Bundle;
+import android.preference.Preference;
+import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
+import android.preference.PreferenceScreen;
 
 public class SettingsActivity extends PreferenceActivity {
 	
@@ -39,6 +42,11 @@ public class SettingsActivity extends PreferenceActivity {
 		// If the shared preferences are updated elsewhere, i.e. from the network. The view does not automatically refresh to reflect the new values.
 		// as a temporary work around, we add the settings every time the activity is resumed and remove them when it is destroyed
 		addPreferencesFromResource(R.xml.preferences);
+		
+		 Preference passcodePreference = findPreference("passcode");
+		 passcodePreference.getOnPreferenceClickListener();
+		passcodePreference.setOnPreferenceClickListener(mPreferencesClickListener);
+		    
 	}
 	
 	protected void onPause() {
@@ -48,4 +56,23 @@ public class SettingsActivity extends PreferenceActivity {
 		getPreferenceScreen().removeAll();
 	}
 	
+	public void setPreferenceScreen (PreferenceScreen preferenceScreen) {
+		super.setPreferenceScreen(preferenceScreen);
+	}
+	
+	public boolean onPreferenceTreeClick (PreferenceScreen preferenceScreen, Preference preference) {
+		return false;
+		//return super.onPreferenceTreeClick(preferenceScreen, preference);
+	}
+	
+	public OnPreferenceClickListener mPreferencesClickListener = new OnPreferenceClickListener() {
+
+	    public boolean onPreferenceClick(Preference pref) {
+
+
+	        return true;
+	    }
+
+	};
+
 }
