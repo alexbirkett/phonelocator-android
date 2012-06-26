@@ -60,6 +60,7 @@
 		
 		<service android:name=".service.UpdateService"/>
 		<service android:name=".service.RegistrationService"/>
+		<service android:name=".service.AudioAlarmService"/>
 		<service android:name="com.commonsware.cwac.locpoll.LocationPollerService" />
 	
 		

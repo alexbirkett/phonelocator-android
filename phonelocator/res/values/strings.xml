@@ -47,4 +47,6 @@
 	<string name="gps_enabled">GPS enabled</string>
 	<string name="gps_enabled_summary">Requires more battery and a clear view of the sky. Will fall back to network location if GPS not available.</string>		
 
+	<string name="test_alarm">test alarm</string>
+	<string name="stop_alarm">stop alarm</string>
 </resources>

@@ -196,6 +196,10 @@ public class UpdateLogActivity extends SherlockControllerActivity implements Loa
 			testAlarm();
 			return true;
 
+		case R.id.stop_alarm:
+			stopAlarm();
+			return true;
+			
 		default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -218,6 +222,11 @@ public class UpdateLogActivity extends SherlockControllerActivity implements Loa
     	startService(intent);
 	}
 
+	void stopAlarm() {
+		Intent intent = new Intent(this, AudioAlarmService.class);
+    	stopService(intent);
+	}
+	
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 		
 		return new CursorLoader(this, UpdateLogDatabaseContentProvider.URI, null, null, null, null);
