@@ -193,11 +193,11 @@ public class UpdateLogActivity extends SherlockControllerActivity implements Loa
 			return true;
 			
 		case R.id.test_alarm:
-			testAlarm();
+			AudioAlarmService.startAlarmService(this);
 			return true;
 
 		case R.id.stop_alarm:
-			stopAlarm();
+			AudioAlarmService.stopAlarmService(this);
 			return true;
 			
 		default:
@@ -215,16 +215,6 @@ public class UpdateLogActivity extends SherlockControllerActivity implements Loa
 	void startSettings() {
 		Intent intent = new Intent(this, SettingsActivity.class);
     	startActivity(intent);
-	}
-	
-	void testAlarm() {
-		Intent intent = new Intent(this, AudioAlarmService.class);
-    	startService(intent);
-	}
-
-	void stopAlarm() {
-		Intent intent = new Intent(this, AudioAlarmService.class);
-    	stopService(intent);
 	}
 	
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {

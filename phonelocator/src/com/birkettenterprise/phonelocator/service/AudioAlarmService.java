@@ -20,6 +20,17 @@ public class AudioAlarmService extends Service {
 	private int mStreamId;
 	private MediaPlayer mMediaPlayer;
 	
+	
+	public static void startAlarmService(Context context) {
+		Intent intent = new Intent(context, AudioAlarmService.class);
+		context.startService(intent);
+	}
+
+	public static void stopAlarmService(Context context) {
+		Intent intent = new Intent(context, AudioAlarmService.class);
+    	context.stopService(intent);
+	}
+	
 	@Override
 	public void onCreate() {
 		super.onCreate();

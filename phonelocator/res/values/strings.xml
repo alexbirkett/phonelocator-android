@@ -49,4 +49,7 @@
 
 	<string name="test_alarm">test alarm</string>
 	<string name="stop_alarm">stop alarm</string>
+	
+	<string name="trigger_message_udpate">update</string>
+	<string name="trigger_message_alarm">alarm</string>
 </resources>
