@@ -27,6 +27,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.birkettenterprise.phonelocator.R;
+import com.birkettenterprise.phonelocator.controller.PasscodeController;
 import com.birkettenterprise.phonelocator.database.UpdateLogDatabaseContentProvider;
 import com.birkettenterprise.phonelocator.service.AudioAlarmService;
 import com.birkettenterprise.phonelocator.settings.SettingsHelper;
@@ -85,7 +86,7 @@ public class UpdateLogActivity extends SherlockControllerActivity implements Loa
 	
 		addController(mListController);
 		addController(new HockeyAppController(this, "https://rink.hockeyapp.net/", "3f7ef8dc87d197b81fb86ff41dcc1314"));
-		
+		addController(new PasscodeController(this));
 		super.onCreate(savedInstanceState);
 		
 		setContentView(mListController.getView());

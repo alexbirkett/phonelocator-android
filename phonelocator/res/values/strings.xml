@@ -67,4 +67,9 @@
 	<string name="passcode_enabled_preference_summary">Require that the passcode is entered when Phonelocator is started and included in SMS trigger messages.</string>
 	
 
+	<string name="passcode_dialog_title">Enter passcode</string>
+	<string name="passcode_dialog_ok">OK</string>
+	<string name="passcode_dialog_cancel">Cancel</string>
+	
+	
 </resources>
