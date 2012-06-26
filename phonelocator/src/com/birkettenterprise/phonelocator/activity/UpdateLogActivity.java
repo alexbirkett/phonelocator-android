@@ -29,14 +29,17 @@ import com.actionbarsherlock.view.MenuItem;
 import com.birkettenterprise.phonelocator.R;
 import com.birkettenterprise.phonelocator.database.UpdateLogDatabaseContentProvider;
 import com.birkettenterprise.phonelocator.service.AudioAlarmService;
+import com.birkettenterprise.phonelocator.settings.SettingsHelper;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.content.Intent;
 import android.support.v4.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ResourceCursorAdapter;
@@ -71,6 +74,10 @@ public class UpdateLogActivity extends SherlockControllerActivity implements Loa
 	@Override
     public void onCreate(Bundle savedInstanceState) {
 		// add controllers before you call super.onCreate()
+		
+			SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+			boolean test = SettingsHelper.isHideTriggerMessage(sharedPreferences);
+		
 		
 		mListController = new ListController(this); 
 		mListController.setContentView(R.layout.update_log);

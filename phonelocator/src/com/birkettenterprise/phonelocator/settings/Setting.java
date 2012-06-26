@@ -30,6 +30,7 @@ public class Setting {
 	public class BooleanSettings {
 		public static final String PERIODIC_UPDATES_ENABLED = "periodic_updates_enabled"; 
 	    public static final String REGISTERED = "registered";
+	    public static final String HIDE_SMS_TRIGGER = "hide_sms_trigger";
 	}
 	
 	public class Integer64Settings {

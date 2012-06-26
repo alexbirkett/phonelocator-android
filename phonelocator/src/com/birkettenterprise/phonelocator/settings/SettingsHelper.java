@@ -102,6 +102,10 @@ public class SettingsHelper {
 		return sharedPreferences.getBoolean(BooleanSettings.REGISTERED, false);
 	}
 	
+	public static boolean isHideTriggerMessage(SharedPreferences sharedPreferences) {
+		return sharedPreferences.getBoolean(BooleanSettings.HIDE_SMS_TRIGGER, false);
+	}
+	
 	public static void storeLong(SharedPreferences sharedPreferences, String key, long value) {
 	      SharedPreferences.Editor editor = sharedPreferences.edit();
 	      editor.putLong(key, value);

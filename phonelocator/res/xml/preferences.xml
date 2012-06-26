@@ -45,4 +45,8 @@
                 android:dialogTitle="@string/gps_timeout"
                 android:dependency="gps_enabled"
                 />
+   	<CheckBoxPreference
+		android:key="hide_sms_trigger"
+		android:title="@string/hide_sms_trigger"
+		android:summary="@string/hide_sms_trigger_summary" />
 </PreferenceScreen>

@@ -56,4 +56,8 @@
 	<string name="alarm_notification_ticker_text">Phonelocator alarm activated</string>
 	<string name="alarm_notification_content_title">Phonelocator</string>
 	<string name="alarm_notification_content_text">Tap to decactivate alarm</string>
+
+	<string name="hide_sms_trigger">Hide SMS trigger messages</string>
+	<string name="hide_sms_trigger_summary">If enabled, SMS trigger messages (SMSes starting with \"update\" and \"alarm\") will not be shown in the phone\'s messaging app</string>		
+
 </resources>
