@@ -60,4 +60,11 @@
 	<string name="hide_sms_trigger">Hide SMS trigger messages</string>
 	<string name="hide_sms_trigger_summary">If enabled, SMS trigger messages (SMSes starting with \"update\" and \"alarm\") will not be shown in the phone\'s messaging app</string>		
 
+	<string name="passcode_preference">Passcode</string>
+	<string name="passcode_preference_summary">Protects against unauthorized tampering with Phonelocator. It can be requested when Phonelocator is started and included in SMS trigger messages.</string>
+
+	<string name="passcode_enabled_preference">Passcode enabled</string>
+	<string name="passcode_enabled_preference_summary">Require that the passcode is entered when Phonelocator is started and included in SMS trigger messages.</string>
+	
+
 </resources>

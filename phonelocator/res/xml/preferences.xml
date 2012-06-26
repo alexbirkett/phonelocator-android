@@ -49,4 +49,16 @@
 		android:key="hide_sms_trigger"
 		android:title="@string/hide_sms_trigger"
 		android:summary="@string/hide_sms_trigger_summary" />
+   	
+   	<CheckBoxPreference
+		android:key="passcode_enabled"
+		android:title="@string/passcode_enabled_preference"
+		android:summary="@string/passcode_enabled_preference_summary" />
+   	 	
+   	<EditTextPreference
+   	    android:key="passcode"
+   	    android:numeric="decimal"
+		android:title="@string/passcode_preference"
+		android:summary="@string/passcode_preference_summary" />
+   	
 </PreferenceScreen>
