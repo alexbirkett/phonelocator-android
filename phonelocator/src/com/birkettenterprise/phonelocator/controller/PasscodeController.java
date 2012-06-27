@@ -34,7 +34,7 @@ public class PasscodeController extends Controller implements OnDismissListener 
 	@Override
 	protected void onResume() {
 		
-		boolean passcodeEnabled = isPasscodeEnabled();
+		boolean passcodeEnabled = isPasscodeNonNummAndEnabled();
 		if (passcodeEnabled) {
 			buildDialogIfNotAlreadyExists();
 			showDialog();
@@ -70,8 +70,8 @@ public class PasscodeController extends Controller implements OnDismissListener 
 		}
 	}
 	
-	private boolean isPasscodeEnabled() {
-		return SettingsHelper.isPasscodeEnabled(mSharedPreferences);
+	private boolean isPasscodeNonNummAndEnabled() {
+		return SettingsHelper.isPasscodeEnabled(mSharedPreferences) && getPasscode() != null;
 	}
 
 	private String getPasscode() {
@@ -124,7 +124,8 @@ public class PasscodeController extends Controller implements OnDismissListener 
 
 		@Override
 		public void onClick(DialogInterface dialog, int which) {
-			mCorrectPasswordEntered = mPasscodeEditText.getText().toString().equals(getPasscode());
+			String passcode = getPasscode();
+			mCorrectPasswordEntered = mPasscodeEditText.getText().toString().equals(passcode);
 			mOkClicked = true;
 		}
 
