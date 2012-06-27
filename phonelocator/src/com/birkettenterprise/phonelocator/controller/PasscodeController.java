@@ -46,6 +46,7 @@ public class PasscodeController extends Controller implements OnDismissListener 
 		mDialog.show();
 		mOkClicked = false;
 		mCorrectPasswordEntered = false;
+		mPasscodeEditText.setText("");
 	}
 	
 	@Override
