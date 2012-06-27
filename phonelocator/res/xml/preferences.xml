@@ -59,6 +59,7 @@
    	    android:key="passcode"
    	    android:numeric="decimal"
 		android:title="@string/passcode_preference"
-		android:summary="@string/passcode_preference_summary" />
+		android:summary="@string/passcode_preference_summary"
+		android:dependency="passcode_enabled" />
    	
 </PreferenceScreen>
