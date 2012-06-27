@@ -18,17 +18,20 @@
 
 package com.birkettenterprise.phonelocator.activity;
 
+import no.birkettconsulting.controllers.BaseControllerPreferenceActivity;
+
 import com.birkettenterprise.phonelocator.R;
+import com.birkettenterprise.phonelocator.controller.PasscodeController;
 import com.birkettenterprise.phonelocator.settings.SettingsManager;
 
 import android.os.Bundle;
-import android.preference.PreferenceActivity;
 
-public class SettingsActivity extends PreferenceActivity {
+public class SettingsActivity extends BaseControllerPreferenceActivity {
 	
 	private SettingsManager mSettingsManager;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		addController(new PasscodeController(this));
 		super.onCreate(savedInstanceState);
 	}
 	

@@ -77,16 +77,11 @@ public class UpdateLogActivity extends SherlockControllerActivity implements Loa
     public void onCreate(Bundle savedInstanceState) {
 		// add controllers before you call super.onCreate()
 		
-			SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-			boolean test = SettingsHelper.isHideTriggerMessage(sharedPreferences);
-		
-		
 		mListController = new ListController(this); 
 		mListController.setContentView(R.layout.update_log);
 	
 		addController(mListController);
 		addController(new HockeyAppController(this, "https://rink.hockeyapp.net/", "3f7ef8dc87d197b81fb86ff41dcc1314"));
-		addController(new PasscodeController(this));
 		super.onCreate(savedInstanceState);
 		
 		setContentView(mListController.getView());
