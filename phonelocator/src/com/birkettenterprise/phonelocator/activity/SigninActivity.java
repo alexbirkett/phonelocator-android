@@ -99,8 +99,8 @@ public class SigninActivity extends Activity {
 		return false;
 	}
 	
-	private void startStatusActvity() {
-		Intent intent = new Intent(this, UpdateLogActivity.class);
+	private void startDashboardActivity() {
+		Intent intent = new Intent(this, DashboardActivity.class);
         startActivity(intent);
 		finish();
 	}
@@ -155,7 +155,7 @@ public class SigninActivity extends Activity {
 
 		if (isRegistered()) {
 			Log.d(TAG, "performNextRegistrationStep registered");
-			startStatusActvity();
+			startDashboardActivity();
 			stopProgressIfNotStopped();
 			return;
 		} else {

@@ -21,6 +21,7 @@ package com.birkettenterprise.phonelocator.service;
 import java.io.IOException;
 import java.util.Vector;
 
+import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
@@ -70,6 +71,7 @@ public class UpdateService extends WakefulIntentService {
 	
 	private void handleUpdateLocation(Intent intent) {
 		Log.v(LOG_TAG, "handleUpdateLocation");
+		sendBroadcast(new Intent("com.birkettenterprise.phonelocator.SENDING_UPDATE"));
 		
 		Session session = new Session();
 		SettingsManager settingsManager = SettingsManager.getInstance(this, this);
@@ -108,6 +110,7 @@ public class UpdateService extends WakefulIntentService {
 				// ignore
 			}
 		}
+		sendBroadcast(new Intent("com.birkettenterprise.phonelocator.UPDATE_COMPLETE"));
 	}
    
 	private static Location getLocationFromIntent(Intent intent) throws LocationPollFailedException {

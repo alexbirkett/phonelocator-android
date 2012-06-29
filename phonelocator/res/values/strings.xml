@@ -14,8 +14,11 @@
 	<string name="updates_tab">Updates</string>
 	<string name="settings_tab">Settings</string>
 
-	<string name="settings_menu_item">settings</string>
-	<string name="web_site_menu_item">web site</string>
+	<string name="menu_item_settings">Settings</string>
+	<string name="menu_item_web_site">Web site</string>
+	<string name="menu_item_test_alarm">Test alarm</string>
+	<string name="menu_item_update_log">Update history</string>
+	
 		
 	<string name="periodic_updates">Enable updates</string>
 	<string name="periodic_updates_summary">Send location to server periodically</string>
@@ -46,9 +49,6 @@
 	
 	<string name="gps_enabled">GPS enabled</string>
 	<string name="gps_enabled_summary">Requires more battery and a clear view of the sky. Will fall back to network location if GPS not available.</string>		
-
-	<string name="test_alarm">test alarm</string>
-	<string name="stop_alarm">stop alarm</string>
 	
 	<string name="trigger_message_udpate">update</string>
 	<string name="trigger_message_alarm">alarm</string>

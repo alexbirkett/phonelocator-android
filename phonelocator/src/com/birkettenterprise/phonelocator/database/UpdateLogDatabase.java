@@ -30,6 +30,8 @@ public class UpdateLogDatabase extends SQLiteOpenHelper {
 	private static final String DATABASE_NAME = "phonelocator_update_log";
 	private static final int DATABASE_VERSION = 4;
 	
+	private static int UPDATE_TIMESTAMP_COLUMN_INDEX = 1;
+	
 	/**
 	 * Update table stores successful and unsuccessful update attempts. Each
 	 * update can have 1 or more locations.
@@ -128,6 +130,16 @@ public class UpdateLogDatabase extends SQLiteOpenHelper {
 	
 	public Cursor getUpdateTable() {
 		return getReadableDatabase().rawQuery(SELECT_UPDATES_QUERY, null);
+	}
+	
+	public long getLastUpdateTimestamp() {
+		long lastUpdateTimestamp = 0;
+		Cursor cursor = getUpdateTable();
+		if (cursor.moveToFirst()) {
+			lastUpdateTimestamp = cursor.getLong(UPDATE_TIMESTAMP_COLUMN_INDEX);
+		}
+		cursor.close();
+		return lastUpdateTimestamp;
 	}
  
 }

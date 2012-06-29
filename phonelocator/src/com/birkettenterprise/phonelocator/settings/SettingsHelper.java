@@ -18,7 +18,7 @@
 
 package com.birkettenterprise.phonelocator.settings;
 
-import com.birkettenterprise.phonelocator.broadcastreceiver.AlarmBroadcastReceiver;
+import com.birkettenterprise.phonelocator.broadcastreceiver.UpdateBroadcastReceiver;
 import com.birkettenterprise.phonelocator.settings.Setting.BooleanSettings;
 import com.birkettenterprise.phonelocator.settings.Setting.StringSettings;
 
@@ -43,11 +43,11 @@ public class SettingsHelper {
 		AlarmManager alamManager = (AlarmManager) context
 				.getSystemService(Context.ALARM_SERVICE);
 				
-		Intent intent = new Intent(context, AlarmBroadcastReceiver.class);
+		Intent intent = new Intent("com.birkettenterprise.phonelocator.UPDATE");
 		PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
 		if (periodicUpdatesEnabled(PreferenceManager.getDefaultSharedPreferences(context))) {
-			long intervalInMicroseconds = getUpdateIntervalInMicroSeconds(PreferenceManager.getDefaultSharedPreferences(context));
+			long intervalInMicroseconds = getUpdateIntervalInMilliSeconds(PreferenceManager.getDefaultSharedPreferences(context));
 			alamManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
 					SystemClock.elapsedRealtime(),
 					intervalInMicroseconds, pendingIntent);
@@ -63,7 +63,7 @@ public class SettingsHelper {
 		return sharedPreferences.getBoolean(BooleanSettings.PERIODIC_UPDATES_ENABLED, false);
 	}	
 
-	private static long getUpdateIntervalInMicroSeconds(SharedPreferences sharedPreferences) {
+	public static long getUpdateIntervalInMilliSeconds(SharedPreferences sharedPreferences) {
 		return getSettingAsLong(sharedPreferences, Setting.StringSettings.UPDATE_FREQUENCY,
 								DEFAULT_UPDATE_FREQUENCY)  * MILLISECONDS_IN_SECOND;
 	}

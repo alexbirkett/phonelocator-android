@@ -26,7 +26,7 @@ import android.content.Context;
 import android.content.Intent;
 
 
-public class AlarmBroadcastReceiver extends BroadcastReceiver {
+public class UpdateBroadcastReceiver extends BroadcastReceiver {
 		
 	@Override
 	public void onReceive(Context context, Intent i) {	
