@@ -14,6 +14,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.widget.FrameLayout;
 
@@ -42,9 +43,10 @@ public class DashboardActivity extends SherlockControllerActivity implements
 	private LocationStatusController mLocationStatusController;
 	private UpdateStatusController mUpdateStatusController;
 	private UpdatesDisabledController mUpdatesDisabledController;
-
 	private List<ActivityManager.RunningServiceInfo> mRunningServices;
-
+	private Handler mHandler;
+	
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 
@@ -68,6 +70,7 @@ public class DashboardActivity extends SherlockControllerActivity implements
 		mSharedPreferences = PreferenceManager
 				.getDefaultSharedPreferences(this);
 
+		mHandler = new Handler();
 		setContentView(R.layout.dashboard_activity);
 	}
 
@@ -85,6 +88,8 @@ public class DashboardActivity extends SherlockControllerActivity implements
 		super.onPause();
 		mSharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
 		unregisterBroadcastReceiver();
+		mHandler.removeCallbacks(mSwapStatusControllerRunnable);
+		
 	}
 
 	@Override
@@ -120,9 +125,19 @@ public class DashboardActivity extends SherlockControllerActivity implements
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
 			String key) {
 		if (key.equals(Setting.BooleanSettings.PERIODIC_UPDATES_ENABLED)) {
-			swapStatusController();
+			mHandler.post(mSwapStatusControllerRunnable);
+		
 		}
 	}
+	
+	private Runnable mSwapStatusControllerRunnable = new Runnable() {
+
+		@Override
+		public void run() {
+			swapStatusController();
+		}
+		
+	};
 
 	private void startWebSite() {
 		Intent viewIntent = new Intent("android.intent.action.VIEW",
