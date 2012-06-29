@@ -73,6 +73,12 @@
 	
 	<string name="incorrect_passcode">Incorrect passcode</string>
 	<string name="updates_disabled_controller_updates_disabled">Phonelocator is not updating your phone\'s location</string>
+	
 	<string name="updates_disabled_controller_enable_updates">Enable Updates</string>
 	<string name="updates_disabled_controller_settings">Settings</string>
+	
+	<string name="updates_status_controller_uploading_location">Uploading location</string>
+	
+	<string name="location_status_controller_waiting_for_location">Waiting for location</string>
+	
 </resources>
