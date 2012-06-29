@@ -46,7 +46,7 @@ public class SettingsHelper {
 		Intent intent = new Intent("com.birkettenterprise.phonelocator.UPDATE");
 		PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-		if (periodicUpdatesEnabled(PreferenceManager.getDefaultSharedPreferences(context))) {
+		if (isPeriodicUpdatesEnabled(PreferenceManager.getDefaultSharedPreferences(context))) {
 			long intervalInMicroseconds = getUpdateIntervalInMilliSeconds(PreferenceManager.getDefaultSharedPreferences(context));
 			alamManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
 					SystemClock.elapsedRealtime(),
@@ -58,10 +58,6 @@ public class SettingsHelper {
 
 		}
 	}
-
-	public static boolean periodicUpdatesEnabled(SharedPreferences sharedPreferences) {
-		return sharedPreferences.getBoolean(BooleanSettings.PERIODIC_UPDATES_ENABLED, false);
-	}	
 
 	public static long getUpdateIntervalInMilliSeconds(SharedPreferences sharedPreferences) {
 		return getSettingAsLong(sharedPreferences, Setting.StringSettings.UPDATE_FREQUENCY,
@@ -102,6 +98,14 @@ public class SettingsHelper {
 		return sharedPreferences.getString(StringSettings.PASSCODE, null);
 	}
 	
+	public static boolean isPeriodicUpdatesEnabled(SharedPreferences sharedPreferences) {
+		return sharedPreferences.getBoolean(BooleanSettings.PERIODIC_UPDATES_ENABLED, false);
+	}	
+	
+	public static void setPeriodicUpdatesEnabled(SharedPreferences sharedPreferences, boolean enabled) {
+		storeBoolean(sharedPreferences, BooleanSettings.PERIODIC_UPDATES_ENABLED, enabled);
+	}
+	
 	public static boolean isRegistered(SharedPreferences sharedPreferences) {
 		return sharedPreferences.getBoolean(BooleanSettings.REGISTERED, false);
 	}
@@ -117,6 +121,12 @@ public class SettingsHelper {
 	public static void storeLong(SharedPreferences sharedPreferences, String key, long value) {
 	      SharedPreferences.Editor editor = sharedPreferences.edit();
 	      editor.putLong(key, value);
+	      editor.commit();
+	}
+	
+	public static void storeBoolean(SharedPreferences sharedPreferences, String key, boolean value) {
+	      SharedPreferences.Editor editor = sharedPreferences.edit();
+	      editor.putBoolean(key, value);
 	      editor.commit();
 	}
 }

@@ -142,7 +142,7 @@ public class DashboardActivity extends SherlockControllerActivity implements
 
 	private void swapStatusController() {
 
-		if (SettingsHelper.periodicUpdatesEnabled(mSharedPreferences)) {
+		if (isUpdatesEnabled()) {
 			refreshRunningServiceList();
 			if (isUpdateServiceRunning()) {
 				showController(mUpdateStatusController);
@@ -157,6 +157,10 @@ public class DashboardActivity extends SherlockControllerActivity implements
 
 	}
 
+	private boolean isUpdatesEnabled() {
+		return SettingsHelper.isPeriodicUpdatesEnabled(mSharedPreferences);
+	}
+	
 	private void showCountdownController() {
 		showController(mCountdownController);
 		mCountdownController.start();
@@ -226,15 +230,17 @@ public class DashboardActivity extends SherlockControllerActivity implements
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			if ("com.birkettenterprise.phonelocator.UPDATE_COMPLETE"
-					.equals(intent.getAction())) {
-				showCountdownController();
-			} else if ("com.birkettenterprise.phonelocator.SENDING_UPDATE"
-					.equals(intent.getAction())) {
-				showController(mUpdateStatusController);
-			} else if ("com.birkettenterprise.phonelocator.UPDATE"
-					.equals(intent.getAction())) {
-				showController(mLocationStatusController);
+			if (isUpdatesEnabled()) {
+				if ("com.birkettenterprise.phonelocator.UPDATE_COMPLETE"
+						.equals(intent.getAction())) {
+					showCountdownController();
+				} else if ("com.birkettenterprise.phonelocator.SENDING_UPDATE"
+						.equals(intent.getAction())) {
+					showController(mUpdateStatusController);
+				} else if ("com.birkettenterprise.phonelocator.UPDATE"
+						.equals(intent.getAction())) {
+					showController(mLocationStatusController);
+				}
 			}
 		}
 

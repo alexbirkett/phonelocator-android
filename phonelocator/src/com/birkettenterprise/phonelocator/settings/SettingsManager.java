@@ -191,4 +191,7 @@ public class SettingsManager implements OnSharedPreferenceChangeListener {
 		return SettingsHelper.getSettingAsLong(mSharedPreferences, SETTINGS_SYNCHRONIZATION_TIMESTAMP, 0);
 	}
 	
+	public SharedPreferences getSharedPreferences() {
+		return mSharedPreferences;
+	}
 }
