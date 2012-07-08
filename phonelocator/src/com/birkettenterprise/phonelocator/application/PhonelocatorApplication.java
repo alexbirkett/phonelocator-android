@@ -18,6 +18,7 @@
 
 package com.birkettenterprise.phonelocator.application;
 
+import net.hockeyapp.android.CrashManager;
 import android.app.Application;
 
 public class PhonelocatorApplication extends Application {
@@ -30,6 +31,7 @@ public class PhonelocatorApplication extends Application {
 	public void onCreate() {
 		super.onCreate();
 		setInstanceVariable();
+		CrashManager.registerHandler();
 	}
 	
 	private void setInstanceVariable() {
