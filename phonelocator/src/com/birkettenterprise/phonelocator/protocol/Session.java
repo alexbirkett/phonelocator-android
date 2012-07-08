@@ -47,8 +47,12 @@ public class Session {
 		mSocket = new Socket(HOST, PORT);
 	}
 
-	public void close() throws IOException {
-		mSocket.close();
+	public void close() {
+		try {
+			mSocket.close();
+		} catch (Throwable e) {
+			// ignore
+		}
 	}
 
 	public RegistrationResponse register() throws IOException {

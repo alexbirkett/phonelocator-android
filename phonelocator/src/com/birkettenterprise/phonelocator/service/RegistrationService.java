@@ -66,11 +66,7 @@ public class RegistrationService extends Service {
 			} finally {
 				settingsManager.releaseInstance(this);
 				settingsManager = null;
-				try {
-					mSession.close();
-				} catch (Throwable e) {
-					// ignore
-				}
+				mSession.close();
 			}
 			
 			synchronized(this) {
@@ -108,11 +104,7 @@ public class RegistrationService extends Service {
 			} finally {
 				settingsManager.releaseInstance(this);
 				settingsManager = null;
-				try {
-					mSession.close();
-				} catch (Throwable e) {
-					// ignore
-				}
+				mSession.close();
 			}
 			
 			synchronized(this) {

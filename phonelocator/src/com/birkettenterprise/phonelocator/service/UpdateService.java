@@ -103,12 +103,8 @@ public class UpdateService extends WakefulIntentService {
 			updateLog(e);
 			Log.d(LOG_TAG,"authentication failed");
 		} finally {
-			try {
-				settingsManager.releaseInstance(this);
-				session.close();
-			} catch (IOException e) {
-				// ignore
-			}
+			settingsManager.releaseInstance(this);
+			session.close();
 		}
 		sendBroadcast(new Intent("com.birkettenterprise.phonelocator.UPDATE_COMPLETE"));
 	}
