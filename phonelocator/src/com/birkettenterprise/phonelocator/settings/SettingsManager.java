@@ -168,11 +168,11 @@ public class SettingsManager implements OnSharedPreferenceChangeListener {
 			
 			for (Setting setting : settings) {
 				if (setting.getValue() instanceof String) {
-					editor.putString(setting.getName(), (String) setting.getValue());
+					putString(editor, setting.getName(), (String) setting.getValue());
 				} else if (setting.getValue() instanceof Integer) {
-					editor.putInt(setting.getName(), (Integer) setting.getValue());
+					putInt(editor, setting.getName(), (Integer) setting.getValue());
 				} else if (setting.getValue() instanceof Boolean) {
-					editor.putBoolean(setting.getName(), (Boolean) setting.getValue());
+					putBoolean(editor, setting.getName(), (Boolean) setting.getValue());
 				}
 				
 				// we can't write timestamps directly, because they'll be
@@ -183,6 +183,24 @@ public class SettingsManager implements OnSharedPreferenceChangeListener {
 		}
 	}	
 	
+	private void putBoolean(SharedPreferences.Editor editor, String name, boolean value) {
+		if (!mSharedPreferences.contains(name) || mSharedPreferences.getBoolean(name, false) != value) {
+			editor.putBoolean(name, value);
+		}
+	}
+	
+	private void putInt(SharedPreferences.Editor editor, String name, int value) {
+		if (!mSharedPreferences.contains(name) || mSharedPreferences.getInt(name, 0) != value) {
+			editor.putInt(name, value);
+		}
+	}
+	
+	private void putString(SharedPreferences.Editor editor, String name, String value) {
+		if (!mSharedPreferences.contains(name) || !mSharedPreferences.getString(name, "").equals(value)) {
+			editor.putString(name, value);
+		}	
+	}
+
 	public void updateSettingsSynchronizationTimestamp() {
 		SettingsHelper.storeLong(mSharedPreferences, SETTINGS_SYNCHRONIZATION_TIMESTAMP, System.currentTimeMillis());
 	}
