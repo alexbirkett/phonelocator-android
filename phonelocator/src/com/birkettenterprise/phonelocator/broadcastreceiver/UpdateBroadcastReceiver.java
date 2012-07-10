@@ -18,18 +18,23 @@
 
 package com.birkettenterprise.phonelocator.broadcastreceiver;
 
+import com.birkettenterprise.phonelocator.settings.SettingsHelper;
 import com.birkettenterprise.phonelocator.utility.UpdateUtility;
 
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 
 public class UpdateBroadcastReceiver extends BroadcastReceiver {
 		
 	@Override
 	public void onReceive(Context context, Intent i) {	
+		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+		SettingsHelper.setLastUpdateTimeStamp(preferences, System.currentTimeMillis());
 		UpdateUtility.update(context);
 	}
 	

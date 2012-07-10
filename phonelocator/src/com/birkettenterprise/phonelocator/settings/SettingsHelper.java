@@ -1,6 +1,6 @@
 /**
  * 
- *  Copyright 2011 Birkett Enterprise Ltd
+ *  Copyright 2011-2012 Birkett Enterprise Ltd
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,8 +18,8 @@
 
 package com.birkettenterprise.phonelocator.settings;
 
-import com.birkettenterprise.phonelocator.broadcastreceiver.UpdateBroadcastReceiver;
 import com.birkettenterprise.phonelocator.settings.Setting.BooleanSettings;
+import com.birkettenterprise.phonelocator.settings.Setting.LongSettings;
 import com.birkettenterprise.phonelocator.settings.Setting.StringSettings;
 
 import android.app.AlarmManager;
@@ -116,6 +116,14 @@ public class SettingsHelper {
 	
 	public static boolean isPasscodeEnabled(SharedPreferences sharedPreferences) {
 		return sharedPreferences.getBoolean(BooleanSettings.PASSCODE_ENABLED, false);
+	}
+	
+	public static long getLastUpdateTimeStamp(SharedPreferences sharedPreferences) {
+		return sharedPreferences.getLong(LongSettings.LAST_UPDATE_TIME_STAMP, 0L);
+	}
+	
+	public static void setLastUpdateTimeStamp(SharedPreferences sharedPreferences, long value) {
+		storeLong(sharedPreferences, LongSettings.LAST_UPDATE_TIME_STAMP, value);
 	}
 	
 	public static void storeLong(SharedPreferences sharedPreferences, String key, long value) {

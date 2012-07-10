@@ -47,6 +47,10 @@ public class Setting {
 		public static final String VERSION_REVISION = "version_revision";
 	}
 	
+	public class LongSettings {
+		public static final String LAST_UPDATE_TIME_STAMP = "last_update_time_stamp";
+	}
+	
 	private long mTimestamp;
 	private String mName;
 	private Object mValue;
