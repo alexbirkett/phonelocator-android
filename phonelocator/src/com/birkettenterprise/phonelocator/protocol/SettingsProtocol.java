@@ -83,23 +83,20 @@ public class SettingsProtocol {
 		public static final int IMSI = 1;
 	}
 	
-	public static void writeSettings(Vector<Setting> settings, DataOutputStream outputStream) throws IOException {
+	public static void writeSettings(Vector<Setting> settings,
+			DataOutputStream outputStream) throws IOException {
 		outputStream.writeByte(PROTOCOL_VERSION_2);
-		
-		if (settings == null) {
-			createDefaultSettings(outputStream);
-		} else {
-			for (Setting setting : settings) {
-				try {
-					int settingId = getSettingIdForSettingName(setting.getName());
-					writeSetting(settingId, setting.getTimestamp(), setting.getValue(), outputStream);
-				} catch (UnknowSettingException e) {
-					// ignore unknown settings
-				}
+
+		for (Setting setting : settings) {
+			try {
+				int settingId = getSettingIdForSettingName(setting.getName());
+				writeSetting(settingId, setting.getTimestamp(),
+						setting.getValue(), outputStream);
+			} catch (UnknowSettingException e) {
+				// ignore unknown settings
 			}
-			
-			
 		}
+
 		outputStream.writeByte(END_OF_SETTINGS_MARKER);
 	}
 	
@@ -219,21 +216,6 @@ public class SettingsProtocol {
 		} else if (STRING_OFFSET <= settingId && settingId < END_OF_SETTINGS_MARKER) {
 			String stringToWrite = (String)setting;
 			outputStream.writeUTF(stringToWrite);
-		}
-	}
-	
-	private static void createDefaultSettings(DataOutputStream outputStream) throws IOException {
-		for (int i = 0; i < DEFAULT_BOOLEAN_COUNT; i++) {
-			writeSetting(i+BOOLEAN_OFFSET, 0, true, outputStream);
-		}
-		for (int i = 0; i < DEFAULT_INTEGER_COUNT; i++) {
-			writeSetting(i+INTEGER_OFFSET, 0, 0, outputStream);
-		}
-		for (int i = 0; i < DEFAULT_STRING_COUNT; i++) {
-			writeSetting(i+STRING_OFFSET, 0, "", outputStream);
-		}
-		for (int i = 0; i < DEFAULT_INT64_COUNT; i++) {
-			writeSetting(i+INT64_OFFSET, 0, BigInteger.ZERO, outputStream);
 		}
 	}
 	

@@ -55,7 +55,7 @@ public class EnvironmentalSettingsSetter {
 	private static void setStringIfRequired(SharedPreferences sharedPreferences, String key, String value) {
 		String valueStoredInSettings = sharedPreferences.getString(key, "");
 
-		if (!valueStoredInSettings.equals(value)) {
+		if (!sharedPreferences.contains(key) || !valueStoredInSettings.equals(value)) {
 			SharedPreferences.Editor editor = sharedPreferences.edit();
 			editor.putString(key, value);
 			editor.commit();
@@ -65,12 +65,13 @@ public class EnvironmentalSettingsSetter {
 	private static void setIntIfRequired(SharedPreferences sharedPreferences, String key, int value) {
 		int valueStoredInSettings = sharedPreferences.getInt(key, 0);
 
-		if (value != valueStoredInSettings) {
+		if (!sharedPreferences.contains(key) || value != valueStoredInSettings) {
 			SharedPreferences.Editor editor = sharedPreferences.edit();
 			editor.putInt(key, value);
 			editor.commit();
 		}
 	}
+	
 	
 	static Version getVersion(PackageInfo packageInfo) {
 		return getVersion(packageInfo.versionName, packageInfo.versionCode);	

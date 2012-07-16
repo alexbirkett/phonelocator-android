@@ -1,6 +1,6 @@
 /**
  * 
- *  Copyright 2011 Birkett Enterprise Ltd
+ *  Copyright 2011-2012 Birkett Enterprise Ltd
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -88,13 +88,10 @@ public class RegistrationService extends Service {
 				mRegistrationResponse = mSession.register();
 				mSession.authenticate(mRegistrationResponse.getAuthenticationToken());
 				
-				Vector<Setting> settings =  mSession.createDefaultSettings();
-				
 				SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(RegistrationService.this);
-				EnvironmentalSettingsSetter.updateEnvironmentalSettingsIfRequired(sharedPreferences, RegistrationService.this);
-			
-				settingsManager.setSettings(settings);
-				settings = mSession.synchronizeSettings(settingsManager.getSettingsModifiedSinceLastSyncrhonization());
+				EnvironmentalSettingsSetter.updateEnvironmentalSettingsIfRequired(sharedPreferences, RegistrationService.this);			
+				Vector<Setting> settingsToSendToServer = settingsManager.getSettingsModifiedSinceLastSyncrhonization();
+				Vector<Setting> settings = mSession.synchronizeSettings(settingsToSendToServer);
 				settingsManager.setSettings(settings);
 				settingsManager.updateSettingsSynchronizationTimestamp();
 				
