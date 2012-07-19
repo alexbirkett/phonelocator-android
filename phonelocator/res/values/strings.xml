@@ -18,8 +18,8 @@
 	<string name="menu_item_web_site">Web site</string>
 	<string name="menu_item_test_alarm">Test alarm</string>
 	<string name="menu_item_update_log">Update history</string>
+	<string name="menu_item_buddy_message">Buddy message settings</string>
 	
-		
 	<string name="periodic_updates">Enable updates</string>
 	<string name="periodic_updates_summary">Send location to server periodically</string>
 
@@ -66,7 +66,7 @@
 	<string name="passcode_enabled_preference">Passcode enabled</string>
 	<string name="passcode_enabled_preference_summary">Require passcode to modify Phonelocator settings and to be sent in SMS trigger messages</string>
 	
-
+	
 	<string name="passcode_dialog_title">Enter passcode</string>
 	<string name="passcode_dialog_ok">OK</string>
 	<string name="passcode_dialog_cancel">Cancel</string>
@@ -80,5 +80,17 @@
 	<string name="updates_status_controller_uploading_location">Uploading location</string>
 	
 	<string name="location_status_controller_waiting_for_location">Waiting for location</string>
+	
+	<string name="buddy_number_select_from_contacts_button">Select from contacts</string>
+	<string name="buddy_number_description">Buddy number</string>
+	<string name="buddy_number_hint">Enter recipient</string>
+	<string name="buddy_number_preference_summary">Your buddy will receive a text when the SIM card in your phone is changed.</string>	
+	<string name="buddy_number_select_contacts_button">Select contacts button</string>
+	
+	<string name="buddy_message_description">Buddy message</string>
+	
+	<string name="buddy_message_hint">Enter message to be sent to your buddy when the SIM card is changed</string>
+	
+		
 	
 </resources>

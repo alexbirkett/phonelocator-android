@@ -14,6 +14,10 @@
         android:showAsAction="ifRoom"
         android:title="@string/menu_item_update_log"/>
     <item
+        android:id="@+id/buddy_message"
+        android:showAsAction="ifRoom"
+        android:title="@string/menu_item_buddy_message"/>
+    <item
         android:id="@+id/test_alarm"
         android:showAsAction="ifRoom"
         android:title="@string/menu_item_test_alarm"/>

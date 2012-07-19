@@ -109,6 +109,9 @@ public class DashboardActivity extends SherlockControllerActivity implements
 		case R.id.test_alarm:
 			AudioAlarmService.startAlarmService(this);
 			return true;
+		case R.id.buddy_message:
+			startBuddyMessageActivity();
+			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -154,6 +157,12 @@ public class DashboardActivity extends SherlockControllerActivity implements
 		Intent intent = new Intent(this, UpdateLogActivity.class);
 		startActivity(intent);
 	}
+	
+	private void startBuddyMessageActivity() {
+		Intent intent = new Intent(this, BuddyMessageActivity.class);
+		startActivity(intent);
+	}
+	
 
 	private void swapStatusController() {
 
