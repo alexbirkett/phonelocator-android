@@ -6,7 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.view.View;
-import android.widget.Toast;
+import android.widget.EditText;
 
 import com.birkettenterprise.phonelocator.R;
 import com.birkettenterprise.phonelocator.controller.PasscodeController;
@@ -50,9 +50,7 @@ public class BuddyMessageActivity extends BaseControllerActivity {
 									null, null, null);
 
 					if (c != null && c.moveToFirst()) {
-						String number = c.getString(0);
-						int type = c.getInt(1);
-						showSelectedNumber(type, number);
+						setNumber(c.getString(0));
 					}
 				} finally {
 					if (c != null) {
@@ -62,8 +60,9 @@ public class BuddyMessageActivity extends BaseControllerActivity {
 			}
 		}
 	}
-
-	public void showSelectedNumber(int type, String number) {
-	    Toast.makeText(this, type + ": " + number, Toast.LENGTH_LONG).show();      
+	
+	public void setNumber(String number) {
+		EditText editText = (EditText)findViewById(R.id.buddy_number_edit_text);
+		editText.setText(number);
 	}
 }
