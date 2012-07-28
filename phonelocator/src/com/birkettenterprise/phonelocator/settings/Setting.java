@@ -26,7 +26,9 @@ public class Setting {
 		public static final String AUTHENTICATION_TOKEN = "authentication_token";
 	    public static final String REGISTRATION_URL = "registration_url";
 	    public static final String PASSCODE = "passcode";
-	    
+	    public static final String BUDDY_TELEPHONE_NUMBER = "buddy_telephone_number";
+	    public static final String BUDDY_MESSAGE = "buddy_message";
+
 	}
     
 	public class BooleanSettings {
