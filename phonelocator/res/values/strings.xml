@@ -91,6 +91,10 @@
 	
 	<string name="buddy_message_hint">Enter message to be sent to your buddy when the SIM card is changed</string>
 	
+	<string name="buddy_message_save">Save</string>
+	<string name="buddy_message_cancel">Cancel</string>
+	
+	
 		
 	
 </resources>
