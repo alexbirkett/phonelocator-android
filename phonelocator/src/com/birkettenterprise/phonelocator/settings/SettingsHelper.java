@@ -137,4 +137,54 @@ public class SettingsHelper {
 	      editor.putBoolean(key, value);
 	      editor.commit();
 	}
+	
+	public static boolean putBooleanIfRequired(SharedPreferences.Editor editor, SharedPreferences sharedPreferences, String name, boolean value) {
+		boolean changed = false;
+		if (!sharedPreferences.contains(name)
+				|| sharedPreferences.getBoolean(name, false) != value) {
+			editor.putBoolean(name, value);
+			changed = true;
+		}
+		return changed;
+	}
+	
+	public static boolean putIntIfRequired(SharedPreferences.Editor editor, SharedPreferences sharedPreferences, String name, int value) {
+		boolean changed = false;
+		if (!sharedPreferences.contains(name)
+				|| sharedPreferences.getInt(name, 0) != value) {
+			editor.putInt(name, value);
+			changed = true;
+		}
+		return changed;
+	}
+	
+	public static boolean putStringIfRequired(SharedPreferences.Editor editor, SharedPreferences sharedPreferences, String name, String value) {
+		boolean changed = false;
+		if (!sharedPreferences.contains(name)
+				|| !sharedPreferences.getString(name, "").equals(value)) {
+			editor.putString(name, value);
+			changed = true;
+		}
+		return changed;
+	}
+	
+	public static boolean putStringIfRequired(SharedPreferences sharedPreferences, String key, String value) {
+		boolean changed = false;
+		SharedPreferences.Editor editor = sharedPreferences.edit();
+		if (putStringIfRequired(editor, sharedPreferences, key, value)) {
+			editor.commit();
+			changed = true;
+		}
+		return changed;
+	}
+	
+	public static boolean putIntIfRequired(SharedPreferences sharedPreferences, String key, int value) {
+		boolean changed = false;
+		SharedPreferences.Editor editor = sharedPreferences.edit();
+		if(putIntIfRequired(editor, sharedPreferences, key, value)) {
+			editor.commit();
+			changed = true;
+		}
+		return changed;
+	}
 }

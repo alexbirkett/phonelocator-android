@@ -21,8 +21,6 @@ public class EnvironmentalSettingsSetter {
 	public static Pattern mPattern = Pattern.compile("(\\d+)\\.(\\d+)");
 	
 	public static void updateEnvironmentalSettingsIfRequired(SharedPreferences sharedPreferences, Context context) {
-
-		
 	    TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
 		EnvironmentalSettingsSetter.setIMEIIMSIIfRequired(sharedPreferences, telephonyManager);
 		
@@ -37,41 +35,20 @@ public class EnvironmentalSettingsSetter {
 		String imei = telephonyManager.getDeviceId();
 	
 		Log.d(LOG_TAG, "imei " + imei);
-		setStringIfRequired(sharedPreferences, Setting.Integer64Settings.IMEI, imei);
+		SettingsHelper.putStringIfRequired(sharedPreferences, Setting.Integer64Settings.IMEI, imei);
 		
 		String imsi = telephonyManager.getSubscriberId();
 			
 		Log.d(LOG_TAG, "imsi " + imsi);
-		setStringIfRequired(sharedPreferences, Setting.Integer64Settings.IMSI, imsi);
+		SettingsHelper.putStringIfRequired(sharedPreferences, Setting.Integer64Settings.IMSI, imsi);
 	}
 	
 	public static void setVersionIfRequired(SharedPreferences sharedPreferences, PackageInfo packageInfo) {
 		Version version = getVersion(packageInfo);
-		setIntIfRequired(sharedPreferences, Setting.IntegerSettings.VERSION_MAJOR, version.mMajor);
-		setIntIfRequired(sharedPreferences, Setting.IntegerSettings.VERSION_MINOR, version.mMinor);
-		setIntIfRequired(sharedPreferences, Setting.IntegerSettings.VERSION_REVISION, version.mRevision);
+		SettingsHelper.putIntIfRequired(sharedPreferences, Setting.IntegerSettings.VERSION_MAJOR, version.mMajor);
+		SettingsHelper.putIntIfRequired(sharedPreferences, Setting.IntegerSettings.VERSION_MINOR, version.mMinor);
+		SettingsHelper.putIntIfRequired(sharedPreferences, Setting.IntegerSettings.VERSION_REVISION, version.mRevision);
 	}
-	
-	private static void setStringIfRequired(SharedPreferences sharedPreferences, String key, String value) {
-		String valueStoredInSettings = sharedPreferences.getString(key, "");
-
-		if (!sharedPreferences.contains(key) || !valueStoredInSettings.equals(value)) {
-			SharedPreferences.Editor editor = sharedPreferences.edit();
-			editor.putString(key, value);
-			editor.commit();
-		}
-	}
-	
-	private static void setIntIfRequired(SharedPreferences sharedPreferences, String key, int value) {
-		int valueStoredInSettings = sharedPreferences.getInt(key, 0);
-
-		if (!sharedPreferences.contains(key) || value != valueStoredInSettings) {
-			SharedPreferences.Editor editor = sharedPreferences.edit();
-			editor.putInt(key, value);
-			editor.commit();
-		}
-	}
-	
 	
 	static Version getVersion(PackageInfo packageInfo) {
 		return getVersion(packageInfo.versionName, packageInfo.versionCode);	
