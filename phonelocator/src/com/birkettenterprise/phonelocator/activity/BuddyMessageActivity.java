@@ -10,10 +10,13 @@ import android.widget.EditText;
 
 import com.birkettenterprise.phonelocator.R;
 import com.birkettenterprise.phonelocator.controller.PasscodeController;
+import com.birkettenterprise.phonelocator.settings.SettingsManager;
 
 import no.birkettconsulting.controllers.BaseControllerActivity;
 
 public class BuddyMessageActivity extends BaseControllerActivity {
+
+	private SettingsManager mSettingsManager;
 
 	View.OnClickListener mSelectFromContactsButtonListener = new View.OnClickListener() {
 		@Override
@@ -32,6 +35,19 @@ public class BuddyMessageActivity extends BaseControllerActivity {
 		
 		View button = findViewById(R.id.buddy_message_select_from_contacts);
 	    button.setOnClickListener(mSelectFromContactsButtonListener);
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		mSettingsManager = SettingsManager.getInstance(this, this);
+	}
+	
+	@Override
+	public void onPause() {
+		super.onPause();
+		mSettingsManager.releaseInstance(this);
+		mSettingsManager = null;
 	}
 	
 	@Override
