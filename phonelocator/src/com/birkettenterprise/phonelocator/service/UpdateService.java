@@ -21,7 +21,6 @@ package com.birkettenterprise.phonelocator.service;
 import java.io.IOException;
 import java.util.Vector;
 
-import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
@@ -38,8 +37,8 @@ import com.birkettenterprise.phonelocator.protocol.CorruptStreamException;
 import com.birkettenterprise.phonelocator.protocol.Session;
 import com.birkettenterprise.phonelocator.settings.EnvironmentalSettingsSetter;
 import com.birkettenterprise.phonelocator.settings.Setting;
+import com.birkettenterprise.phonelocator.settings.SettingSynchronizationHelper;
 import com.birkettenterprise.phonelocator.settings.SettingsHelper;
-import com.birkettenterprise.phonelocator.settings.SettingsManager;
 import com.commonsware.cwac.locpoll.LocationPollerResult;
 import com.commonsware.cwac.wakeful.WakefulIntentService;
 
@@ -74,7 +73,6 @@ public class UpdateService extends WakefulIntentService {
 		sendBroadcast(new Intent("com.birkettenterprise.phonelocator.SENDING_UPDATE"));
 		
 		Session session = new Session();
-		SettingsManager settingsManager = SettingsManager.getInstance(this, this);
 		
 		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 		EnvironmentalSettingsSetter.updateEnvironmentalSettingsIfRequired(sharedPreferences, this);
@@ -83,7 +81,7 @@ public class UpdateService extends WakefulIntentService {
 			session.connect();
 			session.authenticate(SettingsHelper.getAuthenticationToken(sharedPreferences));
 			
-			synchronizeSettings(session, settingsManager);
+			synchronizeSettings(session, sharedPreferences);
 			try {
 				Location location = getLocationFromIntent(intent);
 				sendUpdate(session, location, null);
@@ -103,7 +101,6 @@ public class UpdateService extends WakefulIntentService {
 			updateLog(e);
 			Log.d(LOG_TAG,"authentication failed");
 		} finally {
-			settingsManager.releaseInstance(this);
 			session.close();
 		}
 		sendBroadcast(new Intent("com.birkettenterprise.phonelocator.UPDATE_COMPLETE"));
@@ -118,11 +115,10 @@ public class UpdateService extends WakefulIntentService {
 		return location;
 	}
 	
-	private static void synchronizeSettings(Session session, SettingsManager settingsManager) throws IOException {
-		Vector<Setting> settings = session.synchronizeSettings(settingsManager.getSettingsModifiedSinceLastSyncrhonization());
-		settingsManager.updateSettingsSynchronizationTimestamp();
-		settingsManager.setSettings(settings);
-
+	private static void synchronizeSettings(Session session, SharedPreferences sharedPreferences) throws IOException {
+		Vector<Setting> settings = session.synchronizeSettings(SettingSynchronizationHelper.getSettingsModifiedSinceLastSyncrhonization(sharedPreferences));
+		SettingSynchronizationHelper.updateSettingsSynchronizationTimestamp(sharedPreferences);
+		SettingSynchronizationHelper.setSettings(sharedPreferences, settings);
 	}
 	
 	private static  void sendUpdate(Session session, Location location, String error) throws IOException, CorruptStreamException {

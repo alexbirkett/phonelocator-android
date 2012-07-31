@@ -22,13 +22,11 @@ import no.birkettconsulting.controllers.BaseControllerPreferenceActivity;
 
 import com.birkettenterprise.phonelocator.R;
 import com.birkettenterprise.phonelocator.controller.PasscodeController;
-import com.birkettenterprise.phonelocator.settings.SettingsManager;
 
 import android.os.Bundle;
 
 public class SettingsActivity extends BaseControllerPreferenceActivity {
 	
-	private SettingsManager mSettingsManager;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		addController(new PasscodeController(this));
@@ -36,9 +34,7 @@ public class SettingsActivity extends BaseControllerPreferenceActivity {
 	}
 	
 	protected void onResume() {
-		super.onResume();
-		mSettingsManager = SettingsManager.getInstance(this, this);
-		
+		super.onResume();	
 		// If the shared preferences are updated elsewhere, i.e. from the network. The view does not automatically refresh to reflect the new values.
 		// as a temporary work around, we add the settings every time the activity is resumed and remove them when it is destroyed
 		addPreferencesFromResource(R.xml.preferences);
@@ -46,8 +42,6 @@ public class SettingsActivity extends BaseControllerPreferenceActivity {
 	
 	protected void onPause() {
 		super.onPause();
-		mSettingsManager.releaseInstance(this);
-		mSettingsManager = null;
 		getPreferenceScreen().removeAll();
 	}
 	

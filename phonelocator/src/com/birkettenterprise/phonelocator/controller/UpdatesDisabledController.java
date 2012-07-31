@@ -3,7 +3,9 @@ package com.birkettenterprise.phonelocator.controller;
 import no.birkettconsulting.controllers.ViewController;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -11,11 +13,9 @@ import android.widget.Button;
 import com.birkettenterprise.phonelocator.R;
 import com.birkettenterprise.phonelocator.activity.SettingsActivity;
 import com.birkettenterprise.phonelocator.settings.SettingsHelper;
-import com.birkettenterprise.phonelocator.settings.SettingsManager;
 
 public class UpdatesDisabledController extends ViewController {
 
-	private SettingsManager mSettingsManager;
 	
 	public UpdatesDisabledController(Context context) {
 		super(context);
@@ -30,7 +30,9 @@ public class UpdatesDisabledController extends ViewController {
 
 			@Override
 			public void onClick(View v) {
-				SettingsHelper.setPeriodicUpdatesEnabled(mSettingsManager.getSharedPreferences(), true);
+				SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+				
+				SettingsHelper.setPeriodicUpdatesEnabled(sharedPreferences, true);
 			}
 			
 		});
@@ -44,15 +46,6 @@ public class UpdatesDisabledController extends ViewController {
 			}
 			
 		});
-	}
-	
-	protected void onResume() {
-		mSettingsManager = SettingsManager.getInstance(this, mContext);
-	}
-	
-	protected void onPause() {
-		mSettingsManager.releaseInstance(this);
-		mSettingsManager = null;
 	}
 	
 }

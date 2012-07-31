@@ -18,6 +18,7 @@
 
 package com.birkettenterprise.phonelocator.service;
 
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.Vector;
 
@@ -25,8 +26,8 @@ import com.birkettenterprise.phonelocator.protocol.RegistrationResponse;
 import com.birkettenterprise.phonelocator.protocol.Session;
 import com.birkettenterprise.phonelocator.settings.EnvironmentalSettingsSetter;
 import com.birkettenterprise.phonelocator.settings.Setting;
+import com.birkettenterprise.phonelocator.settings.SettingSynchronizationHelper;
 import com.birkettenterprise.phonelocator.settings.SettingsHelper;
-import com.birkettenterprise.phonelocator.settings.SettingsManager;
 
 import android.app.Service;
 import android.content.Intent;
@@ -50,22 +51,25 @@ public class RegistrationService extends Service {
     private SynchronizeRunnable mSynchronizeRunnable;
     private Thread mWorkerThread;
     
+    private static void synchronizeSettings(Session session, SharedPreferences sharedPreferences) throws IOException {
+		Vector<Setting> settings = session.synchronizeSettings(SettingSynchronizationHelper.getSettingsModifiedSinceLastSyncrhonization(sharedPreferences));
+		SettingSynchronizationHelper.updateSettingsSynchronizationTimestamp(sharedPreferences);
+		SettingSynchronizationHelper.setSettings(sharedPreferences, settings);
+	}
+    
     private class SynchronizeRunnable implements Runnable {
 
 		public void run() {
 		
-		SettingsManager settingsManager = SettingsManager.getInstance(this, RegistrationService.this);
+			SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(RegistrationService.this);
+			
 			try {
 				mSession.connect();
-				mSession.authenticate(SettingsHelper.getAuthenticationToken(PreferenceManager.getDefaultSharedPreferences(RegistrationService.this)));		
-				Vector<Setting> settings =  mSession.synchronizeSettings(settingsManager.getSettingsModifiedSinceLastSyncrhonization());
-				settingsManager.setSettings(settings);
-				settingsManager.updateSettingsSynchronizationTimestamp();
+				mSession.authenticate(SettingsHelper.getAuthenticationToken(sharedPreferences));		
+				synchronizeSettings(mSession, sharedPreferences);
 			} catch (Throwable e) {
 				mException = e;
 			} finally {
-				settingsManager.releaseInstance(this);
-				settingsManager = null;
 				mSession.close();
 			}
 			
@@ -81,8 +85,6 @@ public class RegistrationService extends Service {
     private class RegisrationRunnable implements Runnable {
 
 		public void run() {
-			SettingsManager settingsManager = SettingsManager.getInstance(this, RegistrationService.this);
-			
 			try {
 				mSession.connect();
 				mRegistrationResponse = mSession.register();
@@ -90,17 +92,15 @@ public class RegistrationService extends Service {
 				
 				SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(RegistrationService.this);
 				EnvironmentalSettingsSetter.updateEnvironmentalSettingsIfRequired(sharedPreferences, RegistrationService.this);			
-				Vector<Setting> settingsToSendToServer = settingsManager.getSettingsModifiedSinceLastSyncrhonization();
+				Vector<Setting> settingsToSendToServer = SettingSynchronizationHelper.getSettingsModifiedSinceLastSyncrhonization(sharedPreferences);
 				Vector<Setting> settings = mSession.synchronizeSettings(settingsToSendToServer);
-				settingsManager.setSettings(settings);
-				settingsManager.updateSettingsSynchronizationTimestamp();
+				SettingSynchronizationHelper.setSettings(sharedPreferences, settings);
+				SettingSynchronizationHelper.updateSettingsSynchronizationTimestamp(sharedPreferences);
 				
 				SettingsHelper.storeResponse(sharedPreferences, mRegistrationResponse.getAuthenticationToken(), mRegistrationResponse.getRegistrationUrl());
 			} catch (Throwable e) {
 				mException = e;
 			} finally {
-				settingsManager.releaseInstance(this);
-				settingsManager = null;
 				mSession.close();
 			}
 			

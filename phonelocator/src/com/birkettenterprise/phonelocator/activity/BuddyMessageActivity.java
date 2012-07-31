@@ -12,15 +12,9 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.birkettenterprise.phonelocator.R;
-import com.birkettenterprise.phonelocator.controller.PasscodeController;
 import com.birkettenterprise.phonelocator.settings.Setting;
-import com.birkettenterprise.phonelocator.settings.SettingsManager;
-
-import no.birkettconsulting.controllers.BaseControllerActivity;
 
 public class BuddyMessageActivity extends Activity {
-
-	private SettingsManager mSettingsManager;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -33,15 +27,11 @@ public class BuddyMessageActivity extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		mSettingsManager = SettingsManager.getInstance(this, this);
-
 	}
 	
 	@Override
 	public void onPause() {
 		super.onPause();
-		mSettingsManager.releaseInstance(this);
-		mSettingsManager = null;
 	}
 	
 	@Override

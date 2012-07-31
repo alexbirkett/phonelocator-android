@@ -18,6 +18,8 @@
 
 package com.birkettenterprise.phonelocator.application;
 
+import com.birkettenterprise.phonelocator.settings.SettingTimestampListener;
+
 import net.hockeyapp.android.CrashManager;
 import android.app.Application;
 
@@ -26,12 +28,14 @@ public class PhonelocatorApplication extends Application {
 	public static String LOG_TAG = "PHONELOCATOR";
 	
 	private static PhonelocatorApplication mInstance;
+	private SettingTimestampListener mSettingTimestampListener;
 	
 	@Override
 	public void onCreate() {
 		super.onCreate();
 		setInstanceVariable();
 		CrashManager.registerHandler();
+		createTimestampListener();
 	}
 	
 	private void setInstanceVariable() {
@@ -43,5 +47,15 @@ public class PhonelocatorApplication extends Application {
 	
 	public static PhonelocatorApplication getInstance() {
 		return mInstance;
+	}
+	
+	private void createTimestampListener() {
+		// A setting timestamp listener needs to exist while the app process is running.
+		// A service is not used because we don't want to indicate to the framework that an operation is in progress
+		mSettingTimestampListener = new SettingTimestampListener(this);
+	}
+	
+	public SettingTimestampListener getSettingTimestampListener() {
+		return mSettingTimestampListener;
 	}
 }
