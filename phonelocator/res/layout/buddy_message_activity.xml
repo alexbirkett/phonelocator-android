@@ -32,15 +32,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/buddy_message_save"
-            android:onClick="saveListener" />
-
+            android:text="@string/buddy_message_cancel"
+            android:onClick="cancelListener" />
+         
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/buddy_message_cancel"
-            android:onClick="cancelListener" />
+            android:text="@string/buddy_message_save"
+            android:onClick="saveListener" />
+
+       
 
     </LinearLayout>
 
