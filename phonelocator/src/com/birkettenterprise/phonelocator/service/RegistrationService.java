@@ -53,9 +53,9 @@ public class RegistrationService extends Service {
     
     private static void synchronizeSettings(Session session, SharedPreferences sharedPreferences) throws IOException {
 		Vector<Setting> settings = session.synchronizeSettings(SettingSynchronizationHelper.getSettingsModifiedSinceLastSyncrhonization(sharedPreferences));
-		SettingSynchronizationHelper.updateSettingsSynchronizationTimestamp(sharedPreferences);
 		SettingSynchronizationHelper.setSettings(sharedPreferences, settings);
-	}
+		SettingSynchronizationHelper.updateSettingsSynchronizationTimestamp(sharedPreferences);
+    }
     
     private class SynchronizeRunnable implements Runnable {
 
@@ -95,7 +95,6 @@ public class RegistrationService extends Service {
 				Vector<Setting> settingsToSendToServer = SettingSynchronizationHelper.getSettingsModifiedSinceLastSyncrhonization(sharedPreferences);
 				Vector<Setting> settings = mSession.synchronizeSettings(settingsToSendToServer);
 				SettingSynchronizationHelper.setSettings(sharedPreferences, settings);
-				SettingSynchronizationHelper.updateSettingsSynchronizationTimestamp(sharedPreferences);
 				
 				SettingsHelper.storeResponse(sharedPreferences, mRegistrationResponse.getAuthenticationToken(), mRegistrationResponse.getRegistrationUrl());
 			} catch (Throwable e) {
