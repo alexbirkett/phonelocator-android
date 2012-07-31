@@ -23,6 +23,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.birkettenterprise.phonelocator.R;
+import com.birkettenterprise.phonelocator.broadcastreceiver.PollLocationAndSendUpdateBroadcastReceiver;
 import com.birkettenterprise.phonelocator.controller.CountdownController;
 import com.birkettenterprise.phonelocator.controller.DatabaseController;
 import com.birkettenterprise.phonelocator.controller.LocationStatusController;
@@ -240,7 +241,7 @@ public class DashboardActivity extends SherlockControllerActivity implements
 
 	private void registerBroadcastReceiver() {
 		IntentFilter filter = new IntentFilter();
-		filter.addAction("com.birkettenterprise.phonelocator.UPDATE");
+		filter.addAction(PollLocationAndSendUpdateBroadcastReceiver.ACTION);
 		filter.addAction("com.birkettenterprise.phonelocator.UPDATE_COMPLETE");
 		filter.addAction("com.birkettenterprise.phonelocator.SENDING_UPDATE");
 		registerReceiver(mBroadcastReceiver, filter);
@@ -261,7 +262,7 @@ public class DashboardActivity extends SherlockControllerActivity implements
 				} else if ("com.birkettenterprise.phonelocator.SENDING_UPDATE"
 						.equals(intent.getAction())) {
 					showController(mUpdateStatusController);
-				} else if ("com.birkettenterprise.phonelocator.UPDATE"
+				} else if (PollLocationAndSendUpdateBroadcastReceiver.ACTION
 						.equals(intent.getAction())) {
 					showController(mLocationStatusController);
 				}

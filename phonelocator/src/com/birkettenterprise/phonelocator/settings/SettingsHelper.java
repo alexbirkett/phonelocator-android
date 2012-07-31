@@ -18,6 +18,7 @@
 
 package com.birkettenterprise.phonelocator.settings;
 
+import com.birkettenterprise.phonelocator.broadcastreceiver.PollLocationAndSendUpdateBroadcastReceiver;
 import com.birkettenterprise.phonelocator.settings.Setting.BooleanSettings;
 import com.birkettenterprise.phonelocator.settings.Setting.LongSettings;
 import com.birkettenterprise.phonelocator.settings.Setting.StringSettings;
@@ -43,7 +44,7 @@ public class SettingsHelper {
 		AlarmManager alamManager = (AlarmManager) context
 				.getSystemService(Context.ALARM_SERVICE);
 				
-		Intent intent = new Intent("com.birkettenterprise.phonelocator.UPDATE");
+		Intent intent = new Intent(PollLocationAndSendUpdateBroadcastReceiver.ACTION);
 		PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
 		if (isPeriodicUpdatesEnabled(PreferenceManager.getDefaultSharedPreferences(context))) {

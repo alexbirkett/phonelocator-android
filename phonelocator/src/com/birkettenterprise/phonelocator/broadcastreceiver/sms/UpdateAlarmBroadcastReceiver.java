@@ -1,4 +1,4 @@
-package com.birkettenterprise.phonelocator.broadcastreceiver;
+package com.birkettenterprise.phonelocator.broadcastreceiver.sms;
 
 import com.birkettenterprise.phonelocator.R;
 import com.birkettenterprise.phonelocator.service.AudioAlarmService;
@@ -14,11 +14,11 @@ import android.preference.PreferenceManager;
 import android.telephony.SmsMessage;
 
 
-public class SMSBroadcastReceiver extends BroadcastReceiver {
+public class UpdateAlarmBroadcastReceiver extends BroadcastReceiver {
 
 	private SharedPreferences mSharedPreferences;
 	
-	enum Action {
+	public enum Action {
 		None,
 		Update,
 		Alarm
@@ -33,7 +33,7 @@ public class SMSBroadcastReceiver extends BroadcastReceiver {
 		Action action = parseMessage(sms, context);
 		
 		if (action == Action.Update) {
-			UpdateUtility.update(context);			
+			UpdateUtility.pollLocationAndSendUpdate(context);			
 		} else if (action == Action.Alarm){
 			AudioAlarmService.startAlarmService(context);		
 		}

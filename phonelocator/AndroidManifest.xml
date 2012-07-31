@@ -66,22 +66,22 @@
 		<service android:name="com.commonsware.cwac.locpoll.LocationPollerService" />
 	
 		
-		<receiver android:name=".broadcastreceiver.BootCompletedBroadcastReceiver">  
+		<receiver android:name=".broadcastreceiver.boot.ScheduleUpdatesBroadcastReceiver">  
 		    <intent-filter>  
 		        <action android:name="android.intent.action.BOOT_COMPLETED" />  
 		    </intent-filter>
 		</receiver>
-		<receiver android:name=".broadcastreceiver.SMSBroadcastReceiver">
+		<receiver android:name=".broadcastreceiver.sms.UpdateAlarmBroadcastReceiver">
    			<intent-filter android:priority="2147483647">  
 		         <action android:name="android.provider.Telephony.SMS_RECEIVED"></action>
 		    </intent-filter>
 		</receiver>  
-		<receiver android:name=".broadcastreceiver.UpdateBroadcastReceiver">
+		<receiver android:name=".broadcastreceiver.PollLocationAndSendUpdateBroadcastReceiver">
 		  <intent-filter>  
-		        <action android:name="com.birkettenterprise.phonelocator.UPDATE" />  
+		        <action android:name="com.birkettenterprise.phonelocator.POLL_LOCATION_AND_SEND_UPDATE" />  
 		</intent-filter>
 		</receiver> 
-		<receiver android:name=".broadcastreceiver.LocationBroadcastReceiver"/>
+		<receiver android:name=".broadcastreceiver.SendWorkToUpdateServiceBroadcastReceiver"/>
 		<receiver android:name=".broadcastreceiver.StopAudioAlarmBroadcastReceiver"/>
 		<receiver android:name="com.commonsware.cwac.locpoll.LocationPoller" />
 		

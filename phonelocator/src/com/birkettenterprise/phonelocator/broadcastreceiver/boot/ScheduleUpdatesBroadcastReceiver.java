@@ -1,6 +1,6 @@
 /**
  * 
- *  Copyright 2011, 2012 Birkett Enterprise Ltd
+ *  Copyright 2011 Birkett Enterprise Ltd
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,26 +16,17 @@
  * 
  */
 
-package com.birkettenterprise.phonelocator.broadcastreceiver;
+package com.birkettenterprise.phonelocator.broadcastreceiver.boot;
 
 import com.birkettenterprise.phonelocator.settings.SettingsHelper;
-import com.birkettenterprise.phonelocator.utility.UpdateUtility;
-
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 
-
-public class UpdateBroadcastReceiver extends BroadcastReceiver {
-		
-	@Override
-	public void onReceive(Context context, Intent i) {	
-		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-		SettingsHelper.setLastUpdateTimeStamp(preferences, System.currentTimeMillis());
-		UpdateUtility.update(context);
-	}
-	
+public class ScheduleUpdatesBroadcastReceiver extends BroadcastReceiver {
+    @Override
+    public void onReceive(Context context, Intent intent) {
+    	SettingsHelper.scheduleUpdates(context);
+    }
 }

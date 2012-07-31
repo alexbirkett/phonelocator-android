@@ -18,7 +18,7 @@
 
 package com.birkettenterprise.phonelocator.utility;
 
-import com.birkettenterprise.phonelocator.broadcastreceiver.LocationBroadcastReceiver;
+import com.birkettenterprise.phonelocator.broadcastreceiver.SendWorkToUpdateServiceBroadcastReceiver;
 import com.commonsware.cwac.locpoll.LocationPoller;
 import com.commonsware.cwac.locpoll.LocationPollerParameter;
 
@@ -37,7 +37,7 @@ public class UpdateUtility {
 	private static String GPS_ENABLED = "gps_enabled";
 	
 	
-	public static void update(Context context) {
+	public static void pollLocationAndSendUpdate(Context context) {
 		Bundle bundle = new Bundle();
 		
 		LocationPollerParameter parameter = new LocationPollerParameter(bundle);
@@ -46,7 +46,7 @@ public class UpdateUtility {
 			parameter.addProvider(LocationManager.GPS_PROVIDER);
 		}
 		parameter.addProvider(LocationManager.NETWORK_PROVIDER);
-		parameter.setIntentToBroadcastOnCompletion(new Intent(context, LocationBroadcastReceiver.class));
+		parameter.setIntentToBroadcastOnCompletion(new Intent(context, SendWorkToUpdateServiceBroadcastReceiver.class));
 		
 		Intent intent = new Intent(context, LocationPoller.class);
 		intent.putExtras(bundle);
