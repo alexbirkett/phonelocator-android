@@ -1,5 +1,6 @@
 package com.birkettenterprise.phonelocator.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -17,13 +18,13 @@ import com.birkettenterprise.phonelocator.settings.SettingsManager;
 
 import no.birkettconsulting.controllers.BaseControllerActivity;
 
-public class BuddyMessageActivity extends BaseControllerActivity {
+public class BuddyMessageActivity extends Activity {
 
 	private SettingsManager mSettingsManager;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		addController(new PasscodeController(this));
+		//addController(new PasscodeController(this));
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.buddy_message_activity);
 		loadSettings();
