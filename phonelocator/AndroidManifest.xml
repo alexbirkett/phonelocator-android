@@ -37,7 +37,6 @@
 	<application android:name=".application.PhonelocatorApplication" 
 	             android:icon="@drawable/icon"
 	             android:label="@string/app_name"
-				 android:debuggable="true"
 				 android:theme="@style/Theme.Sherlock">
 	
 		<activity android:name=".activity.SigninActivity" android:label="@string/app_name" android:launchMode="singleInstance">	
