@@ -95,6 +95,8 @@
 	<string name="buddy_message_cancel">Cancel</string>
 	
 	
-		
+	<string name="countdown_controler_next_update">Next update in</string>
+	
+	
 	
 </resources>

@@ -28,7 +28,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="Next update in "
+        android:text="@string/countdown_controler_next_update"
         android:textSize="24sp" />
 
     <TextView
@@ -36,7 +36,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="00:00:00"
         android:textSize="40sp" />
 
 </LinearLayout>
