@@ -83,14 +83,9 @@
 	
 	<string name="buddy_number_select_from_contacts_button">Select from contacts</string>
 	<string name="buddy_number_description">Buddy number</string>
-	<string name="buddy_number_hint">Enter recipient</string>
-	<string name="buddy_number_preference_summary">Your buddy will receive a text when the SIM card in your phone is changed.</string>	
-	<string name="buddy_number_select_contacts_button">Select contacts button</string>
-	
+	<string name="buddy_number_hint">Enter recipient</string>	
 	<string name="buddy_message_description">Buddy message</string>
-	
 	<string name="buddy_message_hint">Enter message to be sent to your buddy when the SIM card is changed</string>
-	
 	<string name="buddy_message_save">Save</string>
 	<string name="buddy_message_cancel">Cancel</string>
 	
