@@ -36,6 +36,8 @@ public class Setting {
 	    public static final String REGISTERED = "registered";
 	    public static final String HIDE_SMS_TRIGGER = "hide_sms_trigger";
 	    public static final String PASSCODE_ENABLED = "passcode_enabled";
+	    public static final String SEND_BUDDY_MESSAGE = "send_buddy_message";
+	    public static final String BUDDY_MESSAGE_ENABLED = "buddy_message_enabled";
 	}
 	
 	public class Integer64Settings {

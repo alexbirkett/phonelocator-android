@@ -4,6 +4,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.birkettenterprise.phonelocator.application.PhonelocatorApplication;
+import com.birkettenterprise.phonelocator.utility.StringUtil;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -17,30 +18,39 @@ public class EnvironmentalSettingsSetter {
 	
 	public static final String LOG_TAG = PhonelocatorApplication.LOG_TAG + "_ENVIRONMENTAL_SETTINGS";
 
-	
 	public static Pattern mPattern = Pattern.compile("(\\d+)\\.(\\d+)");
 	
 	public static void updateEnvironmentalSettingsIfRequired(SharedPreferences sharedPreferences, Context context) {
 	    TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-		EnvironmentalSettingsSetter.setIMEIIMSIIfRequired(sharedPreferences, telephonyManager);
+		setIMEIIfRequired(sharedPreferences, telephonyManager);
+		setIMSIIfRequiredAndDetectSIMCardChanged(sharedPreferences, telephonyManager);
 		
 		try {
-			EnvironmentalSettingsSetter.setVersionIfRequired(sharedPreferences, context.getPackageManager().getPackageInfo(context.getPackageName(), 0));
+			EnvironmentalSettingsSetter.setVersionIfRequired(
+					sharedPreferences,
+					context.getPackageManager().getPackageInfo(
+							context.getPackageName(), 0));
 		} catch (NameNotFoundException e1) {
 		}
 		
 	}
 	
-	public static void setIMEIIMSIIfRequired(SharedPreferences sharedPreferences, TelephonyManager telephonyManager) {
+	public static void setIMEIIfRequired(SharedPreferences sharedPreferences, TelephonyManager telephonyManager) {
 		String imei = telephonyManager.getDeviceId();
 	
 		Log.d(LOG_TAG, "imei " + imei);
 		SettingsHelper.putStringIfRequired(sharedPreferences, Setting.Integer64Settings.IMEI, imei);
-		
+	}
+	
+	public static void setIMSIIfRequiredAndDetectSIMCardChanged(SharedPreferences sharedPreferences, TelephonyManager telephonyManager) {
 		String imsi = telephonyManager.getSubscriberId();
-			
+		
 		Log.d(LOG_TAG, "imsi " + imsi);
-		SettingsHelper.putStringIfRequired(sharedPreferences, Setting.Integer64Settings.IMSI, imsi);
+		if (!StringUtil.isNullOrWhiteSpace(imsi) && SettingsHelper.putStringIfRequired(sharedPreferences, Setting.Integer64Settings.IMSI, imsi)) {
+			if (SettingsHelper.isBuddyMessageEnabled(sharedPreferences)) {
+				SettingsHelper.setSendBuddyMessage(sharedPreferences, true);
+			}
+		}
 	}
 	
 	public static void setVersionIfRequired(SharedPreferences sharedPreferences, PackageInfo packageInfo) {

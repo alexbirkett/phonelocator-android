@@ -99,6 +99,14 @@ public class SettingsHelper {
 		return sharedPreferences.getString(StringSettings.PASSCODE, null);
 	}
 	
+	public static String getBuddyTelephoneNumber(SharedPreferences sharedPreferences) {
+		return sharedPreferences.getString(StringSettings.BUDDY_TELEPHONE_NUMBER, null);
+	}
+	
+	public static String getBuddyMessage(SharedPreferences sharedPreferences) {
+		return sharedPreferences.getString(StringSettings.BUDDY_MESSAGE, null);
+	}
+	
 	public static boolean isPeriodicUpdatesEnabled(SharedPreferences sharedPreferences) {
 		return sharedPreferences.getBoolean(BooleanSettings.PERIODIC_UPDATES_ENABLED, false);
 	}	
@@ -117,6 +125,22 @@ public class SettingsHelper {
 	
 	public static boolean isPasscodeEnabled(SharedPreferences sharedPreferences) {
 		return sharedPreferences.getBoolean(BooleanSettings.PASSCODE_ENABLED, false);
+	}
+	
+	public static void setSendBuddyMessage(SharedPreferences sharedPreferences, boolean sendBuddyMessage) {
+		storeBoolean(sharedPreferences, BooleanSettings.SEND_BUDDY_MESSAGE, sendBuddyMessage);
+	}
+	
+	public static boolean isSendBuddyMessage(SharedPreferences sharedPreferences) {
+		return sharedPreferences.getBoolean(BooleanSettings.SEND_BUDDY_MESSAGE, false);
+	}
+
+	public static void setBuddyMessageEnabled(SharedPreferences sharedPreferences, boolean enabled) {
+		storeBoolean(sharedPreferences, BooleanSettings.BUDDY_MESSAGE_ENABLED, enabled);
+	}
+	
+	public static boolean isBuddyMessageEnabled(SharedPreferences sharedPreferences) {
+		return sharedPreferences.getBoolean(BooleanSettings.BUDDY_MESSAGE_ENABLED, true);
 	}
 	
 	public static long getLastUpdateTimeStamp(SharedPreferences sharedPreferences) {
