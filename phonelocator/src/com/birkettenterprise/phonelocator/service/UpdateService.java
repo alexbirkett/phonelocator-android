@@ -175,11 +175,15 @@ public class UpdateService extends WakefulIntentService {
 		for (Location location : locations) {
 			mDatabase.updateLog(location);
 		}
-
-		getContentResolver().notifyChange(UpdateLogDatabaseContentProvider.URI, null);
+		notifyDataChanged();
 	}
 	
 	private void updateLog(Exception e) {
 		mDatabase.updateLog(e);
+		notifyDataChanged();
+	}
+	
+	private void notifyDataChanged() {
+		getContentResolver().notifyChange(UpdateLogDatabaseContentProvider.URI, null);
 	}
 }
