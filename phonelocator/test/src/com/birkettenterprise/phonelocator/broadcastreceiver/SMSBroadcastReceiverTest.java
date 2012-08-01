@@ -15,7 +15,7 @@ public class SMSBroadcastReceiverTest extends AndroidTestCase {
 		SharedPreferences.Editor editor = sharedPreferences.edit();
 		editor.putString(StringSettings.PASSCODE, "1234");
 		editor.putBoolean(BooleanSettings.PASSCODE_ENABLED, true);
-		editor.apply();
+		editor.commit();
 		
 		UpdateAlarmBroadcastReceiver broadcastReciver = new UpdateAlarmBroadcastReceiver();
 		broadcastReciver.setSharedPreferences(sharedPreferences);
