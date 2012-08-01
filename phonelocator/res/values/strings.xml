@@ -32,7 +32,7 @@
 
 	<string name="registering_progress_dialog_message">Registering&#8230;</string>
 
-	<string name="no_updates_sent_message">Congratulations on installing Phonelocator!\n\nTo enable updates tap the settings tab and then tap enable updates.</string>
+	<string name="no_updates_sent_message">Phonelocator has not attempted to update your Phone\'s location</string>
 	
 	<string name="update_timestamp_description">Update at: </string>
 	<string name="location_timestamp_description">Location acquired: </string>
