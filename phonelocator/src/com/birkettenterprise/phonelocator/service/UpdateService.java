@@ -19,6 +19,7 @@
 package com.birkettenterprise.phonelocator.service;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Vector;
 
 import android.content.Intent;
@@ -39,6 +40,7 @@ import com.birkettenterprise.phonelocator.settings.EnvironmentalSettingsSetter;
 import com.birkettenterprise.phonelocator.settings.Setting;
 import com.birkettenterprise.phonelocator.settings.SettingSynchronizationHelper;
 import com.birkettenterprise.phonelocator.settings.SettingsHelper;
+import com.birkettenterprise.phonelocator.utility.LocationMarshallingUtility;
 import com.commonsware.cwac.locpoll.LocationPollerResult;
 import com.commonsware.cwac.wakeful.WakefulIntentService;
 
@@ -61,49 +63,83 @@ public class UpdateService extends WakefulIntentService {
 
 	@Override
 	protected void doWakefulWork(Intent intent) {
-	//	int command = intent.getIntExtra(COMMAND, -1);		
 		handleUpdateLocation(intent);
 		mDatabase.close();
 	}
 	
-	
-	
+	private void storeLocationBestEffort(Intent intent) {
+		try {
+			Location location = getLocationFromIntent(intent);
+			LocationMarshallingUtility.storeLocation(this, location);
+		} catch (LocationPollFailedException e) {
+		} catch (IOException e) {
+		}
+	}
+
 	private void handleUpdateLocation(Intent intent) {
 		Log.v(LOG_TAG, "handleUpdateLocation");
-		sendBroadcast(new Intent("com.birkettenterprise.phonelocator.SENDING_UPDATE"));
-		
+		sendBroadcast(new Intent(
+				"com.birkettenterprise.phonelocator.SENDING_UPDATE"));
+
 		Session session = new Session();
-		
-		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-		EnvironmentalSettingsSetter.updateEnvironmentalSettingsIfRequired(sharedPreferences, this);
-		
+
+		SharedPreferences sharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(this);
+		EnvironmentalSettingsSetter.updateEnvironmentalSettingsIfRequired(
+				sharedPreferences, this);
+
 		try {
+			// store the location in case the connection fails so that it can be
+			// sent later
+			storeLocationBestEffort(intent);
+
 			session.connect();
-			session.authenticate(SettingsHelper.getAuthenticationToken(sharedPreferences));
-			
+			session.authenticate(SettingsHelper
+					.getAuthenticationToken(sharedPreferences));
+
 			synchronizeSettings(session, sharedPreferences);
-			try {
+
+			List<Location> locations = LocationMarshallingUtility
+					.retrieveLocations(this);
+
+			if (locations.size() < 1) {
+				// if the location was not stored, perhaps because of an out of
+				// disk condition
 				Location location = getLocationFromIntent(intent);
-				sendUpdate(session, location, null);
-				updateLog(location);
-			} catch (LocationPollFailedException e) {
-				sendUpdate(session, null, e.getMessage());
-				updateLog(e);
+				locations = new Vector<Location>();
+				locations.add(location);
 			}
-			
+
+			sendUpdate(session, locations);
+
+			// delete the stored locations
+			LocationMarshallingUtility.deleteLocations(this);
+
+			updateLog(locations);
+
 		} catch (IOException e) {
 			updateLog(e);
-			Log.d(LOG_TAG,"error sending updates settings " + e.toString());
+			Log.d(LOG_TAG, "error sending updates settings " + e.toString());
 		} catch (CorruptStreamException e) {
 			updateLog(e);
-			Log.d(LOG_TAG,"error sending updates settings " + e.toString());
+			Log.d(LOG_TAG, "error sending updates settings " + e.toString());
 		} catch (AuthenticationFailedException e) {
 			updateLog(e);
-			Log.d(LOG_TAG,"authentication failed");
+			Log.d(LOG_TAG, "authentication failed");
+		} catch (LocationPollFailedException e) {
+			try {
+				sendUpdate(session, e.getMessage());
+			} catch (IOException e1) {
+				updateLog(e1);
+			} catch (CorruptStreamException e1) {
+				updateLog(e1);
+			}
+			updateLog(e);
 		} finally {
 			session.close();
 		}
-		sendBroadcast(new Intent("com.birkettenterprise.phonelocator.UPDATE_COMPLETE"));
+		sendBroadcast(new Intent(
+				"com.birkettenterprise.phonelocator.UPDATE_COMPLETE"));
 	}
    
 	private static Location getLocationFromIntent(Intent intent) throws LocationPollFailedException {
@@ -121,15 +157,25 @@ public class UpdateService extends WakefulIntentService {
 		SettingSynchronizationHelper.setSettings(sharedPreferences, settings);
 	}
 	
-	private static  void sendUpdate(Session session, Location location, String error) throws IOException, CorruptStreamException {
+	private static  void sendUpdate(Session session, List<Location> locations) throws IOException, CorruptStreamException {
 		BeaconList beaconList = new BeaconList();
-		beaconList.add(new GpsBeacon(location, error));
+		for (Location location : locations) {
+			beaconList.add(new GpsBeacon(location, null));
+		}
 		session.sendPositionUpdate(beaconList);
 	}
 	
-	private void updateLog(Location location) {
-		mDatabase.updateLog(location);
-		
+	private static  void sendUpdate(Session session, String error) throws IOException, CorruptStreamException {
+		// send empty beacon list
+		BeaconList beaconList = new BeaconList();
+		session.sendPositionUpdate(beaconList);
+	}
+	
+	private void updateLog(List<Location> locations) {
+		for (Location location : locations) {
+			mDatabase.updateLog(location);
+		}
+
 		getContentResolver().notifyChange(UpdateLogDatabaseContentProvider.URI, null);
 	}
 	
