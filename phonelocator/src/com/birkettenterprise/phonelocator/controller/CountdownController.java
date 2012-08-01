@@ -8,11 +8,14 @@ import com.birkettenterprise.phonelocator.R;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.widget.TextView;
 import no.birkettconsulting.controllers.ViewController;
 
 public class CountdownController extends ViewController {
 
+	
+	private static final String LOG_TAG = "CountdownController";
 	private long mEndTimeInMillis;
 	private boolean mRunning;
 	
@@ -36,6 +39,7 @@ public class CountdownController extends ViewController {
 	@Override
 	protected void onResume() {
 		if (mRunning) {
+			updateClock();
 			startBeating();
 		}
 	}
@@ -78,7 +82,7 @@ public class CountdownController extends ViewController {
 
 		@Override
 		public void run() {
-			
+			Log.d(LOG_TAG, "beat");
 			updateClock();
 			if (mRunning) {
 				startBeating();

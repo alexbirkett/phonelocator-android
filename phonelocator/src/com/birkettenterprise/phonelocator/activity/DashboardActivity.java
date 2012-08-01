@@ -195,7 +195,6 @@ public class DashboardActivity extends SherlockControllerActivity implements
 	private void showController(ViewController controller) {
 		detachStatusControllers();
 		FrameLayout counterContainer = (FrameLayout) findViewById(R.id.status_container);
-		detachStatusControllers();
 		counterContainer.addView(controller.getView());
 	}
 
