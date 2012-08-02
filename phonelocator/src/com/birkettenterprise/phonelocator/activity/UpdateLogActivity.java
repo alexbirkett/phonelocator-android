@@ -25,6 +25,7 @@ import no.birkettconsulting.controllers.ListController;
 import com.actionbarsherlock.app.SherlockControllerActivity;
 import com.birkettenterprise.phonelocator.R;
 import com.birkettenterprise.phonelocator.database.UpdateLogDatabaseContentProvider;
+import com.birkettenterprise.phonelocator.utility.StringUtil;
 
 import android.content.Context;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
@@ -81,30 +82,22 @@ public class UpdateLogActivity extends SherlockControllerActivity implements Loa
 
 	        @Override
 	        public void bindView(View view, Context context, Cursor cursor) {
-	          String error = cursor.getString(ERROR_TYPE_COLUMN_INDEX);
+	          String errorType = cursor.getString(ERROR_TYPE_COLUMN_INDEX);
 	 
-	          TextView updateTimestampView = (TextView) view.findViewById(R.id.update_timestamp);
+	          TextView updateTimestampView = (TextView) view.findViewById(R.id.update_log_update_timestamp);
 	          setTimeStamp(updateTimestampView,cursor,UPDATE_TIMESTAMP_COLUMN_INDEX);
 	          
-	          View errorRow = view.findViewById(R.id.error_row);
-	          View locationProviderRow = view.findViewById(R.id.location_provider_row);
-	          View locationTimestampRow = view.findViewById(R.id.location_timestamp_row);
-	          if (error == null) {
-	        	  errorRow.setVisibility(View.GONE); 
-	        	  locationProviderRow.setVisibility(View.VISIBLE);
-	        	  locationTimestampRow.setVisibility(View.VISIBLE);
-	        	  
-	        	  setTimeStamp((TextView) view.findViewById(R.id.location_timestamp), cursor, LOCATION_TIMESTAMP_COLUMN_INDEX);
-	        	  TextView locationProviderTextView = (TextView) view.findViewById(R.id.location_provider);
+        	  TextView errorView = (TextView) view.findViewById(R.id.update_log_error);
+        		  
+	          if (errorType == null) {     	  
+	         	  TextView locationProviderTextView = (TextView) view.findViewById(R.id.update_log_location_provider);
 	        	  locationProviderTextView.setText(cursor.getString(PROVIDER_COLUMN_INDEX));
-	              
+	        	  errorView.setVisibility(View.GONE);
+	           	  view.findViewById(R.id.update_log_location_provider_layout).setVisibility(View.VISIBLE);
 	          } else {
-	        	  errorRow.setVisibility(View.VISIBLE);
-	        	  locationProviderRow.setVisibility(View.GONE);
-	        	  locationTimestampRow.setVisibility(View.GONE);
-	        	  
-	        	  TextView errorView = (TextView) view.findViewById(R.id.error);
-	        	  setError(errorView, cursor);
+	        	  errorView.setVisibility(View.VISIBLE);   	
+	        	  setError(errorView,cursor, errorType);
+	        	  view.findViewById(R.id.update_log_location_provider_layout).setVisibility(View.GONE);
 	          }
 	        }
 	    };
@@ -114,25 +107,23 @@ public class UpdateLogActivity extends SherlockControllerActivity implements Loa
         mListController.setListAdapter(mResourceCursorAdapter);
     }
 	
-	 
-    
 	private void setTimeStamp(TextView view, Cursor cursor, int columnIndex) {
 		view.setText(new Date(cursor.getLong(columnIndex)).toLocaleString());
 	}
 	
-	private void setError(TextView view, Cursor cursor) {
-		String errorType = cursor.getString(ERROR_TYPE_COLUMN_INDEX);
-		if (errorType == null) {
-			view.setVisibility(View.GONE);
-		} else {
-			try {
-				String resolvedError = resolveErrorType(errorType);
-				view.setText(resolvedError);
-			} catch (ErrorNotResolvedException e) {
-				view.setText(cursor.getString(ERROR_MESSAGE_COLUMN_INDEX));	
+	private void setError(TextView view, Cursor cursor, String errorType) {
+		try {
+			String resolvedError = resolveErrorType(errorType);
+			view.setText(resolvedError);
+		} catch (ErrorNotResolvedException e) {
+			String errorMessage = cursor.getString(ERROR_MESSAGE_COLUMN_INDEX);
+			if (StringUtil.isNullOrWhiteSpace(errorMessage)) {
+				errorMessage = errorType;
 			}
+			view.setText(errorMessage);
 		}
 	}
+
 	
 	private String resolveErrorType(String errorType) throws ErrorNotResolvedException {
 		if (errorType.indexOf("IOException") > 0) {
@@ -143,7 +134,9 @@ public class UpdateLogActivity extends SherlockControllerActivity implements Loa
 			return getString(R.string.error_authentication_failed);
 		} else if (errorType.indexOf("LocationPollFailedException") > 0) {
 			return getString(R.string.error_location_poll_failed);
-		}  
+		}  else if (errorType.indexOf("ConnectException") > 0) {
+			return getString(R.string.error_connect_exception);
+		} 
 		
 		throw new ErrorNotResolvedException();
 		
