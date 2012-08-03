@@ -84,6 +84,8 @@
 	<string name="buddy_message_save">Save</string>
 	<string name="buddy_message_cancel">Cancel</string>
 	
-	
 	<string name="countdown_controler_next_update">Next update in</string>
+	
+	<string name="buddy_message_not_set_controller_message">Buddy message not configured</string>
+	<string name="buddy_message_not_set_controller_buddy_settings">Fix</string>
 </resources>

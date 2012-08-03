@@ -24,6 +24,7 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.birkettenterprise.phonelocator.R;
 import com.birkettenterprise.phonelocator.broadcastreceiver.PollLocationAndSendUpdateBroadcastReceiver;
+import com.birkettenterprise.phonelocator.controller.BuddyMessageNotSetController;
 import com.birkettenterprise.phonelocator.controller.CountdownController;
 import com.birkettenterprise.phonelocator.controller.DatabaseController;
 import com.birkettenterprise.phonelocator.controller.LocationStatusController;
@@ -44,6 +45,8 @@ public class DashboardActivity extends SherlockControllerActivity implements
 	private LocationStatusController mLocationStatusController;
 	private UpdateStatusController mUpdateStatusController;
 	private UpdatesDisabledController mUpdatesDisabledController;
+	private BuddyMessageNotSetController mBuddyMessageNotSetController;
+	
 	private List<ActivityManager.RunningServiceInfo> mRunningServices;
 	private Handler mHandler;
 	
@@ -56,6 +59,7 @@ public class DashboardActivity extends SherlockControllerActivity implements
 		mUpdateStatusController = new UpdateStatusController(this);
 		mLocationStatusController = new LocationStatusController(this);
 		mUpdatesDisabledController = new UpdatesDisabledController(this);
+		mBuddyMessageNotSetController = new BuddyMessageNotSetController(this);
 
 		addController(new HockeyAppController(this,
 				"https://rink.hockeyapp.net/",
@@ -65,6 +69,8 @@ public class DashboardActivity extends SherlockControllerActivity implements
 		addController(mLocationStatusController);
 		addController(mUpdateStatusController);
 		addController(mUpdatesDisabledController);
+		addController(mBuddyMessageNotSetController);
+
 
 		super.onCreate(savedInstanceState);
 
@@ -73,6 +79,14 @@ public class DashboardActivity extends SherlockControllerActivity implements
 
 		mHandler = new Handler();
 		setContentView(R.layout.dashboard_activity);
+		
+		addBuddyNumberNotSetController();
+	}
+	
+	private void addBuddyNumberNotSetController() {
+		 
+		FrameLayout counterContainer = (FrameLayout) findViewById(R.id.buddy_message_not_set_container);
+		counterContainer.addView(mBuddyMessageNotSetController.getView());
 	}
 
 	@Override
@@ -139,13 +153,17 @@ public class DashboardActivity extends SherlockControllerActivity implements
 		@Override
 		public void run() {
 			swapStatusController();
+			mBuddyMessageNotSetController.displayHideController();
 		}
 		
 	};
 
+	
 	private void startWebSite() {
+		
 		Intent viewIntent = new Intent("android.intent.action.VIEW",
 				Uri.parse(WEB_SITE_URL));
+		
 		startActivity(viewIntent);
 	}
 
@@ -170,14 +188,14 @@ public class DashboardActivity extends SherlockControllerActivity implements
 		if (isUpdatesEnabled()) {
 			refreshRunningServiceList();
 			if (isUpdateServiceRunning()) {
-				showController(mUpdateStatusController);
+				showStatusController(mUpdateStatusController);
 			} else if (isLocationPollerRunning()) {
-				showController(mLocationStatusController);
+				showStatusController(mLocationStatusController);
 			} else {
 				showCountdownController();
 			}
 		} else {
-			showController(mUpdatesDisabledController);
+			showStatusController(mUpdatesDisabledController);
 		}
 
 	}
@@ -187,12 +205,12 @@ public class DashboardActivity extends SherlockControllerActivity implements
 	}
 	
 	private void showCountdownController() {
-		showController(mCountdownController);
+		showStatusController(mCountdownController);
 		mCountdownController.start();
 		setCountDownTimerEndTime();
 	}
 
-	private void showController(ViewController controller) {
+	private void showStatusController(ViewController controller) {
 		detachStatusControllers();
 		FrameLayout counterContainer = (FrameLayout) findViewById(R.id.status_container);
 		counterContainer.addView(controller.getView());
@@ -260,10 +278,10 @@ public class DashboardActivity extends SherlockControllerActivity implements
 					showCountdownController();
 				} else if ("com.birkettenterprise.phonelocator.SENDING_UPDATE"
 						.equals(intent.getAction())) {
-					showController(mUpdateStatusController);
+					showStatusController(mUpdateStatusController);
 				} else if (PollLocationAndSendUpdateBroadcastReceiver.ACTION
 						.equals(intent.getAction())) {
-					showController(mLocationStatusController);
+					showStatusController(mLocationStatusController);
 				}
 			}
 		}

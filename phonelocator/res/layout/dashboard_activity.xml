@@ -27,6 +27,13 @@
 
      <FrameLayout
             android:id="@+id/status_container"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+    </FrameLayout>
+    
+          <FrameLayout
+            android:id="@+id/buddy_message_not_set_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" >
     </FrameLayout>
