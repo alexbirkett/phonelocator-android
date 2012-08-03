@@ -14,7 +14,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.widget.FrameLayout;
 
@@ -33,6 +32,7 @@ import com.birkettenterprise.phonelocator.controller.UpdatesDisabledController;
 import com.birkettenterprise.phonelocator.service.AudioAlarmService;
 import com.birkettenterprise.phonelocator.settings.Setting;
 import com.birkettenterprise.phonelocator.settings.SettingsHelper;
+import com.birkettenterprise.phonelocator.utility.AsyncSharedPreferencesListener;
 
 public class DashboardActivity extends SherlockControllerActivity implements
 		OnSharedPreferenceChangeListener {
@@ -48,7 +48,7 @@ public class DashboardActivity extends SherlockControllerActivity implements
 	private BuddyMessageNotSetController mBuddyMessageNotSetController;
 	
 	private List<ActivityManager.RunningServiceInfo> mRunningServices;
-	private Handler mHandler;
+	private AsyncSharedPreferencesListener mAsyncSharedPreferencesListener;
 	
 	
 	@Override
@@ -77,7 +77,7 @@ public class DashboardActivity extends SherlockControllerActivity implements
 		mSharedPreferences = PreferenceManager
 				.getDefaultSharedPreferences(this);
 
-		mHandler = new Handler();
+		mAsyncSharedPreferencesListener = new AsyncSharedPreferencesListener(mSharedPreferences);
 		setContentView(R.layout.dashboard_activity);
 		
 		addBuddyNumberNotSetController();
@@ -93,7 +93,7 @@ public class DashboardActivity extends SherlockControllerActivity implements
 	public void onResume() {
 		super.onResume();
 		setCountDownTimerEndTime();
-		mSharedPreferences.registerOnSharedPreferenceChangeListener(this);
+		mAsyncSharedPreferencesListener.registerOnSharedPreferenceChangeListener(this);
 		swapStatusController();
 		registerBroadcastReceiver();
 	}
@@ -101,10 +101,8 @@ public class DashboardActivity extends SherlockControllerActivity implements
 	@Override
 	public void onPause() {
 		super.onPause();
-		mSharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
-		unregisterBroadcastReceiver();
-		mHandler.removeCallbacks(mSwapStatusControllerRunnable);
-		
+		mAsyncSharedPreferencesListener.unregisterOnSharedPreferenceChangeListener(this);
+		unregisterBroadcastReceiver();		
 	}
 
 	@Override
@@ -143,21 +141,10 @@ public class DashboardActivity extends SherlockControllerActivity implements
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
 			String key) {
 		if (key.equals(Setting.BooleanSettings.PERIODIC_UPDATES_ENABLED)) {
-			mHandler.post(mSwapStatusControllerRunnable);
+			swapStatusController();
 		
 		}
 	}
-	
-	private Runnable mSwapStatusControllerRunnable = new Runnable() {
-
-		@Override
-		public void run() {
-			swapStatusController();
-			mBuddyMessageNotSetController.displayHideController();
-		}
-		
-	};
-
 	
 	private void startWebSite() {
 		

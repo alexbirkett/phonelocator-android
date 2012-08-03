@@ -4,6 +4,7 @@ import no.birkettconsulting.controllers.ViewController;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
@@ -13,16 +14,22 @@ import android.widget.Button;
 import com.birkettenterprise.phonelocator.R;
 import com.birkettenterprise.phonelocator.activity.BuddyMessageActivity;
 import com.birkettenterprise.phonelocator.settings.SettingsHelper;
+import com.birkettenterprise.phonelocator.utility.AsyncSharedPreferencesListener;
 import com.birkettenterprise.phonelocator.utility.StringUtil;
 
-public class BuddyMessageNotSetController extends ViewController{
+public class BuddyMessageNotSetController extends ViewController implements OnSharedPreferenceChangeListener{
 
+	private AsyncSharedPreferencesListener mAsyncSharedPreferencesListener;
+	
 	public BuddyMessageNotSetController(Context context) {
 		super(context);
 	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		
+		mAsyncSharedPreferencesListener = new AsyncSharedPreferencesListener(PreferenceManager.getDefaultSharedPreferences(mContext));
+		
 		setContentView(R.layout.buddy_message_not_set_controller);
 
 
@@ -43,6 +50,12 @@ public class BuddyMessageNotSetController extends ViewController{
 	@Override
 	public void onResume() {
 		displayHideController();
+		mAsyncSharedPreferencesListener.registerOnSharedPreferenceChangeListener(this);
+	}
+	
+	@Override
+	public void onPause() {
+		mAsyncSharedPreferencesListener.unregisterOnSharedPreferenceChangeListener(this);
 	}
 	
 	/**
@@ -67,6 +80,12 @@ public class BuddyMessageNotSetController extends ViewController{
 		} else {
 			getView().setVisibility(View.GONE);
 		}
+	}
+
+	@Override
+	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
+			String key) {
+		displayHideController();
 	}
 
 }
