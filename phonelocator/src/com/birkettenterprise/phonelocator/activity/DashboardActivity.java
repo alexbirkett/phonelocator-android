@@ -213,7 +213,7 @@ public class DashboardActivity extends SherlockControllerActivity implements
 
 	private void setCountDownTimerEndTime() {
 		mCountdownController.setEndtime(SettingsHelper
-				.getUpdateIntervalInMilliSeconds(mSharedPreferences)
+				.getUpdateFrequencyInMilliSeconds(mSharedPreferences)
 				+ SettingsHelper.getLastUpdateTimeStamp(mSharedPreferences));
 	}
 

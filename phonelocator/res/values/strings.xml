@@ -88,4 +88,8 @@
 	
 	<string name="buddy_message_not_set_controller_message">Buddy message not configured</string>
 	<string name="buddy_message_not_set_controller_buddy_settings">Fix</string>
+	
+	<string name="settings_warning_controller_frequent_update_warning">Frequent updates may have adverse effect on battery life</string>
+	
+	<string name="settings_warning_controller_non_international_format_buddy_number_warning">Buddy nummber should be saved in international format</string>
 </resources>

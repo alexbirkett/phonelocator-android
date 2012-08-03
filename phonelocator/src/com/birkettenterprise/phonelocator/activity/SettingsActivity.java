@@ -22,6 +22,7 @@ import no.birkettconsulting.controllers.BaseControllerPreferenceActivity;
 
 import com.birkettenterprise.phonelocator.R;
 import com.birkettenterprise.phonelocator.controller.PasscodeController;
+import com.birkettenterprise.phonelocator.controller.SettingsWarningController;
 
 import android.os.Bundle;
 
@@ -30,6 +31,7 @@ public class SettingsActivity extends BaseControllerPreferenceActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		addController(new PasscodeController(this));
+		addController(new SettingsWarningController(this));
 		super.onCreate(savedInstanceState);
 	}
 	

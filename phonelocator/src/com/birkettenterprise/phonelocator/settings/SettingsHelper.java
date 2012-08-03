@@ -48,7 +48,7 @@ public class SettingsHelper {
 		PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
 		if (isPeriodicUpdatesEnabled(PreferenceManager.getDefaultSharedPreferences(context))) {
-			long intervalInMicroseconds = getUpdateIntervalInMilliSeconds(PreferenceManager.getDefaultSharedPreferences(context));
+			long intervalInMicroseconds = getUpdateFrequencyInMilliSeconds(PreferenceManager.getDefaultSharedPreferences(context));
 			alamManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
 					SystemClock.elapsedRealtime(),
 					intervalInMicroseconds, pendingIntent);
@@ -60,7 +60,7 @@ public class SettingsHelper {
 		}
 	}
 
-	public static long getUpdateIntervalInMilliSeconds(SharedPreferences sharedPreferences) {
+	public static long getUpdateFrequencyInMilliSeconds(SharedPreferences sharedPreferences) {
 		return getSettingAsLong(sharedPreferences, Setting.StringSettings.UPDATE_FREQUENCY,
 								DEFAULT_UPDATE_FREQUENCY)  * MILLISECONDS_IN_SECOND;
 	}

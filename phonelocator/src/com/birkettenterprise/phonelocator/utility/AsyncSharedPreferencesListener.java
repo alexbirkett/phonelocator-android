@@ -42,7 +42,9 @@ public class AsyncSharedPreferencesListener implements OnSharedPreferenceChangeL
 		}
 		@Override
 		public void run() {
-			mListener.onSharedPreferenceChanged(mSharedPreferences, mKey);
+			if (mListener != null) {
+				mListener.onSharedPreferenceChanged(mSharedPreferences, mKey);
+			}
 		}
 		
 	}
