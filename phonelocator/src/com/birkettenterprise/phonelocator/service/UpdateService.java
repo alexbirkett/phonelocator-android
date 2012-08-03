@@ -158,11 +158,11 @@ public class UpdateService extends WakefulIntentService {
 	}
 	
 	private static  void sendUpdate(Session session, List<Location> locations) throws IOException, CorruptStreamException {
-		BeaconList beaconList = new BeaconList();
 		for (Location location : locations) {
+			BeaconList beaconList = new BeaconList();
 			beaconList.add(new GpsBeacon(location, null));
+			session.sendPositionUpdate(beaconList);
 		}
-		session.sendPositionUpdate(beaconList);
 	}
 	
 	private static  void sendUpdate(Session session, String error) throws IOException, CorruptStreamException {
