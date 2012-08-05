@@ -63,6 +63,8 @@ public class SettingIdResolver {
 			settingId = BooleanSettings.SENDBUDDY_MESSAGE;
 		} else if (Setting.BooleanSettings.BUDDY_MESSAGE_ENABLED.equals(settingName)) {
 			settingId = BooleanSettings.BUDDY_MESSAGE_ENABLED;
+		} else if (Setting.BooleanSettings.GPS_ENABLED.equals(settingName)) {
+			settingId = BooleanSettings.GPS_ENABLED;
 		} else {
 			throw new UnknowSettingException(settingName);
 		}

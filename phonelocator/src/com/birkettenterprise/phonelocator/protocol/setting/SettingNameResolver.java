@@ -49,9 +49,11 @@ public class SettingNameResolver {
 			return Setting.BooleanSettings.SEND_BUDDY_MESSAGE;
 		} else if (settingId == BooleanSettings.BUDDY_MESSAGE_ENABLED) {
 			return Setting.BooleanSettings.BUDDY_MESSAGE_ENABLED;
+		} else if (settingId == BooleanSettings.GPS_ENABLED) {
+			return Setting.BooleanSettings.GPS_ENABLED;
 		} else {
 			throw new UnknowSettingException(settingId);
-		}	
+		}
 	}
 	
 	private static String getIntSettingIdForSettingName(int settingId) throws UnknowSettingException {

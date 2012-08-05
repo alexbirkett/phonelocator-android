@@ -55,4 +55,6 @@ public class BooleanSettings 	{
 	public static final int CELL_SCANNER_ENABLED = 27; /* 27 cell beacons are sent with update if enabled */
 	public static final int USE_SIMPLE_BEACONS = 28; /* 28 simple GPS, wlan and cell data format is used if true */
 	public static final int ALERT_ACTIVE = 29; /* 29 When set to true, a popup will be displayed showing EMessage and the alert sound will be played  EAlertSoundRepeats times. When the popup is dismissed, EAlertActive will be set to false*/
+	public static final int GPS_ENABLED = 30; /*  30 added first to Android Phonelocator */
+
 }
