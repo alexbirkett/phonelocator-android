@@ -60,6 +60,8 @@ public class SettingNameResolver {
 		settingId -= SettingsOffsets.INTEGER_OFFSET; 
 		if (settingId == IntegerSettings.UPADATE_FREQUENCY) {
 			return Setting.StringSettings.UPDATE_FREQUENCY;
+		} if (settingId == IntegerSettings.GPS_UPDATE_TIMEOUT) {
+			return Setting.StringSettings.GPS_UPDATE_TIMEOUT;
 		} else {
 			throw new UnknowSettingException(settingId);
 		}

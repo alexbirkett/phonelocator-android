@@ -66,7 +66,7 @@ public class SettingsHelper {
 	}
 	
 	public static long getGpsTimeOut(SharedPreferences sharedPreferences) {
-		return getSettingAsLong(sharedPreferences, Setting.StringSettings.GPS_TIMEOUT,DEFAULT_GPS_TIMEOUT);							
+		return getSettingAsLong(sharedPreferences, Setting.StringSettings.GPS_UPDATE_TIMEOUT,DEFAULT_GPS_TIMEOUT);							
 	}
 	
 	public static long getSettingAsLong(SharedPreferences sharedPreferences, String key, long defaultValue) {

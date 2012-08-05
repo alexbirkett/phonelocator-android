@@ -76,13 +76,15 @@ public class SettingIdResolver {
 		// update frequency is stored locally as a string and remotely as an int
 		if (Setting.StringSettings.UPDATE_FREQUENCY.equals(settingName)) {
 			settingId = IntegerSettings.UPADATE_FREQUENCY;
+		} else if (Setting.StringSettings.GPS_UPDATE_TIMEOUT.equals(settingName)) {
+			settingId = IntegerSettings.GPS_UPDATE_TIMEOUT;
 		} else if (Setting.IntegerSettings.VERSION_MAJOR.equals(settingName)) {
 			settingId =  IntegerSettings.VERSION_MAJOR;
 		} else if (Setting.IntegerSettings.VERSION_MINOR.equals(settingName)) {
 			settingId = IntegerSettings.VERSION_MINOR;
 		} else if (Setting.IntegerSettings.VERSION_REVISION.equals(settingName)) {
 			settingId = IntegerSettings.VERSION_REVISION;
-		}else {
+		} else {
 			throw new UnknowSettingException(settingName);
 		}
 		return settingId + SettingsOffsets.INTEGER_OFFSET;
