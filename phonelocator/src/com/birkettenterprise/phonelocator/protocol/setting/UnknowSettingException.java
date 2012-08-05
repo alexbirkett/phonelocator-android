@@ -1,6 +1,6 @@
 /**
  * 
- *  Copyright 2011 Birkett Enterprise Ltd
+ *  Copyright 2011-2012 Birkett Enterprise Ltd
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,8 +17,17 @@
  */
 
 
-package com.birkettenterprise.phonelocator.protocol;
+package com.birkettenterprise.phonelocator.protocol.setting;
 
 public class UnknowSettingException extends Exception {
+	
+	public UnknowSettingException(String settingName) {
+		super("unknown setting name: " + settingName);
+	}
+	
+	public UnknowSettingException(int settingsId) {
+		super("unknown setting id: " + settingsId);
+	}
+	
 	private static final long serialVersionUID = 1L;
 }

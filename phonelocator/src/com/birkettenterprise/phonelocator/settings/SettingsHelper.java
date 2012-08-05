@@ -124,7 +124,7 @@ public class SettingsHelper {
 	}
 	
 	public static boolean isPasscodeEnabled(SharedPreferences sharedPreferences) {
-		return sharedPreferences.getBoolean(BooleanSettings.PASSCODE_ENABLED, false);
+		return sharedPreferences.getBoolean(BooleanSettings.PINCODE_REQUIRED_ON_STARTUP, false);
 	}
 	
 	public static void setSendBuddyMessage(SharedPreferences sharedPreferences, boolean sendBuddyMessage) {
