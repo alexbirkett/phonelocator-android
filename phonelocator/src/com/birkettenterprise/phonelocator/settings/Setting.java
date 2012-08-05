@@ -26,7 +26,8 @@ public class Setting {
 		 * Stored as an int on the server
 		 */
 		public static final String UPDATE_FREQUENCY = "update_frequency";	
-		
+		public static final String GPS_TIMEOUT = "gps_timeout";
+
 		/*
 		 * Synchronized with server
 		 */
@@ -48,7 +49,8 @@ public class Setting {
 	    public static final String PINCODE_REQUIRED_ON_STARTUP = "passcode_enabled";
 	    public static final String SEND_BUDDY_MESSAGE = "send_buddy_message";
 	    public static final String BUDDY_MESSAGE_ENABLED = "buddy_message_enabled";
-	    
+
+		public static final String GPS_ENABLED = "gps_enabled";
 	    /*
 	     * Not synchronized with the server
 	     */
