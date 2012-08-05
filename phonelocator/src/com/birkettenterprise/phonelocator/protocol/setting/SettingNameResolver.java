@@ -1,7 +1,3 @@
-package com.birkettenterprise.phonelocator.protocol.setting;
-
-import com.birkettenterprise.phonelocator.settings.Setting;
-
 /**
  * 
  *  Copyright 2011-2012 Birkett Enterprise Ltd
@@ -19,6 +15,10 @@ import com.birkettenterprise.phonelocator.settings.Setting;
  *  limitations under the License.
  * 
  */
+
+package com.birkettenterprise.phonelocator.protocol.setting;
+
+import com.birkettenterprise.phonelocator.settings.Setting;
 
 public class SettingNameResolver {
 
