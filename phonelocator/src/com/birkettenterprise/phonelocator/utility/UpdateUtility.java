@@ -19,6 +19,7 @@
 package com.birkettenterprise.phonelocator.utility;
 
 import com.birkettenterprise.phonelocator.broadcastreceiver.SendWorkToUpdateServiceBroadcastReceiver;
+import com.birkettenterprise.phonelocator.settings.SettingsHelper;
 import com.commonsware.cwac.locpoll.LocationPoller;
 import com.commonsware.cwac.locpoll.LocationPollerParameter;
 
@@ -31,18 +32,14 @@ import android.preference.PreferenceManager;
 
 public class UpdateUtility {
 	
-	private static long TIMEOUT = 20 * 1000;
-	
-	private static String GPS_TIMEOUT_KEY = "gps_timeout";
-	private static String GPS_ENABLED = "gps_enabled";
-	
-	
+
 	public static void pollLocationAndSendUpdate(Context context) {
 		Bundle bundle = new Bundle();
 		
 		LocationPollerParameter parameter = new LocationPollerParameter(bundle);
-		parameter.setTimeout(getGpsTimeout(context));
-		if (isGpsEnabled(context)) {
+		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+		parameter.setTimeout(SettingsHelper.getGpsTimeOut(sharedPreferences));
+		if (SettingsHelper.isGpsEnabled(sharedPreferences)) {
 			parameter.addProvider(LocationManager.GPS_PROVIDER);
 		}
 		parameter.addProvider(LocationManager.NETWORK_PROVIDER);
@@ -54,16 +51,4 @@ public class UpdateUtility {
 		context.sendBroadcast(intent);
 	}
 	
-	private static long getGpsTimeout(Context context) {
-		SharedPreferences preferenceManager = PreferenceManager.getDefaultSharedPreferences(context);
-		String timeOutString = preferenceManager.getString(GPS_TIMEOUT_KEY,TIMEOUT+ "");
-		long timeout = Long.parseLong(timeOutString);
-		return timeout;
-	}
-	
-	private static boolean isGpsEnabled(Context context) {
-		SharedPreferences preferenceManager = PreferenceManager.getDefaultSharedPreferences(context);
-		boolean gpsEnabled = preferenceManager.getBoolean(GPS_ENABLED, false);
-		return gpsEnabled;
-	}
 }

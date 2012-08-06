@@ -16,7 +16,7 @@
  * 
  */
 
-package com.birkettenterprise.phonelocator.protocol;
+package com.birkettenterprise.phonelocator.protocol.setting;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -33,55 +33,12 @@ public class SettingsProtocol {
 
 	public static final String LOG_TAG = PhonelocatorApplication.LOG_TAG + "_SETTINGS_PROTOCOL";
 	
-	public static final short BOOLEAN_OFFSET = 0;
-	public static final short INTEGER_OFFSET = 64;
-	public static final short INT64_OFFSET = 128;
-	
-	public static final short STRING_OFFSET = 160;
-	public static final short END_OF_SETTINGS_MARKER = 255;
-	
 	public static final int DEFAULT_BOOLEAN_COUNT = 30;
 	public static final int DEFAULT_INTEGER_COUNT = 21;
 	public static final int DEFAULT_STRING_COUNT = 14;
 	public static final int DEFAULT_INT64_COUNT = 2;
 	
 	private static final byte PROTOCOL_VERSION_2 = 2;
-
-	private class BooleanSettings {
-		public static final int PERIODIC_UPDATE_ENABLED = 5;
-		public static final int REGISTERED = 6;
-	}
-	
-	private class IntegerSettings {
-
-		public static final int VERSION_MAJOR = 0;
-		public static final int VERSION_MINOR = 1;
-		public static final int VERSION_REVISION = 2;
-		public static final int SERVER_UPDATE_INTERVAL = 3;
-		public static final int IAPID = 4;
-		public static final int RESERVED = 5;
-		public static final int CONNECTION_TIMEOUT = 6;
-		public static final int GPS_SESSION_TIMEOUT = 7;
-		public static final int GPS_UPDATE_TIMEOUT = 8;
-		public static final int GPS_UPDATE_LOWSIGNAL_TIMEOUT = 9;
-		public static final int GPS_POLL_INTERVAL = 10;
-		public static final int GPS_LOW_SIGNAL_THRESHOLD = 11;
-		public static final int GPS_MINGOODSATELLITECOUNT = 12;
-		public static final int TRANSACTION_CONTROLLER_TIMEOUT = 13;
-		public static final int LANGUAGE = 14;
-		public static final int VARIANT = 15;
-		public static final int PORT_NUMBER = 16;
-		public static final int POSITIONING_MODULE_UID = 17;
-		public static final int SMS_GPS_REST_TIME = 18;
-		public static final int SMS_SENDING_FAILED_RETRY_TIMEOUT = 19;
-		public static final int GPS_LOCK_WAIT_TIME = 20;
-		public static final int UPDATE_FREQUENCY_WHEN_POWER_CONNECTED = 21;
-	}
-	
-	private class Integer64Settings {
-		public static final int IMEI = 0;
-		public static final int IMSI = 1;
-	}
 	
 	public static void writeSettings(Vector<Setting> settings,
 			DataOutputStream outputStream) throws IOException {
@@ -89,7 +46,7 @@ public class SettingsProtocol {
 
 		for (Setting setting : settings) {
 			try {
-				int settingId = getSettingIdForSettingName(setting.getName());
+				int settingId = SettingIdResolver.getSettingsIdForName(setting.getName());
 				writeSetting(settingId, setting.getTimestamp(),
 						setting.getValue(), outputStream);
 			} catch (UnknowSettingException e) {
@@ -97,7 +54,7 @@ public class SettingsProtocol {
 			}
 		}
 
-		outputStream.writeByte(END_OF_SETTINGS_MARKER);
+		outputStream.writeByte(SettingsOffsets.END_OF_SETTINGS_MARKER);
 	}
 	
 	public static Vector<Setting> readingSettings(DataInputStream dataInputStream) throws IOException {
@@ -106,7 +63,7 @@ public class SettingsProtocol {
 		
 		short settingId = 0;
 		Vector<Setting> settings = new Vector<Setting>();
-		while ((settingId = (short)dataInputStream.readUnsignedByte()) != END_OF_SETTINGS_MARKER) {
+		while ((settingId = (short)dataInputStream.readUnsignedByte()) != SettingsOffsets.END_OF_SETTINGS_MARKER) {
 			try {
 				settings.add(readSetting(dataInputStream, settingId));
 			} catch (UnknowSettingException e) {
@@ -115,39 +72,6 @@ public class SettingsProtocol {
 		}
 		return settings;
 	}
-
-	private static int getSettingIdForSettingName(String settingName) throws UnknowSettingException {
-		if (settingName.equals(Setting.BooleanSettings.PERIODIC_UPDATES_ENABLED)) {
-			return BooleanSettings.PERIODIC_UPDATE_ENABLED + BOOLEAN_OFFSET;
-		} else if (settingName.equals(Setting.BooleanSettings.REGISTERED)) {
-			return BooleanSettings.REGISTERED + BOOLEAN_OFFSET;
-		} else if (settingName.equals(Setting.StringSettings.UPDATE_FREQUENCY)) {
-			return IntegerSettings.SERVER_UPDATE_INTERVAL + INTEGER_OFFSET;
-		} else if (settingName.equals(Setting.Integer64Settings.IMEI)) {
-			return Integer64Settings.IMEI + INT64_OFFSET;
-		} else if (settingName.equals(Setting.Integer64Settings.IMSI)) {
-			return Integer64Settings.IMSI + INT64_OFFSET;
-		} else if (settingName.equals(Setting.IntegerSettings.VERSION_MAJOR)) {
-			return IntegerSettings.VERSION_MAJOR + INTEGER_OFFSET;
-		} else if (settingName.equals(Setting.IntegerSettings.VERSION_MINOR)) {
-			return IntegerSettings.VERSION_MINOR + INTEGER_OFFSET;
-		} else if (settingName.equals(Setting.IntegerSettings.VERSION_REVISION)) {
-			return IntegerSettings.VERSION_REVISION + INTEGER_OFFSET;
-		}
-		throw new UnknowSettingException();
-	}
-	
-	private static String getSettingsNameForId(int settingsId) throws UnknowSettingException {
-		if (settingsId == BooleanSettings.PERIODIC_UPDATE_ENABLED + BOOLEAN_OFFSET) {
-			return Setting.BooleanSettings.PERIODIC_UPDATES_ENABLED;
-		} else if (settingsId == BooleanSettings.REGISTERED + BOOLEAN_OFFSET) {
-			return Setting.BooleanSettings.REGISTERED;
-		} else if (settingsId ==  IntegerSettings.SERVER_UPDATE_INTERVAL + INTEGER_OFFSET) {
-			return Setting.StringSettings.UPDATE_FREQUENCY;
-		}
-		throw new UnknowSettingException();
-	}
-
 	
 	private static Setting readSetting(DataInputStream dataInputStream, int settingId) throws IOException, UnknowSettingException {
 		Setting setting = new Setting();
@@ -155,18 +79,18 @@ public class SettingsProtocol {
 		long timeStampInMilliseconds = timeStampInSeconds * 1000L;
 		setting.setTimestamp(timeStampInMilliseconds);
 		
-		if (BOOLEAN_OFFSET <= settingId && settingId <  INTEGER_OFFSET) {
+		if (SettingsOffsets.BOOLEAN_OFFSET <= settingId && settingId <  SettingsOffsets.INTEGER_OFFSET) {
 			setting.setValue(dataInputStream.readByte() > 0);
-		} else if (INTEGER_OFFSET <= settingId && settingId < INT64_OFFSET) {
+		} else if (SettingsOffsets.INTEGER_OFFSET <= settingId && settingId < SettingsOffsets.INT64_OFFSET) {
 			setting.setValue(dataInputStream.readInt() + "");
-		} else if (INT64_OFFSET <= settingId && settingId < STRING_OFFSET) {
+		} else if (SettingsOffsets.INT64_OFFSET <= settingId && settingId < SettingsOffsets.STRING_OFFSET) {
 			setting.setValue(readBigInteger(dataInputStream));
-		} else if (STRING_OFFSET <= settingId && settingId < END_OF_SETTINGS_MARKER) {
+		} else if (SettingsOffsets.STRING_OFFSET <= settingId && settingId < SettingsOffsets.END_OF_SETTINGS_MARKER) {
 			setting.setValue(dataInputStream.readUTF());			
 		}
 		
 		try {
-			setting.setName(getSettingsNameForId(settingId));
+			setting.setName(SettingNameResolver.getSettingsNameForId(settingId));
 			Log.d(LOG_TAG, "read setting id: " + settingId + " name: " + setting.getName() + " value: " + setting.getValue().toString() + " timestamp: " + setting.getTimestamp());
 		} catch (UnknowSettingException e) {
 			Log.d(LOG_TAG, "ignored setting id: " + settingId + " value: " + setting.getValue().toString() + " timestamp: " + setting.getTimestamp());
@@ -179,7 +103,12 @@ public class SettingsProtocol {
 	private static void writeSetting(int settingId, long timeStamp, Object value,  DataOutputStream outputStream) throws IOException {
 		outputStream.writeByte(settingId);
 		writeTimestamp(timeStamp, outputStream);
-		writeSettingValue(settingId,value, outputStream);
+		try {
+			writeSettingValue(settingId,value, outputStream);			
+		} catch (ClassCastException e) {
+			Log.d(LOG_TAG, "ClassCastException error writing setting " + settingId);
+			throw e;
+		}
 		Log.d(LOG_TAG, "written setting id: " + settingId + " value: " + value + " timestamp: " + timeStamp);
 
 	}
@@ -190,10 +119,10 @@ public class SettingsProtocol {
 	}
 	
 	private static void writeSettingValue(int settingId, Object setting, DataOutputStream outputStream) throws IOException {
-		if (BOOLEAN_OFFSET <= settingId && settingId <  INTEGER_OFFSET) {
+		if (SettingsOffsets.BOOLEAN_OFFSET <= settingId && settingId <  SettingsOffsets.INTEGER_OFFSET) {
 			byte byteToWrite = (Boolean)setting ? (byte)1 : (byte)0;
 			outputStream.writeByte(byteToWrite);
-		} else if (INTEGER_OFFSET <= settingId && settingId < INT64_OFFSET) {
+		} else if (SettingsOffsets.INTEGER_OFFSET <= settingId && settingId < SettingsOffsets.INT64_OFFSET) {
 			int intToWrite = 0;
 			
 			if (setting instanceof String) {
@@ -203,7 +132,7 @@ public class SettingsProtocol {
 			}
 	
 			outputStream.writeInt(intToWrite);	
-		} else if (INT64_OFFSET <= settingId && settingId < STRING_OFFSET) {
+		} else if (SettingsOffsets.INT64_OFFSET <= settingId && settingId < SettingsOffsets.STRING_OFFSET) {
 			
 			BigInteger bigIntegerToWrite = BigInteger.ZERO;
 			if (setting instanceof String) {
@@ -213,7 +142,7 @@ public class SettingsProtocol {
 			}
 			writeBigInteger(outputStream, bigIntegerToWrite);
 			
-		} else if (STRING_OFFSET <= settingId && settingId < END_OF_SETTINGS_MARKER) {
+		} else if (SettingsOffsets.STRING_OFFSET <= settingId && settingId < SettingsOffsets.END_OF_SETTINGS_MARKER) {
 			String stringToWrite = (String)setting;
 			outputStream.writeUTF(stringToWrite);
 		}
