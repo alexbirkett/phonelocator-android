@@ -34,7 +34,7 @@ public class SMSBroadcastReceiverTest extends AndroidTestCase {
 		assertEquals(UpdateAlarmBroadcastReceiver.Action.None, broadcastReciver.parseMessage("Alarm", getContext()));
 		
 		editor.putBoolean(BooleanSettings.PINCODE_REQUIRED_ON_STARTUP, false);
-		editor.apply();
+		editor.commit();
 
 		assertEquals(UpdateAlarmBroadcastReceiver.Action.Update, broadcastReciver.parseMessage("Update", getContext()));
 		assertEquals(UpdateAlarmBroadcastReceiver.Action.Alarm, broadcastReciver.parseMessage("Alarm", getContext()));
