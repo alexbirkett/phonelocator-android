@@ -96,7 +96,7 @@ public class SettingIdResolver {
 		
 		if (Setting.StringSettings.AUTHENTICATION_TOKEN.equals(settingName)) {
 			settingId = StringSettings.AUTHENTICATION_TOKEN;
-		} else if (Setting.StringSettings.PASSCODE.equals(settingName)) {
+		} else if (Setting.StringSettings.PINCODE.equals(settingName)) {
 			settingId = StringSettings.PINCODE;
 		} else if (Setting.StringSettings.BUDDY_TELEPHONE_NUMBER.equals(settingName)) {
 			settingId = StringSettings.BUDDY_TELEPHONE_NUMBER;

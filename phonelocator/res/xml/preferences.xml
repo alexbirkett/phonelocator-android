@@ -37,7 +37,7 @@
 		android:summary="@string/gps_enabled_summary"
 		android:dependency="periodic_updates_enabled" />
    	<ListPreference
-                android:key="gps_timeout"
+                android:key="gps_update_timeout"
                 android:title="@string/gps_timeout"
                 android:summary="@string/gps_timeout_summary"
                 android:entries="@array/gps_timeouts"
@@ -51,16 +51,16 @@
 		android:summary="@string/hide_sms_trigger_summary" />
    	
    	<CheckBoxPreference
-		android:key="passcode_enabled"
+		android:key="pincode_required_on_startup"
 		android:title="@string/passcode_enabled_preference"
 		android:summary="@string/passcode_enabled_preference_summary" />
    	 	
    	<EditTextPreference
-   	    android:key="passcode"
+   	    android:key="pincode"
    	    android:numeric="decimal"
    	    android:password="true"
 		android:title="@string/passcode_preference"
 		android:summary="@string/passcode_preference_summary"
-		android:dependency="passcode_enabled" />
+		android:dependency="pincode_required_on_startup" />
    	
 </PreferenceScreen>

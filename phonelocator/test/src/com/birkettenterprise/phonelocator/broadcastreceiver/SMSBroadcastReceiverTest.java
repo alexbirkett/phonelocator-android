@@ -13,7 +13,7 @@ public class SMSBroadcastReceiverTest extends AndroidTestCase {
 	public void testParseMessage() {
 		SharedPreferences sharedPreferences  = PreferenceManager.getDefaultSharedPreferences(getContext());
 		SharedPreferences.Editor editor = sharedPreferences.edit();
-		editor.putString(StringSettings.PASSCODE, "1234");
+		editor.putString(StringSettings.PINCODE, "1234");
 		editor.putBoolean(BooleanSettings.PINCODE_REQUIRED_ON_STARTUP, true);
 		editor.commit();
 		

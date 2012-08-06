@@ -100,7 +100,7 @@ public class SettingsHelper {
 	}
 	
 	public static String getPasscode(SharedPreferences sharedPreferences) {
-		return sharedPreferences.getString(StringSettings.PASSCODE, null);
+		return sharedPreferences.getString(StringSettings.PINCODE, null);
 	}
 	
 	public static String getBuddyTelephoneNumber(SharedPreferences sharedPreferences) {

@@ -32,7 +32,7 @@ public class Setting {
 		 * Synchronized with server
 		 */
 		public static final String AUTHENTICATION_TOKEN = "authentication_token";
-	    public static final String PASSCODE = "passcode";
+	    public static final String PINCODE = "pincode";
 	    public static final String BUDDY_TELEPHONE_NUMBER = "buddy_telephone_number";
 	    public static final String BUDDY_MESSAGE = "buddy_message";
 	

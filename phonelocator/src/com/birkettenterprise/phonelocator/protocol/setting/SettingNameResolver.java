@@ -73,7 +73,7 @@ public class SettingNameResolver {
 		if (settingId == StringSettings.AUTHENTICATION_TOKEN) {
 			return Setting.StringSettings.AUTHENTICATION_TOKEN;
 		} else if (settingId == StringSettings.PINCODE) {
-			return Setting.StringSettings.PASSCODE;
+			return Setting.StringSettings.PINCODE;
 		} else if (settingId == StringSettings.BUDDY_TELEPHONE_NUMBER) {
 			return Setting.StringSettings.BUDDY_TELEPHONE_NUMBER;
 		} else if (settingId == StringSettings.BUDDY_MESSAGE) {
