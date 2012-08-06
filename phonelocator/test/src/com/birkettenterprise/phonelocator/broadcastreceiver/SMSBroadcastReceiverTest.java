@@ -14,7 +14,7 @@ public class SMSBroadcastReceiverTest extends AndroidTestCase {
 		SharedPreferences sharedPreferences  = PreferenceManager.getDefaultSharedPreferences(getContext());
 		SharedPreferences.Editor editor = sharedPreferences.edit();
 		editor.putString(StringSettings.PASSCODE, "1234");
-		editor.putBoolean(BooleanSettings.PASSCODE_ENABLED, true);
+		editor.putBoolean(BooleanSettings.PINCODE_REQUIRED_ON_STARTUP, true);
 		editor.commit();
 		
 		UpdateAlarmBroadcastReceiver broadcastReciver = new UpdateAlarmBroadcastReceiver();
@@ -33,7 +33,7 @@ public class SMSBroadcastReceiverTest extends AndroidTestCase {
 		assertEquals(UpdateAlarmBroadcastReceiver.Action.None, broadcastReciver.parseMessage("Alarm1235", getContext()));
 		assertEquals(UpdateAlarmBroadcastReceiver.Action.None, broadcastReciver.parseMessage("Alarm", getContext()));
 		
-		editor.putBoolean(BooleanSettings.PASSCODE_ENABLED, false);
+		editor.putBoolean(BooleanSettings.PINCODE_REQUIRED_ON_STARTUP, false);
 		editor.apply();
 
 		assertEquals(UpdateAlarmBroadcastReceiver.Action.Update, broadcastReciver.parseMessage("Update", getContext()));
