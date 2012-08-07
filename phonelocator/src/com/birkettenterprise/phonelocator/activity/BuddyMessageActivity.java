@@ -18,13 +18,44 @@ import com.birkettenterprise.phonelocator.settings.Setting;
 
 public class BuddyMessageActivity extends BaseControllerActivity {
 	
+	View.OnClickListener mSaveListener = new View.OnClickListener() {
+		
+		@Override
+		public void onClick(View v) {
+			save();
+		}
+	};
+	
+	View.OnClickListener mCancelListener = new View.OnClickListener() {
+		
+		@Override
+		public void onClick(View v) {
+			cancel();
+		}
+	};
+	
+	View.OnClickListener mSelectFromContactsListener = new View.OnClickListener() {
+		
+		@Override
+		public void onClick(View v) {
+			selectFromContacts();
+		}
+	};
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		addController(new PasscodeController(this));
 		addController(new SettingsWarningController(this));
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.buddy_message_activity);
+		setListeners();
 		loadSettings();
+	}
+	
+	private void setListeners() {
+		findViewById(R.id.buddy_message_activity_cancel_button).setOnClickListener(mCancelListener);
+		findViewById(R.id.buddy_message_activity_save_button).setOnClickListener(mSaveListener);
+		findViewById(R.id.buddy_message_select_number_button).setOnClickListener(mSelectFromContactsListener);
 	}
 	
 	@Override
@@ -66,16 +97,16 @@ public class BuddyMessageActivity extends BaseControllerActivity {
 	
 	
 	
-	public void selectFromContactsListener(View v) {
+	public void selectFromContacts() {
 		startContactsActivity();
 	}
 
-	public void saveListener(View v) {
+	public void save() {
 		saveSettings();
 		finish();
 	}
 
-	public void cancelListener(View v) {
+	public void cancel() {
 		finish();
 	}
 

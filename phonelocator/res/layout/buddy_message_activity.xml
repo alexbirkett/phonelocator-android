@@ -29,21 +29,20 @@
         android:layout_height="wrap_content" >
 
         <Button
+            android:id="@+id/buddy_message_activity_cancel_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/buddy_message_cancel"
-            android:onClick="cancelListener" />
+         />
          
         <Button
+            android:id="@+id/buddy_message_activity_save_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/buddy_message_save"
-            android:onClick="saveListener" />
-
-       
-
+        />
     </LinearLayout>
 
     <TextView
@@ -69,11 +68,13 @@
         </EditText>
 
         <ImageButton
+             android:id="@+id/buddy_message_select_number_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:contentDescription="@string/buddy_number_select_from_contacts_button"
-            android:onClick="selectFromContactsListener"/>
+         />
+        
     </LinearLayout>
     <!-- android:src="@android:drawable/sym_contact_card" -->
     <!-- android:text="@string/buddy_number_select_from_contacts_button" -->
