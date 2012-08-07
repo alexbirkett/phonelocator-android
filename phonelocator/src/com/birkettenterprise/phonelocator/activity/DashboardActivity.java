@@ -90,7 +90,6 @@ public class DashboardActivity extends SherlockControllerActivity implements
 	@Override
 	public void onResume() {
 		super.onResume();
-		setCountDownTimerEndTime();
 		mAsyncSharedPreferencesListener.registerOnSharedPreferenceChangeListener(this);
 		swapStatusController();
 		registerBroadcastReceiver();
@@ -192,7 +191,6 @@ public class DashboardActivity extends SherlockControllerActivity implements
 	private void showCountdownController() {
 		showStatusController(mCountdownController);
 		mCountdownController.start();
-		setCountDownTimerEndTime();
 	}
 
 	private void showStatusController(ViewController controller) {
@@ -207,12 +205,6 @@ public class DashboardActivity extends SherlockControllerActivity implements
 		mUpdateStatusController.detachViewFromParent();
 		mLocationStatusController.detachViewFromParent();
 		mUpdatesDisabledController.detachViewFromParent();
-	}
-
-	private void setCountDownTimerEndTime() {
-		mCountdownController.setEndtime(SettingsHelper
-				.getUpdateFrequencyInMilliSeconds(mSharedPreferences)
-				+ SettingsHelper.getLastUpdateTimeStamp(mSharedPreferences));
 	}
 
 	public long getLastUpdateTimestamp() {

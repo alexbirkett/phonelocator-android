@@ -4,29 +4,32 @@ import java.util.Calendar;
 import java.util.TimeZone;
 
 import com.birkettenterprise.phonelocator.R;
+import com.birkettenterprise.phonelocator.settings.SettingsHelper;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.TextView;
 import no.birkettconsulting.controllers.ViewController;
 
 public class CountdownController extends ViewController {
-
 	
 	private static final String LOG_TAG = "CountdownController";
-	private long mEndTimeInMillis;
-	private boolean mRunning;
+	private boolean mBeating;
 	
 	private Handler mHandler;
 	private TextView mTimerTextView;
+	private SharedPreferences mSharedPreferences;
 	
 	private static final long BEAT_INTERVAL = 1000;
 	
 	public CountdownController(Context context) {
 		super(context);
-	
+		mSharedPreferences = PreferenceManager
+				.getDefaultSharedPreferences(mContext);
 	}
 
 	@Override 
@@ -38,16 +41,15 @@ public class CountdownController extends ViewController {
 	
 	@Override
 	protected void onResume() {
-		if (mRunning) {
-			updateClock();
-			startBeating();
+		if (mBeating) {
+			scheduleNextBeatDelayed();
 		}
 	}
 	
 	@Override
 	protected void onPause() {
-		if (mRunning) {
-			stopBeating();
+		if (mBeating) {
+			cancelBeat();
 		}
 	}
 	
@@ -55,26 +57,25 @@ public class CountdownController extends ViewController {
 	protected void onDestroy() {
 	}
 	
-	
-	public void setEndtime(long endTimeInMillis) {
-		mEndTimeInMillis = endTimeInMillis;
-	}
-	
 	public void start() {	
-		mRunning = true;
-		startBeating();
+		mBeating = true;
+		scheduleNextBeatDelayed();
 	}
 	
 	public void stop() {
-		mRunning = false;
-		stopBeating();
+		mBeating = false;
+		cancelBeat();
 	}
 	
-	private void startBeating() {
+	private void scheduleNextBeatAfterBeatInterval() {
 		mHandler.postDelayed(mBeatRunnable, BEAT_INTERVAL);
 	}
 	
-	private void stopBeating() {
+	private void scheduleNextBeatDelayed() {
+		mHandler.post(mBeatRunnable);
+	}
+	
+	private void cancelBeat() {
 		mHandler.removeCallbacks(mBeatRunnable);
 	}
 	
@@ -84,16 +85,17 @@ public class CountdownController extends ViewController {
 		public void run() {
 			Log.d(LOG_TAG, "beat");
 			updateClock();
-			if (mRunning) {
-				startBeating();
+			if (mBeating) {
+				scheduleNextBeatAfterBeatInterval();
 			}
 		}
 	};
 	
-	
 	private void updateClock() {
-		long timeRemaing = mEndTimeInMillis - System.currentTimeMillis();
-		mTimerTextView.setText(formatTime(timeRemaing));
+		long timeRemaing = getCountDownTimerEndTime() - System.currentTimeMillis();
+		String timeString = formatTime(timeRemaing);
+		Log.d(LOG_TAG, "time string " + timeString);
+		mTimerTextView.setText(timeString);
 	}
 	
 	private String formatTime(long time) {
@@ -113,4 +115,8 @@ public class CountdownController extends ViewController {
 		return timeString;
 	}
 	
+	private long getCountDownTimerEndTime() {
+		return (SettingsHelper.getUpdateFrequencyInMilliSeconds(mSharedPreferences)
+				+ SettingsHelper.getLastUpdateTimeStamp(mSharedPreferences));
+	}
 }
