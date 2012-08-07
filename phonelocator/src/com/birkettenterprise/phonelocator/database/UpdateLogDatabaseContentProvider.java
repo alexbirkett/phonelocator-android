@@ -20,7 +20,7 @@ public class UpdateLogDatabaseContentProvider extends ContentProvider {
 	@Override
 	public Cursor query(Uri uri, String[] projection, String selection,
 			String[] selectionArgs, String sortOrder) {
-		Cursor cursor = mDatabase.getUpdateTable();
+		Cursor cursor = mDatabase.getUpdates();
 		cursor.setNotificationUri(getContext().getContentResolver(), uri);
 		return cursor;
 	}
@@ -37,6 +37,8 @@ public class UpdateLogDatabaseContentProvider extends ContentProvider {
 
 	@Override
 	public int delete(Uri uri, String selection, String[] selectionArgs) {
+		mDatabase.deleteUpdates();
+		getContext().getContentResolver().notifyChange(UpdateLogDatabaseContentProvider.URI, null);
 		return 0;
 	}
 

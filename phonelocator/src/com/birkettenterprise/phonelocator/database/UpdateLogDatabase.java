@@ -126,15 +126,19 @@ public class UpdateLogDatabase extends SQLiteOpenHelper {
 		getWritableDatabase().close();
 	}
 	
-	//
-	
-	public Cursor getUpdateTable() {
+	public Cursor getUpdates() {
 		return getReadableDatabase().rawQuery(SELECT_UPDATES_QUERY, null);
+	}
+	
+	public void deleteUpdates() {
+		SQLiteDatabase database = getWritableDatabase();
+		database.delete(LOCATION_TABLE, null, null);
+		database.delete(UPDATE_TABLE, null, null);
 	}
 	
 	public long getLastUpdateTimestamp() {
 		long lastUpdateTimestamp = 0;
-		Cursor cursor = getUpdateTable();
+		Cursor cursor = getUpdates();
 		if (cursor.moveToFirst()) {
 			lastUpdateTimestamp = cursor.getLong(UPDATE_TIMESTAMP_COLUMN_INDEX);
 		}

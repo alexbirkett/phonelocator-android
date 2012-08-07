@@ -37,8 +37,6 @@ import com.birkettenterprise.phonelocator.utility.AsyncSharedPreferencesListener
 public class DashboardActivity extends SherlockControllerActivity implements
 		OnSharedPreferenceChangeListener {
 
-	private static final String WEB_SITE_URL = "http://phonelocator.mobi";
-
 	private CountdownController mCountdownController;
 	private DatabaseController mDatabaseController;
 	private SharedPreferences mSharedPreferences;
@@ -149,7 +147,7 @@ public class DashboardActivity extends SherlockControllerActivity implements
 	private void startWebSite() {
 		
 		Intent viewIntent = new Intent("android.intent.action.VIEW",
-				Uri.parse(WEB_SITE_URL));
+				Uri.parse(getString(R.string.website_url)));
 		
 		startActivity(viewIntent);
 	}

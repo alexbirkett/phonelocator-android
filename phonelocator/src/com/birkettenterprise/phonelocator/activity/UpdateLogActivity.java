@@ -23,23 +23,27 @@ import java.util.Date;
 import no.birkettconsulting.controllers.ListController;
 
 import com.actionbarsherlock.app.SherlockControllerActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 import com.birkettenterprise.phonelocator.R;
 import com.birkettenterprise.phonelocator.database.UpdateLogDatabaseContentProvider;
 import com.birkettenterprise.phonelocator.utility.StringUtil;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.CursorLoader;
 import android.content.Intent;
 import android.support.v4.content.Loader;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ResourceCursorAdapter;
 import android.widget.TextView;
 import android.view.ViewGroup;
-import net.hockeyapp.android.HockeyAppController;
 
 public class UpdateLogActivity extends SherlockControllerActivity implements LoaderCallbacks<Cursor>{
     
@@ -170,5 +174,41 @@ public class UpdateLogActivity extends SherlockControllerActivity implements Loa
 
 	public void onLoaderReset(Loader<Cursor> loader) {
 		 mResourceCursorAdapter.changeCursor(null);
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+
+		// Handle item selection
+		switch (item.getItemId()) {
+		case R.id.update_log_menu_item_clear_log:
+			clearLog();
+			return true;
+		case R.id.update_log_menu_item_web_site:
+			startWebSite();
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+	
+	private void clearLog() {
+		 ContentResolver cr = getContentResolver();
+		 cr.delete(UpdateLogDatabaseContentProvider.URI, null, null); 
+	}
+	
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getSupportMenuInflater();
+		inflater.inflate(R.menu.update_log_menu, menu);
+		return true;
+	}
+
+	private void startWebSite() {
+		
+		Intent viewIntent = new Intent("android.intent.action.VIEW",
+				Uri.parse(getString(R.string.website_url)));
+		
+		startActivity(viewIntent);
 	}
 }

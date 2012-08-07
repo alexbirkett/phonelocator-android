@@ -16,6 +16,7 @@
 	<string name="menu_item_test_alarm">Test alarm</string>
 	<string name="menu_item_update_log">Update history</string>
 	<string name="menu_item_buddy_message">Buddy message settings</string>
+	<string name="menu_item_clear_log">Clear history</string>
 	
 	<string name="periodic_updates">Enable updates</string>
 	<string name="periodic_updates_summary">Send location to server periodically</string>
@@ -29,8 +30,7 @@
 
 	<string name="registering_progress_dialog_message">Registering&#8230;</string>
 
-	<string name="no_updates_sent_message">Phonelocator has not attempted to update your Phone\'s location</string>
-	
+	<string name="update_log_no_updates_sent_message">Local update history is empty. Use the Phonelocator web site to clear your location history.</string>
 	<string name="location_provider_description">Location provider: </string>
 
 	<string name="error_io_exception">Could not connect to server</string>
@@ -92,4 +92,6 @@
 	<string name="settings_warning_controller_frequent_update_warning">Frequent updates may have adverse effect on battery life</string>
 	
 	<string name="settings_warning_controller_non_international_format_buddy_number_warning">Buddy nummber should be saved in international format</string>
+
+	<string name="website_url">http://phonelocator.mobi</string>
 </resources>
