@@ -62,7 +62,8 @@
             android:layout_gravity="center"
             android:layout_weight="1"
             android:ems="10"
-            android:hint="@string/buddy_number_hint" >
+            android:hint="@string/buddy_number_hint"
+            android:inputType="phone" >
 
             <requestFocus />
         </EditText>
