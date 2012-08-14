@@ -26,6 +26,8 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Vector;
 
+import android.util.Log;
+
 import com.birkettenterprise.phonelocator.domain.BeaconList;
 import com.birkettenterprise.phonelocator.protocol.setting.SettingsProtocol;
 import com.birkettenterprise.phonelocator.settings.Setting;
@@ -34,8 +36,9 @@ public class Session {
 
 	private Socket mSocket;
 	
-	private static final String HOST = "server1.phonelocator.mobi";
-	//private static final String HOST = "serverx.birkettenterprise.com";
+	private static final String HOST = "stage.phonelocator.mobi";
+	//private static final String HOST = "server1.phonelocator.mobi";
+	//private static final String HOST = "test1.phonelocator.mobi";
 
 	private static final int PORT = 4952;
 
@@ -44,6 +47,8 @@ public class Session {
 	private static final short AUTHENTICATION_RESPONSE_LENGTH = 1;
 	private static final short POSITION_UPDATE_RESPONSE_LENGTH = 0;
 
+	private static final String LOG_TAG = "SESSION";
+	
 	public void connect() throws UnknownHostException, IOException {
 		mSocket = new Socket(HOST, PORT);
 	}
@@ -78,6 +83,7 @@ public class Session {
 
 	public void authenticate(String authenticationToken) throws IOException,
 			CorruptStreamException, AuthenticationFailedException {
+		Log.d(LOG_TAG, "authentication token " + authenticationToken);
 		DataOutputStream dataOutputStream = new DataOutputStream(
 				mSocket.getOutputStream());
 		dataOutputStream.writeByte(Methods.AUTHENTICATE);

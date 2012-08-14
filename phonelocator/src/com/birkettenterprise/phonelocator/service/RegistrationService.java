@@ -37,6 +37,7 @@ import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 public class RegistrationService extends Service {
 
@@ -51,6 +52,8 @@ public class RegistrationService extends Service {
     private RegisrationRunnable mRegisrationRunnable;
     private SynchronizeRunnable mSynchronizeRunnable;
     private Thread mWorkerThread;
+    
+    private static final String LOG_TAG = "REGISTATION_SERVICE";
     
     private static void synchronizeSettings(Session session, SharedPreferences sharedPreferences) throws IOException {
 		Vector<Setting> settings = session.synchronizeSettings(SettingSynchronizationHelper.getSettingsModifiedSinceLastSyncrhonization(sharedPreferences));
@@ -95,9 +98,12 @@ public class RegistrationService extends Service {
 				mSession.connect();
 				mRegistrationResponse = mSession.register();
 				mSession.authenticate(mRegistrationResponse.getAuthenticationToken());		
+				SettingsHelper.storeResponse(sharedPreferences, mRegistrationResponse.getAuthenticationToken(), mRegistrationResponse.getRegistrationUrl());
+				Log.d(LOG_TAG, "storing authentication token "+ mRegistrationResponse.getAuthenticationToken());
+				Log.d(LOG_TAG, "storing registration url "+ mRegistrationResponse.getRegistrationUrl());
+
 				synchronizeSettings(mSession, sharedPreferences);
 				
-				SettingsHelper.storeResponse(sharedPreferences, mRegistrationResponse.getAuthenticationToken(), mRegistrationResponse.getRegistrationUrl());
 			} catch (Throwable e) {
 				mException = e;
 			} finally {
