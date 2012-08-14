@@ -65,6 +65,11 @@ public class SettingSynchronizationHelper {
 		}
 	}	
 	
+	
+	public static void resetSettingsSynchronizationTimestamp(SharedPreferences sharedPreferences) {
+		SettingsHelper.storeLong(sharedPreferences, SETTINGS_SYNCHRONIZATION_TIMESTAMP, 0);
+	}
+	
 	public static void updateSettingsSynchronizationTimestamp(SharedPreferences sharedPreferences) {
 		SettingsHelper.storeLong(sharedPreferences, SETTINGS_SYNCHRONIZATION_TIMESTAMP, System.currentTimeMillis());
 	}

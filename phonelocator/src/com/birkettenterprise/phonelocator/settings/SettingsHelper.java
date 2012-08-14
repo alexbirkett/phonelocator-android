@@ -99,12 +99,24 @@ public class SettingsHelper {
 		return sharedPreferences.getString(StringSettings.REGISTRATION_URL, null);
 	}
 	
+	public static void setPasscode(SharedPreferences sharedPreferences, String passcode) {
+		putStringIfRequired(sharedPreferences, StringSettings.PINCODE, passcode);
+	}
+	
 	public static String getPasscode(SharedPreferences sharedPreferences) {
 		return sharedPreferences.getString(StringSettings.PINCODE, null);
 	}
 	
+	public static void setBuddyTelephoneNumber(SharedPreferences sharedPreferences, String buddyTelephoneNumber) {
+		putStringIfRequired(sharedPreferences, StringSettings.BUDDY_TELEPHONE_NUMBER, buddyTelephoneNumber);
+	}
+
 	public static String getBuddyTelephoneNumber(SharedPreferences sharedPreferences) {
 		return sharedPreferences.getString(StringSettings.BUDDY_TELEPHONE_NUMBER, null);
+	}
+	
+	public static void setBuddyMessage(SharedPreferences sharedPreferences, String buddyMessage) {
+		putStringIfRequired(sharedPreferences, StringSettings.BUDDY_MESSAGE, buddyMessage);
 	}
 	
 	public static String getBuddyMessage(SharedPreferences sharedPreferences) {
@@ -121,6 +133,10 @@ public class SettingsHelper {
 	
 	public static boolean isRegistered(SharedPreferences sharedPreferences) {
 		return sharedPreferences.getBoolean(BooleanSettings.REGISTERED, false);
+	}
+	
+	public static void setHideTriggerMessage(SharedPreferences sharedPreferences, boolean hideTriggerMessages) {
+		storeBoolean(sharedPreferences, BooleanSettings.HIDE_SMS_TRIGGER, hideTriggerMessages);
 	}
 	
 	public static boolean isHideTriggerMessage(SharedPreferences sharedPreferences) {

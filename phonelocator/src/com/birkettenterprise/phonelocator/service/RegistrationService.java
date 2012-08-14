@@ -24,6 +24,7 @@ import java.util.Vector;
 
 import com.birkettenterprise.phonelocator.protocol.RegistrationResponse;
 import com.birkettenterprise.phonelocator.protocol.Session;
+import com.birkettenterprise.phonelocator.settings.DefaultSettingsSetter;
 import com.birkettenterprise.phonelocator.settings.EnvironmentalSettingsSetter;
 import com.birkettenterprise.phonelocator.settings.Setting;
 import com.birkettenterprise.phonelocator.settings.SettingSynchronizationHelper;
@@ -86,15 +87,15 @@ public class RegistrationService extends Service {
 
 		public void run() {
 			try {
-				mSession.connect();
-				mRegistrationResponse = mSession.register();
-				mSession.authenticate(mRegistrationResponse.getAuthenticationToken());
 				
 				SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(RegistrationService.this);
+				DefaultSettingsSetter.setDefaultSettings(sharedPreferences, RegistrationService.this);			
 				EnvironmentalSettingsSetter.updateEnvironmentalSettingsIfRequired(sharedPreferences, RegistrationService.this);			
-				Vector<Setting> settingsToSendToServer = SettingSynchronizationHelper.getSettingsModifiedSinceLastSyncrhonization(sharedPreferences);
-				Vector<Setting> settings = mSession.synchronizeSettings(settingsToSendToServer);
-				SettingSynchronizationHelper.setSettings(sharedPreferences, settings);
+				SettingSynchronizationHelper.resetSettingsSynchronizationTimestamp(sharedPreferences);
+				mSession.connect();
+				mRegistrationResponse = mSession.register();
+				mSession.authenticate(mRegistrationResponse.getAuthenticationToken());		
+				synchronizeSettings(mSession, sharedPreferences);
 				
 				SettingsHelper.storeResponse(sharedPreferences, mRegistrationResponse.getAuthenticationToken(), mRegistrationResponse.getRegistrationUrl());
 			} catch (Throwable e) {
