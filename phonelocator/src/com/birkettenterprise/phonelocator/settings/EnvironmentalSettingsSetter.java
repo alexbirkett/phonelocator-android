@@ -31,12 +31,16 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
-
+/**
+ * These non-user modifiable settings, set by the environment e.g. phone IMSI,
+ * IMEI and App version
+ * 
+ */
 public class EnvironmentalSettingsSetter {
 	
 	public static final String LOG_TAG = PhonelocatorApplication.LOG_TAG + "_ENVIRONMENTAL_SETTINGS";
 
-	public static Pattern mPattern = Pattern.compile("(\\d+)\\.(\\d+)");
+	public static Pattern mPattern = Pattern.compile("(\\d+)\\.(\\d+).(\\d+)");
 	
 	public static void updateEnvironmentalSettingsIfRequired(SharedPreferences sharedPreferences, Context context) {
 	    TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
@@ -79,16 +83,17 @@ public class EnvironmentalSettingsSetter {
 	}
 	
 	static Version getVersion(PackageInfo packageInfo) {
-		return getVersion(packageInfo.versionName, packageInfo.versionCode);	
+		return getVersion(packageInfo.versionName);	
 	}
 	
-	static Version getVersion(String versionName, int versionCode) {
+	static Version getVersion(String versionName) {
 		Version version = new Version();
-		version.mRevision = versionCode;
+		
 		Matcher matcher = mPattern.matcher(versionName);
 		if (matcher.matches()) {
 			version.mMajor = Integer.parseInt(matcher.group(1));
 			version.mMinor =  Integer.parseInt(matcher.group(2));
+			version.mRevision = Integer.parseInt(matcher.group(3));
 		}
 		return version;
 	}
