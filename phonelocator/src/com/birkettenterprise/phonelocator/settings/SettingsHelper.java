@@ -20,6 +20,7 @@ package com.birkettenterprise.phonelocator.settings;
 
 import com.birkettenterprise.phonelocator.broadcastreceiver.PollLocationAndSendUpdateBroadcastReceiver;
 import com.birkettenterprise.phonelocator.settings.Setting.BooleanSettings;
+import com.birkettenterprise.phonelocator.settings.Setting.Integer64Settings;
 import com.birkettenterprise.phonelocator.settings.Setting.LongSettings;
 import com.birkettenterprise.phonelocator.settings.Setting.StringSettings;
 
@@ -113,6 +114,14 @@ public class SettingsHelper {
 
 	public static String getBuddyTelephoneNumber(SharedPreferences sharedPreferences) {
 		return sharedPreferences.getString(StringSettings.BUDDY_TELEPHONE_NUMBER, null);
+	}
+	
+	public static String getImsi(SharedPreferences sharedPreferences) {
+		return sharedPreferences.getString(Integer64Settings.IMSI, null);
+	}
+	
+	public static void setImsi(SharedPreferences sharedPreferences, String imsi) {
+		putStringIfRequired(sharedPreferences, Integer64Settings.IMSI, imsi);
 	}
 	
 	public static void setBuddyMessage(SharedPreferences sharedPreferences, String buddyMessage) {

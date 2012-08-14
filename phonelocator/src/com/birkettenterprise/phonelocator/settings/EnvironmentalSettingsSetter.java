@@ -65,14 +65,20 @@ public class EnvironmentalSettingsSetter {
 	}
 	
 	public static void setIMSIIfRequiredAndDetectSIMCardChanged(SharedPreferences sharedPreferences, TelephonyManager telephonyManager) {
-		String imsi = telephonyManager.getSubscriberId();
+		String currentIMSI = telephonyManager.getSubscriberId();
+		String previousIMSI = SettingsHelper.getImsi(sharedPreferences);
 		
-		Log.d(LOG_TAG, "imsi " + imsi);
-		if (!StringUtil.isNullOrWhiteSpace(imsi) && SettingsHelper.putStringIfRequired(sharedPreferences, Setting.Integer64Settings.IMSI, imsi)) {
-			if (SettingsHelper.isBuddyMessageEnabled(sharedPreferences)) {
+		if (!StringUtil.isNullOrWhiteSpace(currentIMSI)) {
+			SettingsHelper.setImsi(sharedPreferences, currentIMSI);
+			if (SettingsHelper.isBuddyMessageEnabled(sharedPreferences) &&
+				!StringUtil.isNullOrWhiteSpace(previousIMSI) && 
+				!currentIMSI.equals(previousIMSI)) {
 				SettingsHelper.setSendBuddyMessage(sharedPreferences, true);
 			}
 		}
+		
+		Log.d(LOG_TAG, "imsi " + currentIMSI);
+		
 	}
 	
 	public static void setVersionIfRequired(SharedPreferences sharedPreferences, PackageInfo packageInfo) {
