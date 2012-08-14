@@ -37,6 +37,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.widget.Toast;
 
 public class SigninActivity extends Activity {
     
@@ -106,6 +107,7 @@ public class SigninActivity extends Activity {
 	}
 	
 	private void openUrl(String url) {
+		Log.d(TAG, "opening reg url " + url);
 		Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
 		intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
 	 	startActivity(intent);
@@ -144,6 +146,7 @@ public class SigninActivity extends Activity {
 
 	private void openRegistrationUrl() {
 		openUrl(mRegisrationService.getResponse().getRegistrationUrl());
+		toast(R.string.sign_in_toast);
 	}
 		
 	private boolean isRegistered() {
@@ -234,5 +237,9 @@ public class SigninActivity extends Activity {
 	
 	private boolean isProgressDialogActive() {
 		return mProgressDialog != null;
+	}
+	
+	private void toast(int resourceId) {
+		Toast.makeText(this, resourceId, Toast.LENGTH_LONG).show();
 	}
 }

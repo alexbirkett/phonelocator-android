@@ -27,7 +27,8 @@
 	<string name="connection_failed">Connection failed</string>
 	<string name="retry">Retry</string>
 	<string name="quit">Quit</string>
-
+	<string name="sign_in_toast">Opening web site for one time sign in / registration</string>
+	
 	<string name="registering_progress_dialog_message">Registering&#8230;</string>
 
 	<string name="update_log_no_updates_sent_message">Local update history is empty. Use the Phonelocator web site to clear your location history.</string>
