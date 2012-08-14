@@ -32,20 +32,25 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/warning"
-            android:layout_gravity="center" />
+            android:layout_gravity="center"
+            android:layout_weight="0"
+            android:padding="3dp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="@string/buddy_message_not_set_controller_message"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            android:layout_weight="1"
+            android:padding="3dp" />
         
         <Button
             android:id="@+id/buddy_message_not_set_controller_buddy_settings"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/buddy_message_not_set_controller_buddy_settings" />
+            android:text="@string/buddy_message_not_set_controller_buddy_settings"
+            android:layout_weight="0" />
 
     </LinearLayout>
 </LinearLayout>

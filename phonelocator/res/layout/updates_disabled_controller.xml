@@ -32,7 +32,8 @@
             android:id="@+id/imageView1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/warning" />
+            android:src="@drawable/warning"
+            android:padding="3dp" />
 
         <TextView
             android:id="@+id/textView1"
@@ -45,22 +46,24 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_gravity="center" >
 
         <Button
             android:id="@+id/button_enable_updates"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/updates_disabled_controller_enable_updates" />
+            android:text="@string/updates_disabled_controller_enable_updates"
+            android:layout_weight="1" />
 
         <Button
             android:id="@+id/button_settings"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/updates_disabled_controller_settings" />
+            android:text="@string/updates_disabled_controller_settings" 
+            android:layout_weight="1"/>
     </LinearLayout>
 
 </LinearLayout>
