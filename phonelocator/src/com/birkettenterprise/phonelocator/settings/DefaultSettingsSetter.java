@@ -17,5 +17,7 @@ public class DefaultSettingsSetter {
 		SettingsHelper.setBuddyTelephoneNumber(sharedPreferences, "");
 		SettingsHelper.setBuddyMessage(sharedPreferences, "");
 		SettingsHelper.setPeriodicUpdatesEnabled(sharedPreferences, false);
+		SettingsHelper.setGpsTimeOut(sharedPreferences, SettingsHelper.DEFAULT_GPS_TIMEOUT);
+		SettingsHelper.setUpdateFrequencyInSeconds(sharedPreferences, SettingsHelper.DEFAULT_UPDATE_FREQUENCY);
 	}
 }

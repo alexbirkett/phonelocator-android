@@ -37,9 +37,10 @@ public class SettingsHelper {
 
 	private static final String TAG = "Phonelocator";
 
+	public static final long DEFAULT_UPDATE_FREQUENCY = 60 * 10;
+	public static final long DEFAULT_GPS_TIMEOUT = 30000;
+
 	private static final int MILLISECONDS_IN_SECOND = 1000;
-	private static final long DEFAULT_UPDATE_FREQUENCY = 3600;
-	private static final long DEFAULT_GPS_TIMEOUT = 20 * 1000;
 	
 	public static void scheduleUpdates(Context context) {
 		AlarmManager alamManager = (AlarmManager) context
@@ -62,12 +63,23 @@ public class SettingsHelper {
 	}
 
 	public static long getUpdateFrequencyInMilliSeconds(SharedPreferences sharedPreferences) {
-		return getSettingAsLong(sharedPreferences, Setting.StringSettings.UPDATE_FREQUENCY,
-								DEFAULT_UPDATE_FREQUENCY)  * MILLISECONDS_IN_SECOND;
+		return getUpdateFrequencyInSeconds(sharedPreferences) * MILLISECONDS_IN_SECOND;
+	}
+	
+	public static long getUpdateFrequencyInSeconds(SharedPreferences sharedPreferences) {
+		return getSettingAsLong(sharedPreferences, Setting.StringSettings.UPDATE_FREQUENCY, DEFAULT_UPDATE_FREQUENCY);
+	}
+	
+	public static void setUpdateFrequencyInSeconds(SharedPreferences sharedPreferences, long value) {
+		putStringIfRequired(sharedPreferences,  Setting.StringSettings.UPDATE_FREQUENCY, Long.toString(value));
 	}
 	
 	public static long getGpsTimeOut(SharedPreferences sharedPreferences) {
 		return getSettingAsLong(sharedPreferences, Setting.StringSettings.GPS_UPDATE_TIMEOUT,DEFAULT_GPS_TIMEOUT);							
+	}
+	
+	public static void setGpsTimeOut(SharedPreferences sharedPreferences, long value) {
+		putStringIfRequired(sharedPreferences,  Setting.StringSettings.GPS_UPDATE_TIMEOUT, Long.toString(value));
 	}
 	
 	public static long getSettingAsLong(SharedPreferences sharedPreferences, String key, long defaultValue) {
