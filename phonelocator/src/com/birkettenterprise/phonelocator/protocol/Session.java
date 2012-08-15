@@ -36,8 +36,8 @@ public class Session {
 
 	private Socket mSocket;
 	
-	private static final String HOST = "stage.phonelocator.mobi";
-	//private static final String HOST = "server1.phonelocator.mobi";
+	//private static final String HOST = "stage.phonelocator.mobi";
+	private static final String HOST = "server1.phonelocator.mobi";
 	//private static final String HOST = "test1.phonelocator.mobi";
 
 	private static final int PORT = 4952;
