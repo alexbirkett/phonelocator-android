@@ -2,7 +2,7 @@ package com.birkettenterprise.phonelocator.activity;
 
 import java.util.List;
 
-import net.hockeyapp.android.HockeyAppController;
+//import net.hockeyapp.android.HockeyAppController;
 import no.birkettconsulting.controllers.ViewController;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
@@ -59,9 +59,9 @@ public class DashboardActivity extends SherlockControllerActivity implements
 		mUpdatesDisabledController = new UpdatesDisabledController(this);
 		mBuddyMessageNotSetController = new BuddyMessageNotSetController(this);
 
-		addController(new HockeyAppController(this,
+/*		addController(new HockeyAppController(this,
 				"https://rink.hockeyapp.net/",
-				"3f7ef8dc87d197b81fb86ff41dcc1314"));
+				"3f7ef8dc87d197b81fb86ff41dcc1314"));*/
 		addController(mCountdownController);
 		addController(mDatabaseController);
 		addController(mLocationStatusController);
