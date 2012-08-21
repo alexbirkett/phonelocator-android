@@ -2,6 +2,7 @@ package com.birkettenterprise.phonelocator.controller;
 
 import com.birkettenterprise.phonelocator.R;
 import com.birkettenterprise.phonelocator.settings.SettingsHelper;
+import com.birkettenterprise.phonelocator.utility.StringUtil;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -71,7 +72,7 @@ public class PasscodeController extends Controller implements OnDismissListener 
 	}
 	
 	private boolean isPasscodeNonNummAndEnabled() {
-		return SettingsHelper.isPasscodeEnabled(mSharedPreferences) && getPasscode() != null;
+		return SettingsHelper.isPasscodeEnabled(mSharedPreferences) && !StringUtil.isNullOrWhiteSpace(getPasscode());
 	}
 
 	private String getPasscode() {
