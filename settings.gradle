@@ -1,0 +1,5 @@
+include ':phonelocator'
+include ':controllers-for-android'
+
+
+project(':controllers-for-android').projectDir = new File(rootProject.projectDir, '../controllers-for-android/library')

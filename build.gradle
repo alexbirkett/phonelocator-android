@@ -1,0 +1,22 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:0.9.+'
+    }
+}
+
+allprojects {
+    repositories {
+        mavenCentral()
+    }
+}
+
+/**
+ * Task to generate a gradle wrapper.
+ */
+task wrapper(type: Wrapper) {
+    gradleVersion = '1.11'
+}
+
