@@ -3,3 +3,6 @@ gen/
 local.properties
 org.eclipse.jdt.core.prefs
 birkettenterprise.keystore
+phonelocator/build
+.idea
+.gradle
