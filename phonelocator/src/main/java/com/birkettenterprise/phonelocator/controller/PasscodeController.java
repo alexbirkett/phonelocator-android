@@ -1,5 +1,6 @@
 package com.birkettenterprise.phonelocator.controller;
 
+import com.birkett.controllers.Controller;
 import com.birkettenterprise.phonelocator.R;
 import com.birkettenterprise.phonelocator.settings.SettingsHelper;
 import com.birkettenterprise.phonelocator.utility.StringUtil;
@@ -7,6 +8,7 @@ import com.birkettenterprise.phonelocator.utility.StringUtil;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.DialogInterface.OnClickListener;
@@ -17,7 +19,6 @@ import android.text.method.PasswordTransformationMethod;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.Toast;
-import no.birkettconsulting.controllers.Controller;
 
 public class PasscodeController extends Controller implements OnDismissListener {
 
@@ -26,10 +27,12 @@ public class PasscodeController extends Controller implements OnDismissListener 
 	private EditText mPasscodeEditText;
 	private boolean mCorrectPasswordEntered;
 	private boolean mOkClicked;
+    private Context mContext;
 	
 	public PasscodeController(Activity context) {
-		super(context);
-		mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+		super();
+		mContext = context;
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
 	}
 
 	@Override

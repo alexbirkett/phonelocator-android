@@ -1,6 +1,5 @@
 package com.birkettenterprise.phonelocator.controller;
 
-import no.birkettconsulting.controllers.Controller;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -8,6 +7,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
 
+import com.birkett.controllers.Controller;
 import com.birkettenterprise.phonelocator.R;
 import com.birkettenterprise.phonelocator.settings.Setting;
 import com.birkettenterprise.phonelocator.settings.SettingsHelper;
@@ -22,9 +22,10 @@ public class SettingsWarningController extends Controller implements OnSharedPre
 
 	private AsyncSharedPreferencesListener mAsyncSharedPreferencesListener;
 	private static final long MINIMUM_RECOMENDED_UPDATE_FREQUENCY = 10 * 60 * 1000;
-	
+	private Context mContext;
 	public SettingsWarningController(Context context) {
-		super(context);
+		super();
+        this.mContext = context;
 	}
 
 	@Override

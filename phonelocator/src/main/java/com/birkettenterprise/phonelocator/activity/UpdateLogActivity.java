@@ -20,12 +20,8 @@ package com.birkettenterprise.phonelocator.activity;
 
 import java.util.Date;
 
-import no.birkettconsulting.controllers.ListController;
-
-import com.actionbarsherlock.app.SherlockControllerActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
+import com.birkett.controllers.ActivityThatSupportsControllers;
+import com.birkett.controllers.ListController;
 import com.birkettenterprise.phonelocator.R;
 import com.birkettenterprise.phonelocator.database.UpdateLogDatabaseContentProvider;
 import com.birkettenterprise.phonelocator.utility.StringUtil;
@@ -40,12 +36,15 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ResourceCursorAdapter;
 import android.widget.TextView;
 import android.view.ViewGroup;
 
-public class UpdateLogActivity extends SherlockControllerActivity implements LoaderCallbacks<Cursor>{
+public class UpdateLogActivity extends ActivityThatSupportsControllers implements LoaderCallbacks<Cursor>{
     
 	private class ErrorNotResolvedException extends Exception {
 		private static final long serialVersionUID = 1L;
@@ -66,7 +65,7 @@ public class UpdateLogActivity extends SherlockControllerActivity implements Loa
     public void onCreate(Bundle savedInstanceState) {
 		// add controllers before you call super.onCreate()
 		
-		mListController = new ListController(this); 
+		mListController = new ListController(this);
 		mListController.setContentView(R.layout.update_log_activity);
 	
 		addController(mListController);
@@ -180,15 +179,17 @@ public class UpdateLogActivity extends SherlockControllerActivity implements Loa
 	public boolean onOptionsItemSelected(MenuItem item) {
 
 		// Handle item selection
-		switch (item.getItemId()) {
-		case R.id.update_log_menu_item_clear_log:
-			clearLog();
-			return true;
-		case R.id.update_log_menu_item_web_site:
-			startWebSite();
-		default:
-			return super.onOptionsItemSelected(item);
-		}
+        int i = item.getItemId();
+        if (i == R.id.update_log_menu_item_clear_log) {
+            clearLog();
+            return true;
+        } else if (i == R.id.update_log_menu_item_web_site) {
+            startWebSite();
+
+            return super.onOptionsItemSelected(item);
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
 	}
 	
 	private void clearLog() {
@@ -199,7 +200,7 @@ public class UpdateLogActivity extends SherlockControllerActivity implements Loa
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getSupportMenuInflater();
+		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.update_log_menu, menu);
 		return true;
 	}

@@ -18,15 +18,15 @@
 
 package com.birkettenterprise.phonelocator.activity;
 
-import no.birkettconsulting.controllers.BaseControllerPreferenceActivity;
 
+import com.birkett.controllers.PreferenceActivityThatSupportsControllers;
 import com.birkettenterprise.phonelocator.R;
 import com.birkettenterprise.phonelocator.controller.PasscodeController;
 import com.birkettenterprise.phonelocator.controller.SettingsWarningController;
 
 import android.os.Bundle;
 
-public class SettingsActivity extends BaseControllerPreferenceActivity {
+public class SettingsActivity extends PreferenceActivityThatSupportsControllers {
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {

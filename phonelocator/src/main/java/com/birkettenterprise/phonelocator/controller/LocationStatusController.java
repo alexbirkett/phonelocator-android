@@ -1,10 +1,10 @@
 package com.birkettenterprise.phonelocator.controller;
 
+import com.birkett.controllers.ViewController;
 import com.birkettenterprise.phonelocator.R;
 
 import android.content.Context;
 import android.os.Bundle;
-import no.birkettconsulting.controllers.ViewController;
 
 public class LocationStatusController extends ViewController {
 

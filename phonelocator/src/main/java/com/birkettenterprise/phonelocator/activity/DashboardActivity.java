@@ -2,8 +2,6 @@ package com.birkettenterprise.phonelocator.activity;
 
 import java.util.List;
 
-//import net.hockeyapp.android.HockeyAppController;
-import no.birkettconsulting.controllers.ViewController;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
 import android.content.BroadcastReceiver;
@@ -15,12 +13,13 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.FrameLayout;
 
-import com.actionbarsherlock.app.SherlockControllerActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
+import com.birkett.controllers.ActivityThatSupportsControllers;
+import com.birkett.controllers.ViewController;
 import com.birkettenterprise.phonelocator.R;
 import com.birkettenterprise.phonelocator.broadcastreceiver.PollLocationAndSendUpdateBroadcastReceiver;
 import com.birkettenterprise.phonelocator.controller.BuddyMessageNotSetController;
@@ -34,7 +33,7 @@ import com.birkettenterprise.phonelocator.settings.Setting;
 import com.birkettenterprise.phonelocator.settings.SettingsHelper;
 import com.birkettenterprise.phonelocator.utility.AsyncSharedPreferencesListener;
 
-public class DashboardActivity extends SherlockControllerActivity implements
+public class DashboardActivity extends ActivityThatSupportsControllers implements
 		OnSharedPreferenceChangeListener {
 
 	private CountdownController mCountdownController;
@@ -106,30 +105,30 @@ public class DashboardActivity extends SherlockControllerActivity implements
 	public boolean onOptionsItemSelected(MenuItem item) {
 
 		// Handle item selection
-		switch (item.getItemId()) {
-		case R.id.web_site:
-			startWebSite();
-			return true;
-		case R.id.settings:
-			startSettings();
-			return true;
-		case R.id.update_log:
-			startUpdateLog();
-			return true;
-		case R.id.test_alarm:
-			AudioAlarmService.startAlarmService(this);
-			return true;
-		case R.id.buddy_message:
-			startBuddyMessageActivity();
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
-		}
+        int i = item.getItemId();
+        if (i == R.id.web_site) {
+            startWebSite();
+            return true;
+        } else if (i == R.id.settings) {
+            startSettings();
+            return true;
+        } else if (i == R.id.update_log) {
+            startUpdateLog();
+            return true;
+        } else if (i == R.id.test_alarm) {
+            AudioAlarmService.startAlarmService(this);
+            return true;
+        } else if (i == R.id.buddy_message) {
+            startBuddyMessageActivity();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getSupportMenuInflater();
+		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.dashboard_menu, menu);
 		return true;
 	}

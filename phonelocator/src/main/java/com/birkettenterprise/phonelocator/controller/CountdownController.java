@@ -3,6 +3,7 @@ package com.birkettenterprise.phonelocator.controller;
 import java.util.Calendar;
 import java.util.TimeZone;
 
+import com.birkett.controllers.ViewController;
 import com.birkettenterprise.phonelocator.R;
 import com.birkettenterprise.phonelocator.settings.SettingsHelper;
 
@@ -13,7 +14,7 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.TextView;
-import no.birkettconsulting.controllers.ViewController;
+
 
 public class CountdownController extends ViewController {
 	

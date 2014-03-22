@@ -1,17 +1,18 @@
 package com.birkettenterprise.phonelocator.controller;
 
-import no.birkettconsulting.controllers.Controller;
 import android.content.Context;
 import android.os.Bundle;
 
+import com.birkett.controllers.Controller;
 import com.birkettenterprise.phonelocator.database.UpdateLogDatabase;
 
 public class DatabaseController extends Controller {
 	
 	private UpdateLogDatabase mDatabase;
+    private Context mContext;
 	
 	public DatabaseController(Context context) {
-		super(context);
+		this.mContext = context;
 	}
 	
 	@Override

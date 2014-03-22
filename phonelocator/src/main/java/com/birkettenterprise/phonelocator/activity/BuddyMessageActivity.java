@@ -1,6 +1,5 @@
 package com.birkettenterprise.phonelocator.activity;
 
-import no.birkettconsulting.controllers.BaseControllerActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -11,12 +10,13 @@ import android.provider.ContactsContract;
 import android.view.View;
 import android.widget.EditText;
 
+import com.birkett.controllers.ActivityThatSupportsControllers;
 import com.birkettenterprise.phonelocator.R;
 import com.birkettenterprise.phonelocator.controller.PasscodeController;
 import com.birkettenterprise.phonelocator.controller.SettingsWarningController;
 import com.birkettenterprise.phonelocator.settings.Setting;
 
-public class BuddyMessageActivity extends BaseControllerActivity {
+public class BuddyMessageActivity extends ActivityThatSupportsControllers {
 	
 	View.OnClickListener mSaveListener = new View.OnClickListener() {
 		
