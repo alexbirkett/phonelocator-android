@@ -4,6 +4,7 @@ import java.util.List;
 
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
+import android.app.DialogFragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -21,6 +22,7 @@ import android.widget.FrameLayout;
 import com.birkett.controllers.ActivityThatSupportsControllers;
 import com.birkett.controllers.ViewController;
 import com.birkettenterprise.phonelocator.R;
+import com.birkettenterprise.phonelocator.SigninFragment;
 import com.birkettenterprise.phonelocator.broadcastreceiver.PollLocationAndSendUpdateBroadcastReceiver;
 import com.birkettenterprise.phonelocator.controller.BuddyMessageNotSetController;
 import com.birkettenterprise.phonelocator.controller.CountdownController;
@@ -92,6 +94,7 @@ public class DashboardActivity extends ActivityThatSupportsControllers implement
 		mAsyncSharedPreferencesListener.registerOnSharedPreferenceChangeListener(this);
 		swapStatusController();
 		registerBroadcastReceiver();
+        signIn();
 	}
 
 	@Override
@@ -263,5 +266,10 @@ public class DashboardActivity extends ActivityThatSupportsControllers implement
 		}
 
 	};
+
+    private void signIn() {
+        DialogFragment newFragment = SigninFragment.newInstance(0);
+        newFragment.show(getFragmentManager(), "dialog");
+    }
 
 }

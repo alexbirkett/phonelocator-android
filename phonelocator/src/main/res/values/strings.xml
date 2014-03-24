@@ -95,4 +95,8 @@
 	<string name="settings_warning_controller_non_international_format_buddy_number_warning">Buddy nummber should be saved in international format</string>
 
 	<string name="website_url">http://phonelocator.mobi</string>
+
+    <string name="signin_username_email">username or email address</string>
+    <string name="signin_password">password</string>
+    <string name="signin_signing">Signin</string>
 </resources>
