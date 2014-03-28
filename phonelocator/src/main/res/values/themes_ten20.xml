@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Generated with http://android-holo-colors.com -->
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <style name="ten20" parent="android:Theme.Holo">
+
+    <item name="android:editTextBackground">@drawable/ten20_edit_text_holo_dark</item>
+
+    <item name="android:textColorHighlight">#99ff6600</item>
+    <item name="android:textSelectHandleLeft">@drawable/ten20_text_select_handle_left</item>
+    <item name="android:textSelectHandleRight">@drawable/ten20_text_select_handle_right</item>
+    <item name="android:textSelectHandle">@drawable/ten20_text_select_handle_middle</item>
+
+    <item name="android:autoCompleteTextViewStyle">@style/AutoCompleteTextViewten20</item>
+
+    <item name="android:listChoiceIndicatorMultiple">@drawable/ten20_btn_check_holo_dark</item>
+
+    <item name="android:listChoiceIndicatorSingle">@drawable/ten20_btn_radio_holo_dark</item>
+
+    <item name="android:buttonStyle">@style/Buttonten20</item>
+
+    <item name="android:imageButtonStyle">@style/ImageButtonten20</item>
+
+    <item name="android:dropDownSpinnerStyle">@style/Spinnerten20</item>
+
+    <item name="android:progressBarStyleHorizontal">@style/ProgressBarten20</item>
+
+    <item name="android:seekBarStyle">@style/SeekBarten20</item>
+
+    <item name="android:ratingBarStyle">@style/RatingBarten20</item>
+
+    <item name="android:ratingBarStyleIndicator">@style/RatingBarBigten20</item>
+
+    <item name="android:ratingBarStyleSmall">@style/RatingBarSmallten20</item>
+
+    <item name="android:buttonStyleToggle">@style/Toggleten20</item>
+
+    <item name="android:listChoiceBackgroundIndicator">@drawable/ten20_list_selector_holo_dark</item>
+
+    <item name="android:activatedBackgroundIndicator">@drawable/ten20_activated_background_holo_dark</item>
+
+    <item name="android:fastScrollThumbDrawable">@drawable/ten20_fastscroll_thumb_holo</item>
+
+  </style>
+
+</resources>
