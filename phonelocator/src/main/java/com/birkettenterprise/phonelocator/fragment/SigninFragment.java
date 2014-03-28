@@ -1,4 +1,4 @@
-package com.birkettenterprise.phonelocator;
+package com.birkettenterprise.phonelocator.fragment;
 
 
 import android.os.Bundle;
@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
+import com.birkettenterprise.phonelocator.R;
 
 /**
  * Created by alex on 24/03/14.

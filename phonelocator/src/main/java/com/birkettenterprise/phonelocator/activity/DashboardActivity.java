@@ -24,7 +24,7 @@ import android.widget.FrameLayout;
 import com.birkett.controllers.ActivityThatSupportsControllers;
 import com.birkett.controllers.ViewController;
 import com.birkettenterprise.phonelocator.R;
-import com.birkettenterprise.phonelocator.SigninFragment;
+import com.birkettenterprise.phonelocator.fragment.SigninFragment;
 import com.birkettenterprise.phonelocator.broadcastreceiver.PollLocationAndSendUpdateBroadcastReceiver;
 import com.birkettenterprise.phonelocator.controller.BuddyMessageNotSetController;
 import com.birkettenterprise.phonelocator.controller.CountdownController;
