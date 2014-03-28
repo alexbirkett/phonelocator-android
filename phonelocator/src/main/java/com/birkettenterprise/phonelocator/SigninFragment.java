@@ -1,8 +1,8 @@
 package com.birkettenterprise.phonelocator;
 
-import android.app.DialogFragment;
-import android.app.Fragment;
+
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,12 +11,11 @@ import android.widget.Button;
 /**
  * Created by alex on 24/03/14.
  */
-public class SigninFragment extends DialogFragment {
+public class SigninFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setStyle(STYLE_NO_FRAME, R.style.ten20);
     }
 
     public static SigninFragment newInstance(int num) {

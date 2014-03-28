@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
  - 
  -  Copyright 2012 Birkett Enterprise Ltd
  -
@@ -16,28 +15,35 @@
  -  limitations under the License.
  - 
 -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="fill_parent"
-    android:orientation="vertical"
-    android:layout_gravity="center"
-    android:paddingTop="10dp" >
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:paddingTop="10dp">
 
 
-     <FrameLayout
+        <FrameLayout
             android:id="@+id/status_container"
-            android:layout_gravity="center"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
-    </FrameLayout>
-    
-          <FrameLayout
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"></FrameLayout>
+
+        <FrameLayout
             android:id="@+id/buddy_message_not_set_container"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
-    </FrameLayout>
-        
-  
+            android:layout_height="wrap_content"></FrameLayout>
 
-</LinearLayout>
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"/>
+
+</FrameLayout>
