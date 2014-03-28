@@ -25,6 +25,15 @@
     android:padding="10dp" >
 
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/ten20logo"/>
+
+    <Space
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"/>
     <EditText
         android:id="@+id/email_or_user_name"
         android:layout_width="match_parent"
@@ -41,9 +50,18 @@
         android:ems="10"
          />
 
+    <Space
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"/>
     <Button
         android:id="@+id/sign_in"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/signin_signing"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="sign up"
+        android:text/>
 </LinearLayout>

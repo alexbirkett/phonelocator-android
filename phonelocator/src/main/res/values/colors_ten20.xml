@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="ten20_color">#ff6600</color>
+    <color name="ten20_orange">#ff6500</color>
+    <color name="ten20_gray">#262626</color>
+    <color name="ten20_gray_web">#333</color>
+    <color name="ten20_color">@color/ten20_orange</color>
+    <color name="ten20_action_bar">@color/ten20_gray</color>
+    <color name="ten20_theme_background">@color/ten20_gray</color>
 </resources>

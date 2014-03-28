@@ -42,6 +42,14 @@
 
     <item name="android:fastScrollThumbDrawable">@drawable/ten20_fastscroll_thumb_holo</item>
 
+    <item name="android:actionBarStyle">@style/ten20_action_bar</item>
+
+    <item name="android:background">@color/ten20_theme_background</item>
+
   </style>
+
+    <style name="ten20_action_bar" parent="android:Widget.Holo.ActionBar">
+        <item name="android:background">@color/ten20_action_bar</item>
+    </style>
 
 </resources>
