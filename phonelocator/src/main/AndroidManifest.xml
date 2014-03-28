@@ -39,7 +39,7 @@
 	<application android:name=".application.PhonelocatorApplication" 
 	             android:icon="@drawable/icon"
 	             android:label="@string/app_name"
-                 android:theme="@android:style/Theme.Holo"
+                 android:theme="@style/ten20"
 				 >
 	
 		<activity android:name=".activity.SigninActivity" android:label="@string/app_name" android:launchMode="singleInstance">
