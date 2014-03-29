@@ -15,47 +15,33 @@
  -  limitations under the License.
  -
 -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="10dp"
+    android:layout_gravity="center">
 
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    >
 
-    <RelativeLayout
-        android:layout_width="fill_parent"
+    <EditText
+        android:id="@+id/sign_up_email"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:hint="@string/signup_email" />
 
+    <EditText
+        android:id="@+id/sign_up_user_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/signup_username" />
 
-        <EditText
-            android:id="@+id/sign_up_email"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/signup_email" />
+    <EditText
+        android:id="@+id/signup_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
 
-        <EditText
-            android:id="@+id/sign_up_user_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/sign_up_email"
-            android:hint="@string/signup_username" />
+        android:hint="@string/signup_password"
+        android:inputType="textPassword" />
 
-        <EditText
-            android:id="@+id/signup_password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/sign_up_user_name"
-            android:hint="@string/signup_password"
-            android:inputType="textPassword" />
-
-        <Button
-            android:id="@+id/signup_sign_up"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/sign_up_user_name"
-            android:layout_marginTop="40dp"
-            android:text="@string/signup_sign_up"
-            />
-
-    </RelativeLayout>
-</ScrollView>
+</LinearLayout>

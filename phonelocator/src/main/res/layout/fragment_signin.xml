@@ -15,39 +15,25 @@
  -  limitations under the License.
  -
 -->
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="10dp">
 
-    <RelativeLayout
-        android:layout_width="fill_parent"
+    <EditText
+        android:id="@+id/sign_in_email_or_user_name"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        >
+        android:hint="@string/signin_username_email" />
 
+    <EditText
+        android:id="@+id/sign_in_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/signin_password"
+        android:inputType="textPassword" />
 
-        <EditText
-            android:id="@+id/sign_in_email_or_user_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/signin_username_email" />
-
-        <EditText
-            android:id="@+id/sign_in_password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/sign_in_email_or_user_name"
-            android:hint="@string/signin_password"
-            android:inputType="textPassword" />
-
-        <Button
-            android:id="@+id/sign_in"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:layout_below="@id/sign_in_password"
-            android:text="@string/signin_signing"
-            />
-
-    </RelativeLayout>
-</ScrollView>
+</LinearLayout>

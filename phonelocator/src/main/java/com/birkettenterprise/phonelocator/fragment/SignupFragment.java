@@ -34,15 +34,6 @@ public class SignupFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_signup, container, false);
-
-        // Watch for button clicks.
-        Button button = (Button)v.findViewById(R.id.signup_sign_up);
-        button.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-
-            }
-        });
-
         return v;
     }
 }
