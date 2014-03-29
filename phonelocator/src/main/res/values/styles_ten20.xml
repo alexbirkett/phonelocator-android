@@ -11,6 +11,7 @@
   <style name="Buttonten20" parent="android:Widget.Holo.Button">
 	  <item name="android:background">@drawable/ten20_btn_default_holo_dark</item>
       <item name="android:textAllCaps">true</item>
+      <item name="android:textStyle">bold</item>
   </style>
 
   <style name="ImageButtonten20" parent="android:Widget.Holo.ImageButton">
