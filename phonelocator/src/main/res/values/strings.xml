@@ -100,6 +100,8 @@
     <string name="sign_in_password">password</string>
     <string name="sign_in_error_username_or_email">Enter your username or email address</string>
     <string name="sign_in_error_password">Enter your password</string>
+    <string name="sign_in_error_invalid_email_user_name_or_password">Invalid email, username or password</string>
+    <string name="sign_in_could_not_connect_to_server">Could not connect to server</string>
 
     <string name="sign_up_email">email address</string>
     <string name="sign_up_username">username</string>

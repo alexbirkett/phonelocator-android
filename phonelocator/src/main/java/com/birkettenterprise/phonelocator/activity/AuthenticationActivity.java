@@ -18,6 +18,7 @@
 
 package com.birkettenterprise.phonelocator.activity;
 
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -197,28 +198,32 @@ public class AuthenticationActivity extends Activity {
     }
 
     private void signInRequest(String usernameOrEmail, String password) {
-
         setRequesting(true);
         AuthenticateRequest request = new AuthenticateRequest();
         request.email = usernameOrEmail;
         request.password = password;
-        JacksonRequest<AuthenticateResponse> jsObjRequest = new JacksonRequest(Request.Method.POST, Constants.BASE_URL + "/authenticate", request,AuthenticateResponse.class,
+        JacksonRequest<AuthenticateResponse> jacksonRequest = new JacksonRequest(Request.Method.POST, Constants.BASE_URL + "/authenticate", request,AuthenticateResponse.class,
                 new Response.Listener<AuthenticateResponse>() {
 
                     @Override
                     public void onResponse(AuthenticateResponse response) {
                         setRequesting(false);
-
-
+                        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(AuthenticationActivity.this);
+                        SettingsHelper.setAuthenticationToken(sharedPreferences, response.token);
                     }
                 }, new Response.ErrorListener() {
-
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        NetworkResponse networkResponse = error.networkResponse;
+                        if (networkResponse != null && networkResponse.statusCode == 401) {
+                            toast(R.string.sign_in_error_invalid_email_user_name_or_password);
+                        } else {
+                            toast(R.string.sign_in_could_not_connect_to_server);
+                        }
                         setRequesting(false);
                     }
         });
-        queue.add(jsObjRequest);
+        queue.add(jacksonRequest);
     }
 
 
