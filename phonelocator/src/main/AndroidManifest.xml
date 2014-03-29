@@ -21,8 +21,7 @@
 		package="com.birkettenterprise.phonelocator"
 		android:versionCode="12"
 		android:versionName="1.0.4">
-	
-	<uses-sdk android:minSdkVersion="7" android:targetSdkVersion="14"/>
+
 
 	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 	<uses-permission android:name="android.permission.WAKE_LOCK"/>
@@ -42,20 +41,21 @@
                  android:theme="@style/ten20"
 				 >
 	
-		<activity android:name=".activity.SigninActivity" android:label="@string/app_name" android:launchMode="singleInstance">
+		<activity android:name=".activity.AuthenticationActivity" android:label="@string/app_name" android:launchMode="singleInstance">
 			<intent-filter>
 				<action android:name="android.intent.action.VIEW" />
 				<category android:name="android.intent.category.DEFAULT"/>
 				<category android:name="android.intent.category.BROWSABLE"/>
 				<data android:scheme="phonelocator" />
 			</intent-filter>
-		</activity>
-		
-		<activity android:name=".activity.DashboardActivity" android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+		</activity>
+		
+		<activity android:name=".activity.DashboardActivity" android:label="@string/app_name">
+
 		</activity>
 		<activity android:name=".activity.UpdateLogActivity" android:label="@string/app_name" uiOptions="splitActionBarWhenNarrow"/>
 		<activity android:name=".activity.SettingsActivity" android:label="@string/app_name"/>
