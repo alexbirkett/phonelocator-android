@@ -99,4 +99,12 @@
     <string name="signin_username_email">username or email address</string>
     <string name="signin_password">password</string>
     <string name="signin_signing">Sign in</string>
+
+    <string name="signup_email">email address</string>
+    <string name="signup_username">username</string>
+    <string name="signup_password">password</string>
+
+    <string name="signup_sign_up">Sign up</string>
+
+
 </resources>
