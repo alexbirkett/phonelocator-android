@@ -103,6 +103,11 @@ public class SettingsHelper {
 				registrationUrl);
 		editor.commit();
 	}
+
+    public static void setAuthenticationToken(SharedPreferences sharedPreferences, String authenticationToken) {
+        putStringIfRequired(sharedPreferences, StringSettings.AUTHENTICATION_TOKEN, authenticationToken);
+    }
+
 	
 	public static String getAuthenticationToken(SharedPreferences sharedPreferences) {
 		return sharedPreferences.getString(StringSettings.AUTHENTICATION_TOKEN, null);

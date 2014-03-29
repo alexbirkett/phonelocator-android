@@ -27,7 +27,9 @@ import com.android.volley.toolbox.Volley;
 import com.astuetz.PagerSlidingTabStrip;
 import com.birkettenterprise.phonelocator.R;
 import com.birkettenterprise.phonelocator.model.request.AuthenticateRequest;
+import com.birkettenterprise.phonelocator.model.request.SingUpRequest;
 import com.birkettenterprise.phonelocator.model.response.AuthenticateResponse;
+import com.birkettenterprise.phonelocator.model.response.SignUpResponse;
 import com.birkettenterprise.phonelocator.settings.SettingsHelper;
 import com.birkettenterprise.phonelocator.utility.Constants;
 import com.birkettenterprise.phonelocator.utility.JacksonRequest;
@@ -188,7 +190,11 @@ public class AuthenticationActivity extends Activity {
 	}
 
     private void signUp() {
-        validateSignUp();
+        if (validateSignUp()) {
+            signUpRequest(getValueFromTextView(R.id.sign_up_user_name),
+                          getValueFromTextView(R.id.sign_up_email),
+                          getValueFromTextView(R.id.sign_up_password));
+        }
     }
 
     private void signIn() {
@@ -226,6 +232,33 @@ public class AuthenticationActivity extends Activity {
         queue.add(jacksonRequest);
     }
 
+    private void signUpRequest(final String username, final String email, final String password) {
+        setRequesting(true);
+        SingUpRequest request = new SingUpRequest();
+        request.email = email;
+        request.password = password;
+        request.username = username;
+
+        JacksonRequest<SignUpResponse> jacksonRequest = new JacksonRequest(Request.Method.POST, Constants.BASE_URL + "/signup", request, SignUpResponse.class,
+                new Response.Listener<SignUpResponse>() {
+                    @Override
+                    public void onResponse(SignUpResponse response) {
+                        signInRequest(email, password);
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                NetworkResponse networkResponse = error.networkResponse;
+                if (networkResponse != null && networkResponse.statusCode == 403) {
+                    toast(R.string.sign_up_user_already_registered);
+                } else {
+                    toast(R.string.sign_up_could_not_connect_to_server);
+                }
+                setRequesting(false);
+            }
+        });
+        queue.add(jacksonRequest);
+    }
 
     private boolean validateSignUp() {
         String email = getValueFromTextView(R.id.sign_up_email);
