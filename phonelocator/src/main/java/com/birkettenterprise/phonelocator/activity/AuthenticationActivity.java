@@ -18,23 +18,59 @@
 
 package com.birkettenterprise.phonelocator.activity;
 
+import com.birkettenterprise.phonelocator.R;
+import com.birkettenterprise.phonelocator.fragment.SigninFragment;
+import com.birkettenterprise.phonelocator.fragment.SignupFragment;
 import com.birkettenterprise.phonelocator.settings.SettingsHelper;
-
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.widget.Toast;
 
-public class AuthenticationActivity extends Activity {
+public class AuthenticationActivity extends FragmentActivity {
 
-	@Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    private AuthenticationAdapter adapter;
+    private ViewPager viewPager;
+
+    public static class AuthenticationAdapter extends FragmentPagerAdapter {
+        public AuthenticationAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public int getCount() {
+            return 2;
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            Fragment fragment = null;
+            if (position == 0) {
+                fragment = SignupFragment.newInstance(position);
+            } else {
+                fragment = SigninFragment.newInstance(position);
+            }
+            return fragment;
+        }
     }
 
-	@Override
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_authentication);
+        adapter = new AuthenticationAdapter(getSupportFragmentManager());
+        viewPager = (ViewPager)findViewById(R.id.pager);
+        viewPager.setAdapter(adapter);
+    }
+
+    @Override
 	public void onPause() {
 		super.onPause();
 	}
@@ -43,7 +79,7 @@ public class AuthenticationActivity extends Activity {
 	public void onResume() {
 		super.onResume();
         //if (isRegistered()) {
-            startDashboardActivity();
+        //    startDashboardActivity();
         //}
     }
 	

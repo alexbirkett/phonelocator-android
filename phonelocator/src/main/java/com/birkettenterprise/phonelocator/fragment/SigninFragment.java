@@ -37,12 +37,12 @@ public class SigninFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_signin, container, false);
 
         // Watch for button clicks.
-        Button button = (Button)v.findViewById(R.id.sign_in);
+      /*  Button button = (Button)v.findViewById(R.id.sig);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
             }
-        });
+        });*/
 
         return v;
     }

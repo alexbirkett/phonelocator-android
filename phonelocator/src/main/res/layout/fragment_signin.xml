@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
  -
  -  Copyright 2014 Birkett Enterprise Ltd
  -
@@ -16,47 +15,39 @@
  -  limitations under the License.
  -
 -->
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical"
-    android:layout_gravity="center"
-    android:padding="10dp" >
+    android:layout_height="fill_parent">
 
-
-    <ImageView
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:src="@drawable/ten20logo"/>
+        android:orientation="vertical"
+        >
 
-    <Space
-        android:layout_width="wrap_content"
-        android:layout_height="20dp"/>
-    <EditText
-        android:id="@+id/email_or_user_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/signin_username_email"
-         />
 
-    <EditText
-        android:id="@+id/password"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textPassword"
-        android:hint="@string/signin_password"
-        android:ems="10"
-         />
+        <EditText
+            android:id="@+id/sign_in_email_or_user_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/signin_username_email" />
 
-    <Space
-        android:layout_width="wrap_content"
-        android:layout_height="20dp"/>
-    <Button
-        android:id="@+id/sign_in"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/signin_signing"/>
+        <EditText
+            android:id="@+id/sign_in_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/sign_in_email_or_user_name"
+            android:hint="@string/signin_password"
+            android:inputType="textPassword" />
 
-</LinearLayout>
+        <Button
+            android:id="@+id/sign_in"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:layout_below="@id/sign_in_password"
+            android:text="@string/signin_signing"
+            />
+
+    </RelativeLayout>
+</ScrollView>
