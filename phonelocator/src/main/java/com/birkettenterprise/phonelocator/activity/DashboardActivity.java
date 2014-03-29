@@ -24,7 +24,6 @@ import android.widget.FrameLayout;
 import com.birkett.controllers.ActivityThatSupportsControllers;
 import com.birkett.controllers.ViewController;
 import com.birkettenterprise.phonelocator.R;
-import com.birkettenterprise.phonelocator.fragment.SigninFragment;
 import com.birkettenterprise.phonelocator.broadcastreceiver.PollLocationAndSendUpdateBroadcastReceiver;
 import com.birkettenterprise.phonelocator.controller.BuddyMessageNotSetController;
 import com.birkettenterprise.phonelocator.controller.CountdownController;
@@ -96,7 +95,6 @@ public class DashboardActivity extends ActivityThatSupportsControllers implement
 		mAsyncSharedPreferencesListener.registerOnSharedPreferenceChangeListener(this);
 		swapStatusController();
 		registerBroadcastReceiver();
-        signIn();
 	}
 
 	@Override
@@ -268,13 +266,5 @@ public class DashboardActivity extends ActivityThatSupportsControllers implement
 		}
 
 	};
-
-    private void signIn() {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        Fragment fragment = SigninFragment.newInstance(0);
-        fragmentTransaction.add(R.id.fragment_container, fragment);
-        fragmentTransaction.commit();
-    }
 
 }
