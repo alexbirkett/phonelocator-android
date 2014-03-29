@@ -22,7 +22,6 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.astuetz.PagerSlidingTabStrip;
 import com.birkettenterprise.phonelocator.R;
@@ -55,6 +54,7 @@ public class AuthenticationActivity extends Activity {
     private PagerSlidingTabStrip tabs;
     private TextView actionButton;
     private View progressBar;
+    private RequestQueue queue;
 
     private static int SIGN_UP_INDEX = 0;
 
@@ -143,9 +143,12 @@ public class AuthenticationActivity extends Activity {
         tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
         tabs.setViewPager(viewPager);
         tabs.setOnPageChangeListener(pageChangeListener);
+        queue = Volley.newRequestQueue(this);
+
         actionButton = (TextView)findViewById(R.id.authentication_action_button);
         actionButton.setOnClickListener(actionButtonClickListener);
         progressBar = findViewById(R.id.authentication_progress_bar);
+
     }
 
     @Override
@@ -195,7 +198,6 @@ public class AuthenticationActivity extends Activity {
 
     private void signInRequest(String usernameOrEmail, String password) {
 
-        RequestQueue queue = Volley.newRequestQueue(this);
         setRequesting(true);
         AuthenticateRequest request = new AuthenticateRequest();
         request.email = usernameOrEmail;
