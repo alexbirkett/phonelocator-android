@@ -11,4 +11,5 @@
     <color name="ten20_tab_strip_indicator_color">@color/ten20_orange</color>
     <color name="ten20_tab_strip_background_color">@color/ten20_header_gray</color>
     <color name="ten20_text_color">@color/ten20_white</color>
+    <color name="ten20_progress_bar_color">@color/ten20_orange</color>
 </resources>

@@ -1,44 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <fr.castorflex.android.smoothprogressbar.SmoothProgressBar
+        android:id="@+id/authentication_progress_bar"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:orientation="vertical">
+        android:indeterminate="true"
+        android:visibility="invisible"
+        app:spb_color="@color/ten20_progress_bar_color"
+        app:spb_mirror_mode="false"
+        app:spb_progressiveStart_activated="true"
+        app:spb_progressiveStart_speed="1.5"
+        app:spb_progressiveStop_speed="3.4"
+        app:spb_reversed="false"
+        app:spb_sections_count="4"
+        app:spb_speed="2.0"
+        app:spb_stroke_separator_length="4dp"
+        app:spb_stroke_width="4dp"
+        app:spb_interpolator="spb_interpolator_acceleratedecelerate"/>
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="60dp"
-            android:layout_gravity="center_horizontal"
-            android:scaleType="centerInside"
-            android:src="@drawable/ten20logo"
-            android:visibility="gone" />
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:layout_gravity="center_horizontal"
+        android:scaleType="centerInside"
+        android:src="@drawable/ten20logo"
+        android:visibility="gone" />
 
-        <com.astuetz.PagerSlidingTabStrip
-            android:id="@+id/tabs"
-            android:layout_width="match_parent"
-            android:layout_height="48dip"
-            android:background="@color/ten20_header_gray"
-            android:textColor="@color/ten20_white"
-            android:textSize="14sp"
-            app:pstsIndicatorColor="@color/ten20_tab_strip_indicator_color"
-            app:pstsShouldExpand="true" />
+    <com.astuetz.PagerSlidingTabStrip
+        android:id="@+id/tabs"
+        android:layout_width="match_parent"
+        android:layout_height="48dip"
+        android:background="@color/ten20_header_gray"
+        android:textColor="@color/ten20_white"
+        android:textSize="14sp"
+        app:pstsIndicatorColor="@color/ten20_tab_strip_indicator_color"
+        app:pstsShouldExpand="true" />
 
-        <android.support.v4.view.ViewPager
-            android:id="@+id/pager"
-            android:layout_width="match_parent"
-            android:layout_height="150dp">
+    <android.support.v4.view.ViewPager
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="150dp">
 
-            <include layout="@layout/layout_signup"/>
-            <include layout="@layout/layout_signin"/>
+        <include layout="@layout/layout_signup" />
 
-        </android.support.v4.view.ViewPager>
+        <include layout="@layout/layout_signin" />
 
-        <Button
-            android:id="@+id/authentication_action_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/action_sign_up" />
+    </android.support.v4.view.ViewPager>
 
-    </LinearLayout>
+    <Button
+        android:id="@+id/authentication_action_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/action_sign_up" />
+
+</LinearLayout>

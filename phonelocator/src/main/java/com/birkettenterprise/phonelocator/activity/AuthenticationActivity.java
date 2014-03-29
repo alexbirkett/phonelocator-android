@@ -34,7 +34,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Gravity;
@@ -47,12 +46,13 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class AuthenticationActivity extends FragmentActivity {
+public class AuthenticationActivity extends Activity {
 
     private AuthenticationAdapter adapter;
     private ViewPager viewPager;
     private PagerSlidingTabStrip tabs;
     private TextView actionButton;
+    private View progressBar;
 
     private static int SIGN_UP_INDEX = 0;
 
@@ -134,7 +134,6 @@ public class AuthenticationActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.activity_authentication);
         adapter = new AuthenticationAdapter();
         viewPager = (ViewPager)findViewById(R.id.pager);
@@ -144,9 +143,7 @@ public class AuthenticationActivity extends FragmentActivity {
         tabs.setOnPageChangeListener(pageChangeListener);
         actionButton = (TextView)findViewById(R.id.authentication_action_button);
         actionButton.setOnClickListener(actionButtonClickListener);
-        setProgressBarIndeterminate(Boolean.TRUE);
-        setProgressBarVisibility(true);
-
+        progressBar = findViewById(R.id.authentication_progress_bar);
     }
 
     @Override
@@ -199,7 +196,7 @@ public class AuthenticationActivity extends FragmentActivity {
         JSONObject requestObject = new JSONObject();
 
         RequestQueue queue = Volley.newRequestQueue(this);
-        setProgressBarIndeterminateVisibility(true);
+        setRequesting(true);
         try {
             requestObject.put("email", usernameOrEmail);
             requestObject.put("password", password);
@@ -208,14 +205,14 @@ public class AuthenticationActivity extends FragmentActivity {
 
                 @Override
                 public void onResponse(JSONObject response) {
-                    setProgressBarIndeterminateVisibility(false);
+                    setRequesting(false);
 
                 }
             }, new Response.ErrorListener() {
 
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    setProgressBarIndeterminateVisibility(false);
+                    setRequesting(false);
                 }
             });
             queue.add(jsObjRequest);
@@ -264,5 +261,10 @@ public class AuthenticationActivity extends FragmentActivity {
     private String getValueFromTextView(int id) {
        TextView textView = (TextView) findViewById(id);
        return textView.getText().toString();
+    }
+
+    private void setRequesting(boolean requesting) {
+        progressBar.setVisibility(requesting ? View.VISIBLE : View.INVISIBLE);
+        actionButton.setEnabled(!requesting);
     }
 }
