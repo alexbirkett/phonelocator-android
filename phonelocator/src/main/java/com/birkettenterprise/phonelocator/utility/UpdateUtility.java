@@ -20,8 +20,8 @@ package com.birkettenterprise.phonelocator.utility;
 
 import com.birkettenterprise.phonelocator.broadcastreceiver.SendWorkToUpdateServiceBroadcastReceiver;
 import com.birkettenterprise.phonelocator.settings.SettingsHelper;
-import com.commonsware.cwac.locpoll.LocationPoller;
-import com.commonsware.cwac.locpoll.LocationPollerParameter;
+//import com.commonsware.cwac.locpoll.LocationPoller;
+//import com.commonsware.cwac.locpoll.LocationPollerParameter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -36,7 +36,7 @@ public class UpdateUtility {
 	public static void pollLocationAndSendUpdate(Context context) {
 		Bundle bundle = new Bundle();
 		
-		LocationPollerParameter parameter = new LocationPollerParameter(bundle);
+/*		LocationPollerParameter parameter = new LocationPollerParameter(bundle);
 		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
 		parameter.setTimeout(SettingsHelper.getGpsTimeOut(sharedPreferences));
 		if (SettingsHelper.isGpsEnabled(sharedPreferences)) {
@@ -48,7 +48,7 @@ public class UpdateUtility {
 		Intent intent = new Intent(context, LocationPoller.class);
 		intent.putExtras(bundle);
 		
-		context.sendBroadcast(intent);
+		context.sendBroadcast(intent);*/
 	}
 	
 }

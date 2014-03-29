@@ -26,8 +26,11 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.astuetz.PagerSlidingTabStrip;
 import com.birkettenterprise.phonelocator.R;
+import com.birkettenterprise.phonelocator.model.request.AuthenticateRequest;
+import com.birkettenterprise.phonelocator.model.response.AuthenticateResponse;
 import com.birkettenterprise.phonelocator.settings.SettingsHelper;
 import com.birkettenterprise.phonelocator.utility.Constants;
+import com.birkettenterprise.phonelocator.utility.JacksonRequest;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -39,7 +42,6 @@ import android.support.v4.view.ViewPager;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -193,33 +195,30 @@ public class AuthenticationActivity extends Activity {
 
     private void signInRequest(String usernameOrEmail, String password) {
 
-        JSONObject requestObject = new JSONObject();
-
         RequestQueue queue = Volley.newRequestQueue(this);
         setRequesting(true);
-        try {
-            requestObject.put("email", usernameOrEmail);
-            requestObject.put("password", password);
-            JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.POST, Constants.BASE_URL + "/authenticate", requestObject,
-                new Response.Listener<JSONObject>() {
+        AuthenticateRequest request = new AuthenticateRequest();
+        request.email = usernameOrEmail;
+        request.password = password;
+        JacksonRequest<AuthenticateResponse> jsObjRequest = new JacksonRequest(Request.Method.POST, Constants.BASE_URL + "/authenticate", request,AuthenticateResponse.class,
+                new Response.Listener<AuthenticateResponse>() {
 
-                @Override
-                public void onResponse(JSONObject response) {
-                    setRequesting(false);
+                    @Override
+                    public void onResponse(AuthenticateResponse response) {
+                        setRequesting(false);
 
-                }
-            }, new Response.ErrorListener() {
 
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    setRequesting(false);
-                }
-            });
-            queue.add(jsObjRequest);
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        }
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        setRequesting(false);
+                    }
+        });
+        queue.add(jsObjRequest);
     }
+
 
     private boolean validateSignUp() {
         String email = getValueFromTextView(R.id.sign_up_email);
