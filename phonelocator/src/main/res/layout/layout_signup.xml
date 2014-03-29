@@ -29,20 +29,21 @@
         android:id="@+id/sign_up_email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/signup_email" />
+        android:hint="@string/sign_up_email"
+        android:inputType="textEmailAddress"/>
 
     <EditText
         android:id="@+id/sign_up_user_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/signup_username" />
+        android:hint="@string/sign_up_username" />
 
     <EditText
-        android:id="@+id/signup_password"
+        android:id="@+id/sign_up_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
-        android:hint="@string/signup_password"
+        android:hint="@string/sign_up_password"
         android:inputType="textPassword" />
 
 </LinearLayout>

@@ -29,6 +29,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -162,12 +163,42 @@ public class AuthenticationActivity extends Activity {
 	}
 
 	private void toast(int resourceId) {
-		Toast.makeText(this, resourceId, Toast.LENGTH_LONG).show();
+		Toast toast = Toast.makeText(this, resourceId, Toast.LENGTH_LONG);
+        toast.setGravity(Gravity.TOP, 0, 0);
+        toast.show();
 	}
 
     private void signUp() {
+
+        validateSignUp();
+    }
+
+    private boolean validateSignUp() {
+        String email = getValueFromTextView(R.id.sign_up_email);
+        String userName = getValueFromTextView(R.id.sign_up_user_name);
+        String password = getValueFromTextView(R.id.sign_up_password);
+        boolean valid = true;
+        if (email.length() == 0 || !email.contains("@")) {
+            findViewById(R.id.sign_up_email).requestFocus();
+            toast(R.string.sign_up_error_email);
+            valid = false;
+        } else if (userName.length() == 0) {
+            findViewById(R.id.sign_up_user_name).requestFocus();
+            toast(R.string.sign_up_error_username);
+            valid = false;
+        } else if (password.length() == 0) {
+            findViewById(R.id.sign_up_password).requestFocus();
+            toast(R.string.sign_up_error_password);
+            valid = false;
+        }
+        return valid;
     }
 
     private void signIn() {
+    }
+
+    private String getValueFromTextView(int id) {
+       TextView textView = (TextView) findViewById(id);
+       return textView.getText().toString();
     }
 }
