@@ -28,13 +28,14 @@
         android:id="@+id/sign_in_email_or_user_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/signin_username_email" />
+        android:hint="@string/sign_in_username_email"
+        android:inputType="textEmailAddress"/>
 
     <EditText
         android:id="@+id/sign_in_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/signin_password"
+        android:hint="@string/sign_in_password"
         android:inputType="textPassword" />
 
 </LinearLayout>

@@ -169,8 +169,11 @@ public class AuthenticationActivity extends Activity {
 	}
 
     private void signUp() {
-
         validateSignUp();
+    }
+
+    private void signIn() {
+        validateSignIn();
     }
 
     private boolean validateSignUp() {
@@ -194,8 +197,23 @@ public class AuthenticationActivity extends Activity {
         return valid;
     }
 
-    private void signIn() {
+    private boolean validateSignIn() {
+        String emailOrUserName = getValueFromTextView(R.id.sign_in_email_or_user_name);
+        String password = getValueFromTextView(R.id.sign_in_password);
+        boolean valid = true;
+        if (emailOrUserName.length() == 0) {
+            findViewById(R.id.sign_in_email_or_user_name).requestFocus();
+            toast(R.string.sign_in_error_username_or_email);
+            valid = false;
+        } else if (password.length() == 0) {
+            findViewById(R.id.sign_in_password).requestFocus();
+            toast(R.string.sign_in_error_password);
+            valid = false;
+        }
+        return valid;
     }
+
+
 
     private String getValueFromTextView(int id) {
        TextView textView = (TextView) findViewById(id);
