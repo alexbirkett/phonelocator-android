@@ -20,28 +20,28 @@ package com.birkettenterprise.phonelocator.activity;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.birkettenterprise.phonelocator.R;
-import com.birkettenterprise.phonelocator.fragment.SigninFragment;
-import com.birkettenterprise.phonelocator.fragment.SignupFragment;
 import com.birkettenterprise.phonelocator.settings.SettingsHelper;
+
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class AuthenticationActivity extends FragmentActivity {
+public class AuthenticationActivity extends Activity {
 
     private AuthenticationAdapter adapter;
     private ViewPager viewPager;
     private PagerSlidingTabStrip tabs;
     private TextView actionButton;
+
+    private static int SIGN_UP_INDEX = 0;
 
     private ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {
 
@@ -52,7 +52,7 @@ public class AuthenticationActivity extends FragmentActivity {
 
         @Override
         public void onPageSelected(int position) {
-            if (position == 0) {
+            if (position == SIGN_UP_INDEX) {
                 actionButton.setText(R.string.action_sign_up);
             } else {
                 actionButton.setText(R.string.action_sign_in);
@@ -70,40 +70,48 @@ public class AuthenticationActivity extends FragmentActivity {
 
         @Override
         public void onClick(View v) {
+            if (viewPager.getCurrentItem() == SIGN_UP_INDEX) {
+                signUp();
+            } else {
+                signIn();
+            }
 
         }
     };
 
-    public class AuthenticationAdapter extends FragmentPagerAdapter {
-        public AuthenticationAdapter(FragmentManager fm) {
-            super(fm);
-        }
+    public class AuthenticationAdapter extends PagerAdapter {
 
         @Override
         public int getCount() {
             return 2;
         }
 
-        @Override
-        public Fragment getItem(int position) {
-            Fragment fragment = null;
-            if (position == 0) {
-                fragment = SignupFragment.newInstance(position);
-            } else {
-                fragment = SigninFragment.newInstance(position);
-            }
-            return fragment;
-        }
 
         @Override
         public CharSequence getPageTitle(int position) {
             String title;
-            if (position == 0) {
+            if (position == SIGN_UP_INDEX) {
                 title = getResources().getString(R.string.tab_sign_up);
             } else {
                 title = getResources().getString(R.string.tab_sign_in);
             }
             return title;
+        }
+
+        public Object instantiateItem(ViewGroup collection, int position) {
+
+            int resId = 0;
+            if (position == SIGN_UP_INDEX) {
+                resId = R.id.layout_sign_up;
+            } else {
+                resId = R.id.layout_sign_in;
+            }
+            return findViewById(resId);
+        }
+
+        @Override
+        public boolean isViewFromObject(View arg0, Object arg1) {
+            return arg0 == ((View) arg1);
         }
 
     }
@@ -114,7 +122,7 @@ public class AuthenticationActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_authentication);
-        adapter = new AuthenticationAdapter(getSupportFragmentManager());
+        adapter = new AuthenticationAdapter();
         viewPager = (ViewPager)findViewById(R.id.pager);
         viewPager.setAdapter(adapter);
         tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
@@ -156,4 +164,10 @@ public class AuthenticationActivity extends FragmentActivity {
 	private void toast(int resourceId) {
 		Toast.makeText(this, resourceId, Toast.LENGTH_LONG).show();
 	}
+
+    private void signUp() {
+    }
+
+    private void signIn() {
+    }
 }
