@@ -32,9 +32,9 @@
            />
 
         <Button
-            android:id="@+id/authentication_action"
+            android:id="@+id/authentication_action_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/signin_signing" />
+            android:text="@string/action_sign_up" />
 
     </LinearLayout>

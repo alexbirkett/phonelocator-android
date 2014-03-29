@@ -32,12 +32,47 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class AuthenticationActivity extends FragmentActivity {
 
     private AuthenticationAdapter adapter;
     private ViewPager viewPager;
+    private PagerSlidingTabStrip tabs;
+    private TextView actionButton;
+
+    private ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {
+
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+        }
+
+        @Override
+        public void onPageSelected(int position) {
+            if (position == 0) {
+                actionButton.setText(R.string.action_sign_up);
+            } else {
+                actionButton.setText(R.string.action_sign_in);
+            }
+
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+
+        }
+    };
+
+    private View.OnClickListener actionButtonClickListener = new View.OnClickListener() {
+
+        @Override
+        public void onClick(View v) {
+
+        }
+    };
 
     public static class AuthenticationAdapter extends FragmentPagerAdapter {
         public AuthenticationAdapter(FragmentManager fm) {
@@ -78,8 +113,11 @@ public class AuthenticationActivity extends FragmentActivity {
         adapter = new AuthenticationAdapter(getSupportFragmentManager());
         viewPager = (ViewPager)findViewById(R.id.pager);
         viewPager.setAdapter(adapter);
-        PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
+        tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
         tabs.setViewPager(viewPager);
+        tabs.setOnPageChangeListener(pageChangeListener);
+        actionButton = (TextView)findViewById(R.id.authentication_action_button);
+        actionButton.setOnClickListener(actionButtonClickListener);
     }
 
     @Override
