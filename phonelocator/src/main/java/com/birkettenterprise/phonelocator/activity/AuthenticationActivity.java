@@ -18,24 +18,36 @@
 
 package com.birkettenterprise.phonelocator.activity;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.astuetz.PagerSlidingTabStrip;
 import com.birkettenterprise.phonelocator.R;
 import com.birkettenterprise.phonelocator.settings.SettingsHelper;
+import com.birkettenterprise.phonelocator.utility.Constants;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class AuthenticationActivity extends Activity {
+import org.json.JSONException;
+import org.json.JSONObject;
+
+public class AuthenticationActivity extends FragmentActivity {
 
     private AuthenticationAdapter adapter;
     private ViewPager viewPager;
@@ -122,6 +134,7 @@ public class AuthenticationActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.activity_authentication);
         adapter = new AuthenticationAdapter();
         viewPager = (ViewPager)findViewById(R.id.pager);
@@ -131,6 +144,9 @@ public class AuthenticationActivity extends Activity {
         tabs.setOnPageChangeListener(pageChangeListener);
         actionButton = (TextView)findViewById(R.id.authentication_action_button);
         actionButton.setOnClickListener(actionButtonClickListener);
+        setProgressBarIndeterminate(Boolean.TRUE);
+        setProgressBarVisibility(true);
+
     }
 
     @Override
@@ -173,7 +189,39 @@ public class AuthenticationActivity extends Activity {
     }
 
     private void signIn() {
-        validateSignIn();
+        if (validateSignIn()) {
+            signInRequest(getValueFromTextView(R.id.sign_in_email_or_user_name), getValueFromTextView(R.id.sign_in_password));
+        }
+    }
+
+    private void signInRequest(String usernameOrEmail, String password) {
+
+        JSONObject requestObject = new JSONObject();
+
+        RequestQueue queue = Volley.newRequestQueue(this);
+        setProgressBarIndeterminateVisibility(true);
+        try {
+            requestObject.put("email", usernameOrEmail);
+            requestObject.put("password", password);
+            JsonObjectRequest jsObjRequest = new JsonObjectRequest(Request.Method.POST, Constants.BASE_URL + "/authenticate", requestObject,
+                new Response.Listener<JSONObject>() {
+
+                @Override
+                public void onResponse(JSONObject response) {
+                    setProgressBarIndeterminateVisibility(false);
+
+                }
+            }, new Response.ErrorListener() {
+
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    setProgressBarIndeterminateVisibility(false);
+                }
+            });
+            queue.add(jsObjRequest);
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private boolean validateSignUp() {
@@ -212,8 +260,6 @@ public class AuthenticationActivity extends Activity {
         }
         return valid;
     }
-
-
 
     private String getValueFromTextView(int id) {
        TextView textView = (TextView) findViewById(id);
