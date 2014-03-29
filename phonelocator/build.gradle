@@ -11,7 +11,7 @@ android {
     buildToolsVersion "19.0.1"
 
     defaultConfig {
-        minSdkVersion 11
+        minSdkVersion 14
         targetSdkVersion 19
         versionCode 1
         versionName "1.0"
@@ -27,6 +27,7 @@ android {
 dependencies {
     compile 'com.android.support:appcompat-v7:+'
     compile 'com.commonsware.cwac:wakeful:1.0.1'
+    compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile project(':controllers-for-android')
 }

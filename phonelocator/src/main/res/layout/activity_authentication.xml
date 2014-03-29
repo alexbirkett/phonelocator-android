@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:padding="10dp"
     android:gravity="center_horizontal"
@@ -13,7 +15,18 @@
         android:layout_height="60dp"
         android:layout_gravity="center_horizontal"
         android:scaleType="centerInside"
-        android:src="@drawable/ten20logo"/>
+        android:src="@drawable/ten20logo"
+        android:visibility="gone"/>
+
+    <com.astuetz.PagerSlidingTabStrip
+        android:id="@+id/tabs"
+        android:layout_width="match_parent"
+        android:layout_height="48dip"
+        android:textColor="@color/ten20_white"
+        android:textSize="14sp"
+        android:background="@color/ten20_header_gray"
+        app:pstsIndicatorColor="@color/ten20_tab_strip_indicator_color"
+        app:pstsShouldExpand="true"/>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/pager"

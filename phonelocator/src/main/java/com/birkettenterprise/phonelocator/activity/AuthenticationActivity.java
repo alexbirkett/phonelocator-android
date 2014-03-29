@@ -18,6 +18,7 @@
 
 package com.birkettenterprise.phonelocator.activity;
 
+import com.astuetz.PagerSlidingTabStrip;
 import com.birkettenterprise.phonelocator.R;
 import com.birkettenterprise.phonelocator.fragment.SigninFragment;
 import com.birkettenterprise.phonelocator.fragment.SignupFragment;
@@ -58,8 +59,17 @@ public class AuthenticationActivity extends FragmentActivity {
             }
             return fragment;
         }
+
+        private final String[] TITLES = { "Sign up", "Sign in" };
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return TITLES[position];
+        }
+
     }
 
+    // Bind the tabs to the ViewPager
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +78,8 @@ public class AuthenticationActivity extends FragmentActivity {
         adapter = new AuthenticationAdapter(getSupportFragmentManager());
         viewPager = (ViewPager)findViewById(R.id.pager);
         viewPager.setAdapter(adapter);
+        PagerSlidingTabStrip tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
+        tabs.setViewPager(viewPager);
     }
 
     @Override
