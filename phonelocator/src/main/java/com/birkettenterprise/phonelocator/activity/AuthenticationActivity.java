@@ -74,7 +74,7 @@ public class AuthenticationActivity extends FragmentActivity {
         }
     };
 
-    public static class AuthenticationAdapter extends FragmentPagerAdapter {
+    public class AuthenticationAdapter extends FragmentPagerAdapter {
         public AuthenticationAdapter(FragmentManager fm) {
             super(fm);
         }
@@ -95,11 +95,15 @@ public class AuthenticationActivity extends FragmentActivity {
             return fragment;
         }
 
-        private final String[] TITLES = { "Sign up", "Sign in" };
-
         @Override
         public CharSequence getPageTitle(int position) {
-            return TITLES[position];
+            String title;
+            if (position == 0) {
+                title = getResources().getString(R.string.tab_sign_up);
+            } else {
+                title = getResources().getString(R.string.tab_sign_in);
+            }
+            return title;
         }
 
     }

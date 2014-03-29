@@ -107,4 +107,7 @@
     <string name="action_sign_up">Sign up</string>
     <string name="action_sign_in">Sign in</string>
 
+    <string name="tab_sign_up">Sign up</string>
+    <string name="tab_sign_in">Sign in</string>
+
 </resources>
