@@ -47,9 +47,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 public class AuthenticationActivity extends Activity {
 
     private AuthenticationAdapter adapter;
@@ -139,49 +136,20 @@ public class AuthenticationActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_authentication);
-        adapter = new AuthenticationAdapter();
-        viewPager = (ViewPager)findViewById(R.id.pager);
-        viewPager.setAdapter(adapter);
-        tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
-        tabs.setViewPager(viewPager);
-        tabs.setOnPageChangeListener(pageChangeListener);
-        queue = Volley.newRequestQueue(this);
+            setContentView(R.layout.activity_authentication);
+            adapter = new AuthenticationAdapter();
+            viewPager = (ViewPager)findViewById(R.id.pager);
+            viewPager.setAdapter(adapter);
+            tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
+            tabs.setViewPager(viewPager);
+            tabs.setOnPageChangeListener(pageChangeListener);
+            queue = Volley.newRequestQueue(this);
 
-        actionButton = (TextView)findViewById(R.id.authentication_action_button);
-        actionButton.setOnClickListener(actionButtonClickListener);
-        progressBar = findViewById(R.id.authentication_progress_bar);
+            actionButton = (TextView)findViewById(R.id.authentication_action_button);
+            actionButton.setOnClickListener(actionButtonClickListener);
+            progressBar = findViewById(R.id.authentication_progress_bar);
 
     }
-
-    @Override
-	public void onPause() {
-		super.onPause();
-	}
-	
-	@Override
-	public void onResume() {
-		super.onResume();
-        //if (isRegistered()) {
-        //    startDashboardActivity();
-        //}
-    }
-	
-	@Override
-	protected void onDestroy() {
-	    super.onDestroy();
-	}
-
-	private void startDashboardActivity() {
-		Intent intent = new Intent(this, DashboardActivity.class);
-        startActivity(intent);
-		finish();
-	}
-		
-	private boolean isRegistered() {
-		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-		return SettingsHelper.isRegistered(sharedPreferences);
-	}
 
 	private void toast(int resourceId) {
 		Toast toast = Toast.makeText(this, resourceId, Toast.LENGTH_LONG);
@@ -216,6 +184,7 @@ public class AuthenticationActivity extends Activity {
                         setRequesting(false);
                         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(AuthenticationActivity.this);
                         SettingsHelper.setAuthenticationToken(sharedPreferences, response.token);
+                        startDashboardActivity();
                     }
                 }, new Response.ErrorListener() {
                     @Override
@@ -305,5 +274,12 @@ public class AuthenticationActivity extends Activity {
     private void setRequesting(boolean requesting) {
         progressBar.setVisibility(requesting ? View.VISIBLE : View.INVISIBLE);
         actionButton.setEnabled(!requesting);
+    }
+
+    private void startDashboardActivity() {
+        Intent intent = new Intent(this, DashboardActivity.class);
+        // Use startActivityForResult to prevent flicker
+        startActivity(intent);
+        finish();
     }
 }

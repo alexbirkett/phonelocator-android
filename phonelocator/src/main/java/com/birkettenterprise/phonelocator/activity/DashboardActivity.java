@@ -13,9 +13,6 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -84,7 +81,6 @@ public class DashboardActivity extends ActivityThatSupportsControllers implement
 	}
 	
 	private void addBuddyNumberNotSetController() {
-		 
 		FrameLayout counterContainer = (FrameLayout) findViewById(R.id.buddy_message_not_set_container);
 		counterContainer.addView(mBuddyMessageNotSetController.getView());
 	}
@@ -92,6 +88,11 @@ public class DashboardActivity extends ActivityThatSupportsControllers implement
 	@Override
 	public void onResume() {
 		super.onResume();
+
+        if (!hasAuthenticationToken()) {
+            startAuthenticationActivity();
+        }
+
 		mAsyncSharedPreferencesListener.registerOnSharedPreferenceChangeListener(this);
 		swapStatusController();
 		registerBroadcastReceiver();
@@ -167,7 +168,13 @@ public class DashboardActivity extends ActivityThatSupportsControllers implement
 		Intent intent = new Intent(this, BuddyMessageActivity.class);
 		startActivity(intent);
 	}
-	
+
+    private void startAuthenticationActivity() {
+        Intent intent = new Intent(this, AuthenticationActivity.class);
+        // Use startActivityForResult to prevent flicker
+        startActivityForResult(intent, 0);
+        finish();
+    }
 
 	private void swapStatusController() {
 
@@ -266,5 +273,10 @@ public class DashboardActivity extends ActivityThatSupportsControllers implement
 		}
 
 	};
+
+    private boolean hasAuthenticationToken() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        return SettingsHelper.getAuthenticationToken(sharedPreferences) != null;
+    }
 
 }
