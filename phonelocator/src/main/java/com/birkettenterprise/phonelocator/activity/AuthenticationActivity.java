@@ -26,6 +26,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
 import com.astuetz.PagerSlidingTabStrip;
 import com.birkettenterprise.phonelocator.R;
+import com.birkettenterprise.phonelocator.application.PhonelocatorApplication;
 import com.birkettenterprise.phonelocator.model.request.AuthenticateRequest;
 import com.birkettenterprise.phonelocator.model.request.SingUpRequest;
 import com.birkettenterprise.phonelocator.model.response.AuthenticateResponse;
@@ -143,7 +144,7 @@ public class AuthenticationActivity extends Activity {
             tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
             tabs.setViewPager(viewPager);
             tabs.setOnPageChangeListener(pageChangeListener);
-            queue = Volley.newRequestQueue(this);
+            queue = PhonelocatorApplication.getInstance().getQueue();
 
             actionButton = (TextView)findViewById(R.id.authentication_action_button);
             actionButton.setOnClickListener(actionButtonClickListener);
