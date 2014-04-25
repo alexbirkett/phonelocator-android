@@ -1,6 +1,6 @@
 /**
- * 
- *  Copyright 2011 Birkett Enterprise Ltd
+ *
+ *  Copyright 2011-2014 Birkett Enterprise Ltd
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -13,11 +13,13 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 
 package com.birkettenterprise.phonelocator.application;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
 import com.birkettenterprise.phonelocator.settings.SettingTimestampListener;
 
 //import net.hockeyapp.android.CrashManager;
@@ -25,37 +27,43 @@ import android.app.Application;
 
 public class PhonelocatorApplication extends Application {
 
-	public static String LOG_TAG = "PHONELOCATOR";
-	
-	private static PhonelocatorApplication mInstance;
-	private SettingTimestampListener mSettingTimestampListener;
-	
-	@Override
-	public void onCreate() {
-		super.onCreate();
-		setInstanceVariable();
+    public static String LOG_TAG = "PHONELOCATOR";
+
+    private static PhonelocatorApplication instance;
+    private SettingTimestampListener settingTimestampListener;
+    private RequestQueue queue;
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        setInstanceVariable();
 //		CrashManager.registerHandler();
-		createTimestampListener();
-	}
-	
-	private void setInstanceVariable() {
-		if (mInstance != null) {
-			throw new RuntimeException();
-		}
-		mInstance = this;
-	}
-	
-	public static PhonelocatorApplication getInstance() {
-		return mInstance;
-	}
-	
-	private void createTimestampListener() {
-		// A setting timestamp listener needs to exist while the app process is running.
-		// A service is not used because we don't want to indicate to the framework that an operation is in progress
-		mSettingTimestampListener = new SettingTimestampListener(this);
-	}
-	
-	public SettingTimestampListener getSettingTimestampListener() {
-		return mSettingTimestampListener;
-	}
+        createTimestampListener();
+        queue = Volley.newRequestQueue(this);
+    }
+
+    private void setInstanceVariable() {
+        if (instance != null) {
+            throw new RuntimeException();
+        }
+        instance = this;
+    }
+
+    public static PhonelocatorApplication getInstance() {
+        return instance;
+    }
+
+    private void createTimestampListener() {
+        // A setting timestamp listener needs to exist while the app process is running.
+        // A service is not used because we don't want to indicate to the framework that an operation is in progress
+        settingTimestampListener = new SettingTimestampListener(this);
+    }
+
+    public SettingTimestampListener getSettingTimestampListener() {
+        return settingTimestampListener;
+    }
+
+    public RequestQueue getQueue() {
+        return queue;
+    }
 }
