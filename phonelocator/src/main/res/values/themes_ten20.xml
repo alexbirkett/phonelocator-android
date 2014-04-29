@@ -46,6 +46,8 @@
 
     <item name="android:background">@color/ten20_theme_background</item>
 
+    <item name="android:windowAnimationStyle">@null</item>
+
   </style>
 
     <style name="ten20_action_bar" parent="android:Widget.Holo.ActionBar">
