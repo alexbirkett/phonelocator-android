@@ -6,3 +6,4 @@ birkettenterprise.keystore
 phonelocator/build
 .idea
 .gradle
+.DS_Store
