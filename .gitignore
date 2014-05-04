@@ -4,6 +4,7 @@ local.properties
 org.eclipse.jdt.core.prefs
 birkettenterprise.keystore
 phonelocator/build
+.iml 
 .idea
 .gradle
 .DS_Store
