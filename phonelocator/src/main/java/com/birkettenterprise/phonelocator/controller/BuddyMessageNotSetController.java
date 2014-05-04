@@ -28,7 +28,7 @@ public class BuddyMessageNotSetController extends ViewController implements OnSh
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		
-		mAsyncSharedPreferencesListener = new AsyncSharedPreferencesListener(PreferenceManager.getDefaultSharedPreferences(mContext));
+		mAsyncSharedPreferencesListener = new AsyncSharedPreferencesListener();
 		
 		setContentView(R.layout.buddy_message_not_set_controller);
 
@@ -66,11 +66,10 @@ public class BuddyMessageNotSetController extends ViewController implements OnSh
 	 * @return
 	 */
 	private boolean displayController() {
-		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
-		
-		return (SettingsHelper.isPeriodicUpdatesEnabled(sharedPreferences) && 
-				(StringUtil.isNullOrWhiteSpace(SettingsHelper.getBuddyMessage(sharedPreferences)) || 
-						StringUtil.isNullOrWhiteSpace(SettingsHelper.getBuddyTelephoneNumber(sharedPreferences))));
+
+		return (SettingsHelper.isPeriodicUpdatesEnabled() &&
+				(StringUtil.isNullOrWhiteSpace(SettingsHelper.getBuddyMessage()) ||
+						StringUtil.isNullOrWhiteSpace(SettingsHelper.getBuddyTelephoneNumber())));
 				
 	}
 	

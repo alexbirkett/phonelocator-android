@@ -23,18 +23,20 @@ import java.util.Vector;
 
 import android.content.SharedPreferences;
 
+import com.birkettenterprise.phonelocator.application.PhonelocatorApplication;
+
 public class SettingSynchronizationHelper {
 	
 	private static final String SETTINGS_SYNCHRONIZATION_TIMESTAMP = "settings_synchronization_timestamp";
 
-	public static Vector<Setting> getSettingsModifiedSinceLastSyncrhonization(SharedPreferences sharedPreferences) {
-		long lastSyncrhonizationTimestamp = getLastSynchronizationTimestamp(sharedPreferences);
+	public static Vector<Setting> getSettingsModifiedSinceLastSyncrhonization() {
+		long lastSyncrhonizationTimestamp = getLastSynchronizationTimestamp();
 		Vector<Setting> settingsModifiedSinceLastSyncrhonization =  new Vector<Setting>();
-		Map<String, ?> settings = sharedPreferences.getAll();
+		Map<String, ?> settings = PhonelocatorApplication.getInstance().getSharedPreferences().getAll();
 		
 		for (String key : settings.keySet()) {
 			if (!SettingTimestampHelper.isTimestamp(key)) {
-				long timeStamp = SettingTimestampHelper.getTimestamp(sharedPreferences, key);
+				long timeStamp = SettingTimestampHelper.getTimestamp(key);
 				if (timeStamp >= lastSyncrhonizationTimestamp) {
 					settingsModifiedSinceLastSyncrhonization.add(new Setting(key, (Object)settings.get(key), timeStamp));
 				}
@@ -42,19 +44,19 @@ public class SettingSynchronizationHelper {
 		}
 		return settingsModifiedSinceLastSyncrhonization;
 	}
-	
-	public static void setSettings(SharedPreferences sharedPreferences, Vector<Setting> settings) {
+
+	public static void setSettings(Vector<Setting> settings) {
 		
 		if (!settings.isEmpty()) {
-			SharedPreferences.Editor editor = sharedPreferences.edit();
+			SharedPreferences.Editor editor = PhonelocatorApplication.getInstance().getSharedPreferences().edit();
 			
 			for (Setting setting : settings) {
 				if (setting.getValue() instanceof String) {
-					SettingsHelper.putStringIfRequired(editor, sharedPreferences, setting.getName(), (String) setting.getValue());
+					SettingsHelper.putStringIfRequired(editor, setting.getName(), (String) setting.getValue());
 				} else if (setting.getValue() instanceof Integer) {
-					SettingsHelper.putIntIfRequired(editor, sharedPreferences, setting.getName(), (Integer) setting.getValue());
+					SettingsHelper.putIntIfRequired(editor, setting.getName(), (Integer) setting.getValue());
 				} else if (setting.getValue() instanceof Boolean) {
-					SettingsHelper.putBooleanIfRequired(editor, sharedPreferences,  setting.getName(), (Boolean) setting.getValue());
+					SettingsHelper.putBooleanIfRequired(editor,  setting.getName(), (Boolean) setting.getValue());
 				}
 				
 				// we can't write timestamps directly, because they'll be
@@ -66,15 +68,15 @@ public class SettingSynchronizationHelper {
 	}	
 	
 	
-	public static void resetSettingsSynchronizationTimestamp(SharedPreferences sharedPreferences) {
-		SettingsHelper.storeLong(sharedPreferences, SETTINGS_SYNCHRONIZATION_TIMESTAMP, 0);
+	public static void resetSettingsSynchronizationTimestamp() {
+		SettingsHelper.storeLong(SETTINGS_SYNCHRONIZATION_TIMESTAMP, 0);
 	}
 	
-	public static void updateSettingsSynchronizationTimestamp(SharedPreferences sharedPreferences) {
-		SettingsHelper.storeLong(sharedPreferences, SETTINGS_SYNCHRONIZATION_TIMESTAMP, System.currentTimeMillis());
+	public static void updateSettingsSynchronizationTimestamp() {
+		SettingsHelper.storeLong(SETTINGS_SYNCHRONIZATION_TIMESTAMP, System.currentTimeMillis());
 	}
 	
-	public static long getLastSynchronizationTimestamp(SharedPreferences sharedPreferences) {
-		return SettingsHelper.getSettingAsLong(sharedPreferences, SETTINGS_SYNCHRONIZATION_TIMESTAMP, 0);
+	public static long getLastSynchronizationTimestamp() {
+		return SettingsHelper.getSettingAsLong(SETTINGS_SYNCHRONIZATION_TIMESTAMP, 0);
 	}
 }

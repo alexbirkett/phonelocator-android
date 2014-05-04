@@ -16,7 +16,6 @@ import android.telephony.SmsMessage;
 
 public class UpdateAlarmBroadcastReceiver extends BroadcastReceiver {
 
-	private SharedPreferences mSharedPreferences;
 	
 	public enum Action {
 		None,
@@ -26,8 +25,6 @@ public class UpdateAlarmBroadcastReceiver extends BroadcastReceiver {
 	
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-		
 		String sms = getMessageBody(intent);
 		
 		Action action = parseMessage(sms, context);
@@ -94,19 +91,16 @@ public class UpdateAlarmBroadcastReceiver extends BroadcastReceiver {
 	}
 	
 	private boolean hiddeTriggerMessages(Context context) {
-		return SettingsHelper.isHideTriggerMessage(mSharedPreferences);
+		return SettingsHelper.isHideTriggerMessage();
 	}
 	
 	private String getPasscode() {
-		return SettingsHelper.getPasscode(mSharedPreferences);
+		return SettingsHelper.getPasscode();
 	}
 	
 	private boolean isPasscodeEnabled() {
-		return SettingsHelper.isPasscodeEnabled(mSharedPreferences);
+		return SettingsHelper.isPasscodeEnabled();
 	}
-	
-	public void setSharedPreferences(SharedPreferences sharedPreferences) {
-		mSharedPreferences = sharedPreferences;
-	}
+
 }
 

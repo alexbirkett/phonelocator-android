@@ -11,13 +11,13 @@ import android.content.SharedPreferences;
 public class DefaultSettingsSetter {
 
 	
-	public static void setDefaultSettings(SharedPreferences sharedPreferences, Context context) {
+	public static void setDefaultSettings(Context context) {
 		
-		SettingsHelper.setPasscode(sharedPreferences, "");
-		SettingsHelper.setBuddyTelephoneNumber(sharedPreferences, "");
-		SettingsHelper.setBuddyMessage(sharedPreferences, "");
-		SettingsHelper.setPeriodicUpdatesEnabled(sharedPreferences, false);
-		SettingsHelper.setGpsTimeOut(sharedPreferences, SettingsHelper.DEFAULT_GPS_TIMEOUT);
-		SettingsHelper.setUpdateFrequencyInSeconds(sharedPreferences, SettingsHelper.DEFAULT_UPDATE_FREQUENCY);
+		SettingsHelper.setPasscode("");
+		SettingsHelper.setBuddyTelephoneNumber("");
+		SettingsHelper.setBuddyMessage("");
+		SettingsHelper.setPeriodicUpdatesEnabled(false);
+		SettingsHelper.setGpsTimeOut(SettingsHelper.DEFAULT_GPS_TIMEOUT);
+		SettingsHelper.setUpdateFrequencyInSeconds(SettingsHelper.DEFAULT_UPDATE_FREQUENCY);
 	}
 }

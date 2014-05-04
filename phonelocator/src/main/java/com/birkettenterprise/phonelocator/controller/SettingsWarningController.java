@@ -31,7 +31,7 @@ public class SettingsWarningController extends Controller implements OnSharedPre
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		
-		mAsyncSharedPreferencesListener = new AsyncSharedPreferencesListener(PreferenceManager.getDefaultSharedPreferences(mContext));
+		mAsyncSharedPreferencesListener = new AsyncSharedPreferencesListener();
 	}
 
 	@Override
@@ -48,11 +48,11 @@ public class SettingsWarningController extends Controller implements OnSharedPre
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
 			String key) {
 		if (Setting.StringSettings.BUDDY_TELEPHONE_NUMBER.equals(key)) {
-			if (!SettingsHelper.getBuddyTelephoneNumber(sharedPreferences).startsWith("+")) {
+			if (!SettingsHelper.getBuddyTelephoneNumber().startsWith("+")) {
 				showToast(R.string.settings_warning_controller_non_international_format_buddy_number_warning);
 			}
 		} else if (Setting.StringSettings.UPDATE_FREQUENCY.equals(key)) {
-			long updateFrequency = SettingsHelper.getUpdateFrequencyInMilliSeconds(sharedPreferences);
+			long updateFrequency = SettingsHelper.getUpdateFrequencyInMilliSeconds();
 			if (updateFrequency < MINIMUM_RECOMENDED_UPDATE_FREQUENCY) {
 				showToast(R.string.settings_warning_controller_frequent_update_warning);
 			}

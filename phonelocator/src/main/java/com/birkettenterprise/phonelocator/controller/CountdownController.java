@@ -23,14 +23,11 @@ public class CountdownController extends ViewController {
 	
 	private Handler mHandler;
 	private TextView mTimerTextView;
-	private SharedPreferences mSharedPreferences;
 	
 	private static final long BEAT_INTERVAL = 1000;
 	
 	public CountdownController(Context context) {
 		super(context);
-		mSharedPreferences = PreferenceManager
-				.getDefaultSharedPreferences(mContext);
 	}
 
 	@Override 
@@ -117,7 +114,7 @@ public class CountdownController extends ViewController {
 	}
 	
 	private long getCountDownTimerEndTime() {
-		return (SettingsHelper.getUpdateFrequencyInMilliSeconds(mSharedPreferences)
-				+ SettingsHelper.getLastUpdateTimeStamp(mSharedPreferences));
+		return (SettingsHelper.getUpdateFrequencyInMilliSeconds()
+				+ SettingsHelper.getLastUpdateTimeStamp());
 	}
 }

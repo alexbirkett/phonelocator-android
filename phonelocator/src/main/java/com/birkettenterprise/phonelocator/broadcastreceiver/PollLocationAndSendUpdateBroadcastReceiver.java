@@ -33,9 +33,8 @@ public class PollLocationAndSendUpdateBroadcastReceiver extends BroadcastReceive
 	
 	public static final String ACTION = "com.birkettenterprise.phonelocator.POLL_LOCATION_AND_SEND_UPDATE";
 	@Override
-	public void onReceive(Context context, Intent i) {	
-		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-		SettingsHelper.setLastUpdateTimeStamp(preferences, System.currentTimeMillis());
+	public void onReceive(Context context, Intent i) {
+		SettingsHelper.setLastUpdateTimeStamp(System.currentTimeMillis());
 		UpdateUtility.pollLocationAndSendUpdate(context);
 	}
 	

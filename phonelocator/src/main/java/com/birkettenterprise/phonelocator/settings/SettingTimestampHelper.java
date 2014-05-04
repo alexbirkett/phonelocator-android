@@ -31,8 +31,8 @@ public class SettingTimestampHelper {
 
 	private static final String TAG = "Phonelocator";
 	
-	public static long getTimestamp(SharedPreferences sharedPreferences, String key) {
-		return SettingsHelper.getSettingAsLong(sharedPreferences, key + TIMESTAMP, 0);
+	public static long getTimestamp(String key) {
+		return SettingsHelper.getSettingAsLong(key + TIMESTAMP, 0);
 	}
 	
 	public static boolean isTimestamp(String key) {
@@ -40,7 +40,7 @@ public class SettingTimestampHelper {
 	}
 	
 	public static void storeTimestamp(SharedPreferences sharedPreferences, String key, long timestamp) {
-		SettingsHelper.storeLong(sharedPreferences, key + TIMESTAMP, timestamp); 
+		SettingsHelper.storeLong(key + TIMESTAMP, timestamp);
 	}
 
 	public static long getPendingTimestamp(SharedPreferences sharedPreferences, String key) {
@@ -52,7 +52,7 @@ public class SettingTimestampHelper {
 	}
 	
 	public static void storePendingTimestamp(SharedPreferences sharedPreferences, String key, long pendingTimestamp) {
-		SettingsHelper.storeLong(sharedPreferences, key + PENDING_TIMESTAMP, pendingTimestamp);
+		SettingsHelper.storeLong(key + PENDING_TIMESTAMP, pendingTimestamp);
 		Log.d(TAG, "stored pending timesamp for " + key + ": " + pendingTimestamp);
 	}
 

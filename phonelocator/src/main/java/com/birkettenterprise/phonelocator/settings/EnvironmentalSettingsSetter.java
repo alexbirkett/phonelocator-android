@@ -42,14 +42,13 @@ public class EnvironmentalSettingsSetter {
 
 	public static Pattern mPattern = Pattern.compile("(\\d+)\\.(\\d+).(\\d+)");
 	
-	public static void updateEnvironmentalSettingsIfRequired(SharedPreferences sharedPreferences, Context context) {
-	    TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-		setIMEIIfRequired(sharedPreferences, telephonyManager);
-		setIMSIIfRequiredAndDetectSIMCardChanged(sharedPreferences, telephonyManager);
+	public static void updateEnvironmentalSettingsIfRequired(Context context) {
+        TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+		setIMEIIfRequired(telephonyManager);
+		setIMSIIfRequiredAndDetectSIMCardChanged(telephonyManager);
 		
 		try {
 			EnvironmentalSettingsSetter.setVersionIfRequired(
-					sharedPreferences,
 					context.getPackageManager().getPackageInfo(
 							context.getPackageName(), 0));
 		} catch (NameNotFoundException e1) {
@@ -57,23 +56,23 @@ public class EnvironmentalSettingsSetter {
 		
 	}
 	
-	public static void setIMEIIfRequired(SharedPreferences sharedPreferences, TelephonyManager telephonyManager) {
+	public static void setIMEIIfRequired(TelephonyManager telephonyManager) {
 		String imei = telephonyManager.getDeviceId();
 	
 		Log.d(LOG_TAG, "imei " + imei);
-		SettingsHelper.putStringIfRequired(sharedPreferences, Setting.Integer64Settings.IMEI, imei);
+		SettingsHelper.putStringIfRequired(Setting.Integer64Settings.IMEI, imei);
 	}
 	
-	public static void setIMSIIfRequiredAndDetectSIMCardChanged(SharedPreferences sharedPreferences, TelephonyManager telephonyManager) {
+	public static void setIMSIIfRequiredAndDetectSIMCardChanged(TelephonyManager telephonyManager) {
 		String currentIMSI = telephonyManager.getSubscriberId();
-		String previousIMSI = SettingsHelper.getImsi(sharedPreferences);
+		String previousIMSI = SettingsHelper.getImsi();
 		
 		if (!StringUtil.isNullOrWhiteSpace(currentIMSI)) {
-			SettingsHelper.setImsi(sharedPreferences, currentIMSI);
-			if (SettingsHelper.isBuddyMessageEnabled(sharedPreferences) &&
+			SettingsHelper.setImsi(currentIMSI);
+			if (SettingsHelper.isBuddyMessageEnabled() &&
 				!StringUtil.isNullOrWhiteSpace(previousIMSI) && 
 				!currentIMSI.equals(previousIMSI)) {
-				SettingsHelper.setSendBuddyMessage(sharedPreferences, true);
+				SettingsHelper.setSendBuddyMessage(true);
 			}
 		}
 		
@@ -81,11 +80,11 @@ public class EnvironmentalSettingsSetter {
 		
 	}
 	
-	public static void setVersionIfRequired(SharedPreferences sharedPreferences, PackageInfo packageInfo) {
+	public static void setVersionIfRequired(PackageInfo packageInfo) {
 		Version version = getVersion(packageInfo);
-		SettingsHelper.putIntIfRequired(sharedPreferences, Setting.IntegerSettings.VERSION_MAJOR, version.mMajor);
-		SettingsHelper.putIntIfRequired(sharedPreferences, Setting.IntegerSettings.VERSION_MINOR, version.mMinor);
-		SettingsHelper.putIntIfRequired(sharedPreferences, Setting.IntegerSettings.VERSION_REVISION, version.mRevision);
+		SettingsHelper.putIntIfRequired(Setting.IntegerSettings.VERSION_MAJOR, version.mMajor);
+		SettingsHelper.putIntIfRequired(Setting.IntegerSettings.VERSION_MINOR, version.mMinor);
+		SettingsHelper.putIntIfRequired(Setting.IntegerSettings.VERSION_REVISION, version.mRevision);
 	}
 	
 	static Version getVersion(PackageInfo packageInfo) {

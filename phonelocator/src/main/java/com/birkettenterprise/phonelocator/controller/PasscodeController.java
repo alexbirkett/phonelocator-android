@@ -23,7 +23,6 @@ import android.widget.Toast;
 public class PasscodeController extends Controller implements OnDismissListener {
 
 	private Dialog mDialog;
-	private SharedPreferences mSharedPreferences;
 	private EditText mPasscodeEditText;
 	private boolean mCorrectPasswordEntered;
 	private boolean mOkClicked;
@@ -32,7 +31,6 @@ public class PasscodeController extends Controller implements OnDismissListener 
 	public PasscodeController(Activity context) {
 		super();
 		mContext = context;
-        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
 	}
 
 	@Override
@@ -75,11 +73,11 @@ public class PasscodeController extends Controller implements OnDismissListener 
 	}
 	
 	private boolean isPasscodeNonNummAndEnabled() {
-		return SettingsHelper.isPasscodeEnabled(mSharedPreferences) && !StringUtil.isNullOrWhiteSpace(getPasscode());
+		return SettingsHelper.isPasscodeEnabled() && !StringUtil.isNullOrWhiteSpace(getPasscode());
 	}
 
 	private String getPasscode() {
-		return SettingsHelper.getPasscode(mSharedPreferences);
+		return SettingsHelper.getPasscode();
 	}
 	
 	private void buildDialog() {

@@ -18,22 +18,19 @@ public class SendBuddySMSIfRequiredBroadcastReceiver extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		SharedPreferences sharedPreferences = PreferenceManager
-				.getDefaultSharedPreferences(context);
-		EnvironmentalSettingsSetter.setIMSIIfRequiredAndDetectSIMCardChanged(
-				sharedPreferences, (TelephonyManager) context
+		EnvironmentalSettingsSetter.setIMSIIfRequiredAndDetectSIMCardChanged((TelephonyManager) context
 						.getSystemService(Context.TELEPHONY_SERVICE));
-		sendSMSIfRequired(context, sharedPreferences);
+		sendSMSIfRequired(context);
 		
 	}
       
-	private void sendSMSIfRequired(Context context, SharedPreferences sharedPreferences) {		
+	private void sendSMSIfRequired(Context context) {
 		String buddyTelephoneNumber = SettingsHelper
-				.getBuddyTelephoneNumber(sharedPreferences);
-		String buddyMessage = SettingsHelper.getBuddyMessage(sharedPreferences);
+				.getBuddyTelephoneNumber();
+		String buddyMessage = SettingsHelper.getBuddyMessage();
 		
-		if (SettingsHelper.isBuddyMessageEnabled(sharedPreferences)
-				&& SettingsHelper.isSendBuddyMessage(sharedPreferences) &&
+		if (SettingsHelper.isBuddyMessageEnabled()
+				&& SettingsHelper.isSendBuddyMessage() &&
 				!StringUtil.isNullOrWhiteSpace(buddyTelephoneNumber)
 				&& !StringUtil.isNullOrWhiteSpace(buddyMessage)) {
 			sendSMS(context, buddyTelephoneNumber, buddyMessage);

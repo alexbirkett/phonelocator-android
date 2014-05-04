@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Handler;
 
+import com.birkettenterprise.phonelocator.application.PhonelocatorApplication;
+
 /**
  * Workaround for problem on Android 2.1 where onSharedPreferenceChanged was not
  * always called from the main thread
@@ -16,11 +18,9 @@ import android.os.Handler;
 public class AsyncSharedPreferencesListener implements OnSharedPreferenceChangeListener {
 
 	private Handler mHandler;
-	private SharedPreferences mSharedPreferences;
 	private OnSharedPreferenceChangeListener mListener;
 	
-	public AsyncSharedPreferencesListener(SharedPreferences sharedPreferences) {
-		mSharedPreferences = sharedPreferences;
+	public AsyncSharedPreferencesListener() {
 		mHandler = new Handler();
 	}
 
@@ -57,7 +57,7 @@ public class AsyncSharedPreferencesListener implements OnSharedPreferenceChangeL
      */
     public void registerOnSharedPreferenceChangeListener(OnSharedPreferenceChangeListener listener) {
     	mListener = listener;
-    	mSharedPreferences.registerOnSharedPreferenceChangeListener(this);
+    	PhonelocatorApplication.getInstance().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
     }
     
     /**
@@ -68,7 +68,7 @@ public class AsyncSharedPreferencesListener implements OnSharedPreferenceChangeL
      */
     public void unregisterOnSharedPreferenceChangeListener(OnSharedPreferenceChangeListener listener) {
     	mListener = null;
-    	mSharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
+        PhonelocatorApplication.getInstance().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
     }
 	
 }

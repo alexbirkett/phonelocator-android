@@ -30,9 +30,7 @@ public class UpdatesDisabledController extends ViewController {
 
 			@Override
 			public void onClick(View v) {
-				SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
-				
-				SettingsHelper.setPeriodicUpdatesEnabled(sharedPreferences, true);
+				SettingsHelper.setPeriodicUpdatesEnabled(true);
 			}
 			
 		});

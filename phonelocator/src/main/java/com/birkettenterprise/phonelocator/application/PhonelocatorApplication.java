@@ -24,6 +24,8 @@ import com.birkettenterprise.phonelocator.settings.SettingTimestampListener;
 
 //import net.hockeyapp.android.CrashManager;
 import android.app.Application;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 public class PhonelocatorApplication extends Application {
 
@@ -32,6 +34,7 @@ public class PhonelocatorApplication extends Application {
     private static PhonelocatorApplication instance;
     private SettingTimestampListener settingTimestampListener;
     private RequestQueue queue;
+    private SharedPreferences sharedPreferences;
 
     @Override
     public void onCreate() {
@@ -40,6 +43,7 @@ public class PhonelocatorApplication extends Application {
 //		CrashManager.registerHandler();
         createTimestampListener();
         queue = Volley.newRequestQueue(this);
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
     }
 
     private void setInstanceVariable() {
@@ -65,5 +69,9 @@ public class PhonelocatorApplication extends Application {
 
     public RequestQueue getQueue() {
         return queue;
+    }
+
+    public SharedPreferences getSharedPreferences() {
+        return sharedPreferences;
     }
 }

@@ -14,9 +14,7 @@ public class HandleBuddyMessageSentBroadcastReceiver extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		if (getResultCode() == Activity.RESULT_OK) {
-			SharedPreferences sharedPreferences = PreferenceManager
-					.getDefaultSharedPreferences(context);
-			SettingsHelper.setSendBuddyMessage(sharedPreferences, false);
+			SettingsHelper.setSendBuddyMessage(false);
 		}
 	
 	}

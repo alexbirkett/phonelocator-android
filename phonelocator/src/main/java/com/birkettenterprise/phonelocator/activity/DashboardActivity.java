@@ -38,7 +38,6 @@ public class DashboardActivity extends ActivityThatSupportsControllers implement
 
 	private CountdownController mCountdownController;
 	private DatabaseController mDatabaseController;
-	private SharedPreferences mSharedPreferences;
 	private LocationStatusController mLocationStatusController;
 	private UpdateStatusController mUpdateStatusController;
 	private UpdatesDisabledController mUpdatesDisabledController;
@@ -71,10 +70,8 @@ public class DashboardActivity extends ActivityThatSupportsControllers implement
 
 		super.onCreate(savedInstanceState);
 
-		mSharedPreferences = PreferenceManager
-				.getDefaultSharedPreferences(this);
 
-		mAsyncSharedPreferencesListener = new AsyncSharedPreferencesListener(mSharedPreferences);
+		mAsyncSharedPreferencesListener = new AsyncSharedPreferencesListener();
 		setContentView(R.layout.dashboard_activity);
 		
 		addBuddyNumberNotSetController();
@@ -194,7 +191,7 @@ public class DashboardActivity extends ActivityThatSupportsControllers implement
 	}
 
 	private boolean isUpdatesEnabled() {
-		return SettingsHelper.isPeriodicUpdatesEnabled(mSharedPreferences);
+		return SettingsHelper.isPeriodicUpdatesEnabled();
 	}
 	
 	private void showCountdownController() {
@@ -275,8 +272,7 @@ public class DashboardActivity extends ActivityThatSupportsControllers implement
 	};
 
     private boolean hasAuthenticationToken() {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        return SettingsHelper.getAuthenticationToken(sharedPreferences) != null;
+        return SettingsHelper.getAuthenticationToken() != null;
     }
 
 }

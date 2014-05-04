@@ -55,10 +55,10 @@ public class RegistrationService extends Service {
     
     private static final String LOG_TAG = "REGISTATION_SERVICE";
     
-    private static void synchronizeSettings(Session session, SharedPreferences sharedPreferences) throws IOException {
-		Vector<Setting> settings = session.synchronizeSettings(SettingSynchronizationHelper.getSettingsModifiedSinceLastSyncrhonization(sharedPreferences));
-		SettingSynchronizationHelper.setSettings(sharedPreferences, settings);
-		SettingSynchronizationHelper.updateSettingsSynchronizationTimestamp(sharedPreferences);
+    private static void synchronizeSettings(Session session) throws IOException {
+		Vector<Setting> settings = session.synchronizeSettings(SettingSynchronizationHelper.getSettingsModifiedSinceLastSyncrhonization());
+		SettingSynchronizationHelper.setSettings(settings);
+		SettingSynchronizationHelper.updateSettingsSynchronizationTimestamp();
     }
     
     private class SynchronizeRunnable implements Runnable {
@@ -69,8 +69,8 @@ public class RegistrationService extends Service {
 			
 			try {
 				mSession.connect();
-				mSession.authenticate(SettingsHelper.getAuthenticationToken(sharedPreferences));		
-				synchronizeSettings(mSession, sharedPreferences);
+				mSession.authenticate(SettingsHelper.getAuthenticationToken());
+				synchronizeSettings(mSession);
 			} catch (Throwable e) {
 				mException = e;
 			} finally {
@@ -90,19 +90,18 @@ public class RegistrationService extends Service {
 
 		public void run() {
 			try {
-				
-				SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(RegistrationService.this);
-				DefaultSettingsSetter.setDefaultSettings(sharedPreferences, RegistrationService.this);			
-				EnvironmentalSettingsSetter.updateEnvironmentalSettingsIfRequired(sharedPreferences, RegistrationService.this);			
-				SettingSynchronizationHelper.resetSettingsSynchronizationTimestamp(sharedPreferences);
+
+				DefaultSettingsSetter.setDefaultSettings(RegistrationService.this);
+				EnvironmentalSettingsSetter.updateEnvironmentalSettingsIfRequired(RegistrationService.this);
+				SettingSynchronizationHelper.resetSettingsSynchronizationTimestamp();
 				mSession.connect();
 				mRegistrationResponse = mSession.register();
 				mSession.authenticate(mRegistrationResponse.getAuthenticationToken());		
-				SettingsHelper.storeResponse(sharedPreferences, mRegistrationResponse.getAuthenticationToken(), mRegistrationResponse.getRegistrationUrl());
+				SettingsHelper.storeResponse(mRegistrationResponse.getAuthenticationToken(), mRegistrationResponse.getRegistrationUrl());
 				Log.d(LOG_TAG, "storing authentication token "+ mRegistrationResponse.getAuthenticationToken());
 				Log.d(LOG_TAG, "storing registration url "+ mRegistrationResponse.getRegistrationUrl());
 
-				synchronizeSettings(mSession, sharedPreferences);
+				synchronizeSettings(mSession);
 				
 			} catch (Throwable e) {
 				mException = e;

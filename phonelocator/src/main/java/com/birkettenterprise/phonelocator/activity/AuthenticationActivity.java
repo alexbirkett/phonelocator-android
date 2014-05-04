@@ -183,8 +183,7 @@ public class AuthenticationActivity extends Activity {
                     @Override
                     public void onResponse(AuthenticateResponse response) {
                         setRequesting(false);
-                        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(AuthenticationActivity.this);
-                        SettingsHelper.setAuthenticationToken(sharedPreferences, response.token);
+                         SettingsHelper.setAuthenticationToken(response.token);
                         startDashboardActivity();
                     }
                 }, new Response.ErrorListener() {

@@ -85,8 +85,7 @@ public class UpdateService extends WakefulIntentService {
 
 		SharedPreferences sharedPreferences = PreferenceManager
 				.getDefaultSharedPreferences(this);
-		EnvironmentalSettingsSetter.updateEnvironmentalSettingsIfRequired(
-				sharedPreferences, this);
+		EnvironmentalSettingsSetter.updateEnvironmentalSettingsIfRequired(this);
 
 		try {
 			// store the location in case the connection fails so that it can be
@@ -95,9 +94,9 @@ public class UpdateService extends WakefulIntentService {
 
 			session.connect();
 			session.authenticate(SettingsHelper
-					.getAuthenticationToken(sharedPreferences));
+					.getAuthenticationToken());
 
-			synchronizeSettings(session, sharedPreferences);
+			synchronizeSettings(session);
 
 			List<Location> locations = LocationMarshallingUtility
 					.retrieveLocations(this);
@@ -151,10 +150,10 @@ public class UpdateService extends WakefulIntentService {
 		return location;
 	}
 	
-	private static void synchronizeSettings(Session session, SharedPreferences sharedPreferences) throws IOException {
-		Vector<Setting> settings = session.synchronizeSettings(SettingSynchronizationHelper.getSettingsModifiedSinceLastSyncrhonization(sharedPreferences));
-		SettingSynchronizationHelper.updateSettingsSynchronizationTimestamp(sharedPreferences);
-		SettingSynchronizationHelper.setSettings(sharedPreferences, settings);
+	private static void synchronizeSettings(Session session) throws IOException {
+		Vector<Setting> settings = session.synchronizeSettings(SettingSynchronizationHelper.getSettingsModifiedSinceLastSyncrhonization());
+		SettingSynchronizationHelper.updateSettingsSynchronizationTimestamp();
+		SettingSynchronizationHelper.setSettings(settings);
 	}
 	
 	private static  void sendUpdate(Session session, List<Location> locations) throws IOException, CorruptStreamException {

@@ -1,6 +1,6 @@
 /**
  * 
- *  Copyright 2011-2012 Birkett Enterprise Ltd
+ *  Copyright 2011-2014 Birkett Enterprise Ltd
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@
 
 package com.birkettenterprise.phonelocator.settings;
 
+import com.birkettenterprise.phonelocator.application.PhonelocatorApplication;
 import com.birkettenterprise.phonelocator.broadcastreceiver.PollLocationAndSendUpdateBroadcastReceiver;
 import com.birkettenterprise.phonelocator.settings.Setting.BooleanSettings;
 import com.birkettenterprise.phonelocator.settings.Setting.Integer64Settings;
@@ -49,8 +50,8 @@ public class SettingsHelper {
 		Intent intent = new Intent(PollLocationAndSendUpdateBroadcastReceiver.ACTION);
 		PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-		if (isPeriodicUpdatesEnabled(PreferenceManager.getDefaultSharedPreferences(context))) {
-			long intervalInMicroseconds = getUpdateFrequencyInMilliSeconds(PreferenceManager.getDefaultSharedPreferences(context));
+		if (isPeriodicUpdatesEnabled()) {
+			long intervalInMicroseconds = getUpdateFrequencyInMilliSeconds();
 			alamManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
 					SystemClock.elapsedRealtime(),
 					intervalInMicroseconds, pendingIntent);
@@ -62,41 +63,41 @@ public class SettingsHelper {
 		}
 	}
 
-	public static long getUpdateFrequencyInMilliSeconds(SharedPreferences sharedPreferences) {
-		return getUpdateFrequencyInSeconds(sharedPreferences) * MILLISECONDS_IN_SECOND;
+	public static long getUpdateFrequencyInMilliSeconds() {
+		return getUpdateFrequencyInSeconds() * MILLISECONDS_IN_SECOND;
 	}
 	
-	public static long getUpdateFrequencyInSeconds(SharedPreferences sharedPreferences) {
-		return getSettingAsLong(sharedPreferences, Setting.StringSettings.UPDATE_FREQUENCY, DEFAULT_UPDATE_FREQUENCY);
+	public static long getUpdateFrequencyInSeconds() {
+		return getSettingAsLong(Setting.StringSettings.UPDATE_FREQUENCY, DEFAULT_UPDATE_FREQUENCY);
 	}
 	
-	public static void setUpdateFrequencyInSeconds(SharedPreferences sharedPreferences, long value) {
-		putStringIfRequired(sharedPreferences,  Setting.StringSettings.UPDATE_FREQUENCY, Long.toString(value));
+	public static void setUpdateFrequencyInSeconds(long value) {
+		putStringIfRequired(Setting.StringSettings.UPDATE_FREQUENCY, Long.toString(value));
 	}
 	
-	public static long getGpsTimeOut(SharedPreferences sharedPreferences) {
-		return getSettingAsLong(sharedPreferences, Setting.StringSettings.GPS_UPDATE_TIMEOUT,DEFAULT_GPS_TIMEOUT);							
+	public static long getGpsTimeOut() {
+		return getSettingAsLong(Setting.StringSettings.GPS_UPDATE_TIMEOUT,DEFAULT_GPS_TIMEOUT);
 	}
 	
-	public static void setGpsTimeOut(SharedPreferences sharedPreferences, long value) {
-		putStringIfRequired(sharedPreferences,  Setting.StringSettings.GPS_UPDATE_TIMEOUT, Long.toString(value));
+	public static void setGpsTimeOut(long value) {
+		putStringIfRequired(Setting.StringSettings.GPS_UPDATE_TIMEOUT, Long.toString(value));
 	}
 	
-	public static long getSettingAsLong(SharedPreferences sharedPreferences, String key, long defaultValue) {
+	public static long getSettingAsLong(String key, long defaultValue) {
 		try {
-			return sharedPreferences.getLong(
-					key,
-					defaultValue);
+			return getSharedPreferences().getLong(
+                    key,
+                    defaultValue);
 		} catch (ClassCastException e) {
-			String value = sharedPreferences.getString(
+			String value = getSharedPreferences().getString(
 					key,
 					defaultValue + "");
 			return Long.parseLong(value);
 		}
 	}
 	
-	public static void storeResponse(SharedPreferences sharedPreferences, String authenticationToken, String registrationUrl) {
-		SharedPreferences.Editor editor = sharedPreferences.edit();
+	public static void storeResponse(String authenticationToken, String registrationUrl) {
+		SharedPreferences.Editor editor = getSharedPreferences().edit();
 		editor.putString(Setting.StringSettings.AUTHENTICATION_TOKEN,
 				authenticationToken);
 		editor.putString(Setting.StringSettings.REGISTRATION_URL,
@@ -104,162 +105,167 @@ public class SettingsHelper {
 		editor.commit();
 	}
 
-    public static void setAuthenticationToken(SharedPreferences sharedPreferences, String authenticationToken) {
-        putStringIfRequired(sharedPreferences, StringSettings.AUTHENTICATION_TOKEN, authenticationToken);
+    public static void setAuthenticationToken(String authenticationToken) {
+        putStringIfRequired(StringSettings.AUTHENTICATION_TOKEN, authenticationToken);
     }
 
 	
-	public static String getAuthenticationToken(SharedPreferences sharedPreferences) {
-		return sharedPreferences.getString(StringSettings.AUTHENTICATION_TOKEN, null);
+	public static String getAuthenticationToken() {
+		return getSharedPreferences().getString(StringSettings.AUTHENTICATION_TOKEN, null);
 	}
 
-	public static String getRegistrationUrl(SharedPreferences sharedPreferences) {
-		return sharedPreferences.getString(StringSettings.REGISTRATION_URL, null);
+	public static String getRegistrationUrl() {
+		return getSharedPreferences().getString(StringSettings.REGISTRATION_URL, null);
 	}
 	
-	public static void setPasscode(SharedPreferences sharedPreferences, String passcode) {
-		putStringIfRequired(sharedPreferences, StringSettings.PINCODE, passcode);
+	public static void setPasscode(String passcode) {
+		putStringIfRequired(StringSettings.PINCODE, passcode);
 	}
 	
-	public static String getPasscode(SharedPreferences sharedPreferences) {
-		return sharedPreferences.getString(StringSettings.PINCODE, null);
+	public static String getPasscode() {
+		return getSharedPreferences().getString(StringSettings.PINCODE, null);
 	}
 	
-	public static void setBuddyTelephoneNumber(SharedPreferences sharedPreferences, String buddyTelephoneNumber) {
-		putStringIfRequired(sharedPreferences, StringSettings.BUDDY_TELEPHONE_NUMBER, buddyTelephoneNumber);
+	public static void setBuddyTelephoneNumber(String buddyTelephoneNumber) {
+		putStringIfRequired(StringSettings.BUDDY_TELEPHONE_NUMBER, buddyTelephoneNumber);
 	}
 
-	public static String getBuddyTelephoneNumber(SharedPreferences sharedPreferences) {
-		return sharedPreferences.getString(StringSettings.BUDDY_TELEPHONE_NUMBER, null);
+	public static String getBuddyTelephoneNumber() {
+		return getSharedPreferences().getString(StringSettings.BUDDY_TELEPHONE_NUMBER, null);
 	}
 	
-	public static String getImsi(SharedPreferences sharedPreferences) {
-		return sharedPreferences.getString(Integer64Settings.IMSI, null);
+	public static String getImsi() {
+		return getSharedPreferences().getString(Integer64Settings.IMSI, null);
 	}
 	
-	public static void setImsi(SharedPreferences sharedPreferences, String imsi) {
-		putStringIfRequired(sharedPreferences, Integer64Settings.IMSI, imsi);
+	public static void setImsi(String imsi) {
+		putStringIfRequired(Integer64Settings.IMSI, imsi);
 	}
 	
-	public static void setBuddyMessage(SharedPreferences sharedPreferences, String buddyMessage) {
-		putStringIfRequired(sharedPreferences, StringSettings.BUDDY_MESSAGE, buddyMessage);
+	public static void setBuddyMessage(String buddyMessage) {
+		putStringIfRequired(StringSettings.BUDDY_MESSAGE, buddyMessage);
 	}
 	
-	public static String getBuddyMessage(SharedPreferences sharedPreferences) {
-		return sharedPreferences.getString(StringSettings.BUDDY_MESSAGE, null);
+	public static String getBuddyMessage() {
+		return getSharedPreferences().getString(StringSettings.BUDDY_MESSAGE, null);
 	}
 	
-	public static boolean isPeriodicUpdatesEnabled(SharedPreferences sharedPreferences) {
-		return sharedPreferences.getBoolean(BooleanSettings.PERIODIC_UPDATES_ENABLED, false);
+	public static boolean isPeriodicUpdatesEnabled() {
+		return getSharedPreferences().getBoolean(BooleanSettings.PERIODIC_UPDATES_ENABLED, false);
 	}	
 	
-	public static void setPeriodicUpdatesEnabled(SharedPreferences sharedPreferences, boolean enabled) {
-		storeBoolean(sharedPreferences, BooleanSettings.PERIODIC_UPDATES_ENABLED, enabled);
+	public static void setPeriodicUpdatesEnabled(boolean enabled) {
+		storeBoolean(BooleanSettings.PERIODIC_UPDATES_ENABLED, enabled);
 	}
 	
-	public static boolean isRegistered(SharedPreferences sharedPreferences) {
-		return sharedPreferences.getBoolean(BooleanSettings.REGISTERED, false);
+	public static boolean isRegistered() {
+		return getSharedPreferences().getBoolean(BooleanSettings.REGISTERED, false);
 	}
 	
-	public static void setHideTriggerMessage(SharedPreferences sharedPreferences, boolean hideTriggerMessages) {
-		storeBoolean(sharedPreferences, BooleanSettings.HIDE_SMS_TRIGGER, hideTriggerMessages);
+	public static void setHideTriggerMessage(boolean hideTriggerMessages) {
+		storeBoolean(BooleanSettings.HIDE_SMS_TRIGGER, hideTriggerMessages);
 	}
 	
-	public static boolean isHideTriggerMessage(SharedPreferences sharedPreferences) {
-		return sharedPreferences.getBoolean(BooleanSettings.HIDE_SMS_TRIGGER, false);
+	public static boolean isHideTriggerMessage() {
+		return getSharedPreferences().getBoolean(BooleanSettings.HIDE_SMS_TRIGGER, false);
 	}
 	
-	public static boolean isPasscodeEnabled(SharedPreferences sharedPreferences) {
-		return sharedPreferences.getBoolean(BooleanSettings.PINCODE_REQUIRED_ON_STARTUP, false);
+	public static boolean isPasscodeEnabled() {
+		return getSharedPreferences().getBoolean(BooleanSettings.PINCODE_REQUIRED_ON_STARTUP, false);
 	}
 	
-	public static void setSendBuddyMessage(SharedPreferences sharedPreferences, boolean sendBuddyMessage) {
-		storeBoolean(sharedPreferences, BooleanSettings.SEND_BUDDY_MESSAGE, sendBuddyMessage);
+	public static void setSendBuddyMessage(boolean sendBuddyMessage) {
+		storeBoolean(BooleanSettings.SEND_BUDDY_MESSAGE, sendBuddyMessage);
 	}
 	
-	public static boolean isSendBuddyMessage(SharedPreferences sharedPreferences) {
-		return sharedPreferences.getBoolean(BooleanSettings.SEND_BUDDY_MESSAGE, false);
+	public static boolean isSendBuddyMessage() {
+		return getSharedPreferences().getBoolean(BooleanSettings.SEND_BUDDY_MESSAGE, false);
 	}
 
-	public static void setBuddyMessageEnabled(SharedPreferences sharedPreferences, boolean enabled) {
-		storeBoolean(sharedPreferences, BooleanSettings.BUDDY_MESSAGE_ENABLED, enabled);
+	public static void setBuddyMessageEnabled(boolean enabled) {
+		storeBoolean(BooleanSettings.BUDDY_MESSAGE_ENABLED, enabled);
 	}
 	
-	public static boolean isBuddyMessageEnabled(SharedPreferences sharedPreferences) {
-		return sharedPreferences.getBoolean(BooleanSettings.BUDDY_MESSAGE_ENABLED, true);
+	public static boolean isBuddyMessageEnabled() {
+		return getSharedPreferences().getBoolean(BooleanSettings.BUDDY_MESSAGE_ENABLED, true);
 	}
 
-	public static boolean isGpsEnabled(SharedPreferences sharedPreferences) {
-		return sharedPreferences.getBoolean(BooleanSettings.GPS_ENABLED, true);
+	public static boolean isGpsEnabled() {
+		return getSharedPreferences().getBoolean(BooleanSettings.GPS_ENABLED, true);
 	}
 	
-	public static long getLastUpdateTimeStamp(SharedPreferences sharedPreferences) {
-		return sharedPreferences.getLong(LongSettings.LAST_UPDATE_TIME_STAMP, 0L);
+	public static long getLastUpdateTimeStamp() {
+		return getSharedPreferences().getLong(LongSettings.LAST_UPDATE_TIME_STAMP, 0L);
 	}
 	
-	public static void setLastUpdateTimeStamp(SharedPreferences sharedPreferences, long value) {
-		storeLong(sharedPreferences, LongSettings.LAST_UPDATE_TIME_STAMP, value);
+	public static void setLastUpdateTimeStamp(long value) {
+		storeLong(LongSettings.LAST_UPDATE_TIME_STAMP, value);
 	}
 	
-	public static void storeLong(SharedPreferences sharedPreferences, String key, long value) {
-	      SharedPreferences.Editor editor = sharedPreferences.edit();
+	public static void storeLong(String key, long value) {
+	      SharedPreferences.Editor editor = getSharedPreferences().edit();
 	      editor.putLong(key, value);
 	      editor.commit();
 	}
 	
-	public static void storeBoolean(SharedPreferences sharedPreferences, String key, boolean value) {
-	      SharedPreferences.Editor editor = sharedPreferences.edit();
+	public static void storeBoolean(String key, boolean value) {
+	      SharedPreferences.Editor editor = getSharedPreferences().edit();
 	      editor.putBoolean(key, value);
 	      editor.commit();
 	}
 	
-	public static boolean putBooleanIfRequired(SharedPreferences.Editor editor, SharedPreferences sharedPreferences, String name, boolean value) {
+	public static boolean putBooleanIfRequired(SharedPreferences.Editor editor, String name, boolean value) {
 		boolean changed = false;
-		if (!sharedPreferences.contains(name)
-				|| sharedPreferences.getBoolean(name, false) != value) {
+		if (!getSharedPreferences().contains(name)
+				|| getSharedPreferences().getBoolean(name, false) != value) {
 			editor.putBoolean(name, value);
 			changed = true;
 		}
 		return changed;
 	}
 	
-	public static boolean putIntIfRequired(SharedPreferences.Editor editor, SharedPreferences sharedPreferences, String name, int value) {
+	public static boolean putIntIfRequired(SharedPreferences.Editor editor, String name, int value) {
 		boolean changed = false;
-		if (!sharedPreferences.contains(name)
-				|| sharedPreferences.getInt(name, 0) != value) {
+		if (!getSharedPreferences().contains(name)
+				|| getSharedPreferences().getInt(name, 0) != value) {
 			editor.putInt(name, value);
 			changed = true;
 		}
 		return changed;
 	}
 	
-	public static boolean putStringIfRequired(SharedPreferences.Editor editor, SharedPreferences sharedPreferences, String name, String value) {
+	public static boolean putStringIfRequired(SharedPreferences.Editor editor, String name, String value) {
 		boolean changed = false;
-		if (!sharedPreferences.contains(name)
-				|| !sharedPreferences.getString(name, "").equals(value)) {
+		if (!getSharedPreferences().contains(name)
+				|| !getSharedPreferences().getString(name, "").equals(value)) {
 			editor.putString(name, value);
 			changed = true;
 		}
 		return changed;
 	}
 	
-	public static boolean putStringIfRequired(SharedPreferences sharedPreferences, String key, String value) {
+	public static boolean putStringIfRequired(String key, String value) {
 		boolean changed = false;
-		SharedPreferences.Editor editor = sharedPreferences.edit();
-		if (putStringIfRequired(editor, sharedPreferences, key, value)) {
+		SharedPreferences.Editor editor = getSharedPreferences().edit();
+		if (putStringIfRequired(editor, key, value)) {
 			editor.commit();
 			changed = true;
 		}
 		return changed;
 	}
 	
-	public static boolean putIntIfRequired(SharedPreferences sharedPreferences, String key, int value) {
+	public static boolean putIntIfRequired(String key, int value) {
 		boolean changed = false;
-		SharedPreferences.Editor editor = sharedPreferences.edit();
-		if(putIntIfRequired(editor, sharedPreferences, key, value)) {
+		SharedPreferences.Editor editor = getSharedPreferences().edit();
+		if(putIntIfRequired(editor, key, value)) {
 			editor.commit();
 			changed = true;
 		}
 		return changed;
 	}
+
+    private static SharedPreferences getSharedPreferences() {
+        return PhonelocatorApplication.getInstance().getSharedPreferences();
+    }
+
 }
