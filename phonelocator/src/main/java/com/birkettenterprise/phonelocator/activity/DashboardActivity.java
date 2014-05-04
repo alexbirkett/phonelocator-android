@@ -34,78 +34,78 @@ import com.birkettenterprise.phonelocator.settings.SettingsHelper;
 import com.birkettenterprise.phonelocator.utility.AsyncSharedPreferencesListener;
 
 public class DashboardActivity extends ActivityThatSupportsControllers implements
-		OnSharedPreferenceChangeListener {
+        OnSharedPreferenceChangeListener {
 
-	private CountdownController mCountdownController;
-	private DatabaseController mDatabaseController;
-	private LocationStatusController mLocationStatusController;
-	private UpdateStatusController mUpdateStatusController;
-	private UpdatesDisabledController mUpdatesDisabledController;
-	private BuddyMessageNotSetController mBuddyMessageNotSetController;
-	
-	private List<ActivityManager.RunningServiceInfo> mRunningServices;
-	private AsyncSharedPreferencesListener mAsyncSharedPreferencesListener;
-	
-	
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
+    private CountdownController mCountdownController;
+    private DatabaseController mDatabaseController;
+    private LocationStatusController mLocationStatusController;
+    private UpdateStatusController mUpdateStatusController;
+    private UpdatesDisabledController mUpdatesDisabledController;
+    private BuddyMessageNotSetController mBuddyMessageNotSetController;
 
-		mCountdownController = new CountdownController(this);
-		mDatabaseController = new DatabaseController(this);
-		mUpdateStatusController = new UpdateStatusController(this);
-		mLocationStatusController = new LocationStatusController(this);
-		mUpdatesDisabledController = new UpdatesDisabledController(this);
-		mBuddyMessageNotSetController = new BuddyMessageNotSetController(this);
+    private List<ActivityManager.RunningServiceInfo> mRunningServices;
+    private AsyncSharedPreferencesListener mAsyncSharedPreferencesListener;
+
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+
+        mCountdownController = new CountdownController(this);
+        mDatabaseController = new DatabaseController(this);
+        mUpdateStatusController = new UpdateStatusController(this);
+        mLocationStatusController = new LocationStatusController(this);
+        mUpdatesDisabledController = new UpdatesDisabledController(this);
+        mBuddyMessageNotSetController = new BuddyMessageNotSetController(this);
 
 /*		addController(new HockeyAppController(this,
-				"https://rink.hockeyapp.net/",
+                "https://rink.hockeyapp.net/",
 				"3f7ef8dc87d197b81fb86ff41dcc1314"));*/
-		addController(mCountdownController);
-		addController(mDatabaseController);
-		addController(mLocationStatusController);
-		addController(mUpdateStatusController);
-		addController(mUpdatesDisabledController);
-		addController(mBuddyMessageNotSetController);
+        addController(mCountdownController);
+        addController(mDatabaseController);
+        addController(mLocationStatusController);
+        addController(mUpdateStatusController);
+        addController(mUpdatesDisabledController);
+        addController(mBuddyMessageNotSetController);
 
 
-		super.onCreate(savedInstanceState);
+        super.onCreate(savedInstanceState);
 
 
-		mAsyncSharedPreferencesListener = new AsyncSharedPreferencesListener();
-		setContentView(R.layout.dashboard_activity);
-		
-		addBuddyNumberNotSetController();
-	}
-	
-	private void addBuddyNumberNotSetController() {
-		FrameLayout counterContainer = (FrameLayout) findViewById(R.id.buddy_message_not_set_container);
-		counterContainer.addView(mBuddyMessageNotSetController.getView());
-	}
+        mAsyncSharedPreferencesListener = new AsyncSharedPreferencesListener();
+        setContentView(R.layout.dashboard_activity);
 
-	@Override
-	public void onResume() {
-		super.onResume();
+        addBuddyNumberNotSetController();
+    }
+
+    private void addBuddyNumberNotSetController() {
+        FrameLayout counterContainer = (FrameLayout) findViewById(R.id.buddy_message_not_set_container);
+        counterContainer.addView(mBuddyMessageNotSetController.getView());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
 
         if (!hasAuthenticationToken()) {
             startAuthenticationActivity();
         }
 
-		mAsyncSharedPreferencesListener.registerOnSharedPreferenceChangeListener(this);
-		swapStatusController();
-		registerBroadcastReceiver();
-	}
+        mAsyncSharedPreferencesListener.registerOnSharedPreferenceChangeListener(this);
+        swapStatusController();
+        registerBroadcastReceiver();
+    }
 
-	@Override
-	public void onPause() {
-		super.onPause();
-		mAsyncSharedPreferencesListener.unregisterOnSharedPreferenceChangeListener(this);
-		unregisterBroadcastReceiver();		
-	}
+    @Override
+    public void onPause() {
+        super.onPause();
+        mAsyncSharedPreferencesListener.unregisterOnSharedPreferenceChangeListener(this);
+        unregisterBroadcastReceiver();
+    }
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
 
-		// Handle item selection
+        // Handle item selection
         int i = item.getItemId();
         if (i == R.id.web_site) {
             startWebSite();
@@ -125,46 +125,46 @@ public class DashboardActivity extends ActivityThatSupportsControllers implement
         } else {
             return super.onOptionsItemSelected(item);
         }
-	}
+    }
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.dashboard_menu, menu);
-		return true;
-	}
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.dashboard_menu, menu);
+        return true;
+    }
 
-	@Override
-	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
-			String key) {
-		if (key.equals(Setting.BooleanSettings.PERIODIC_UPDATES_ENABLED)) {
-			swapStatusController();
-		
-		}
-	}
-	
-	private void startWebSite() {
-		
-		Intent viewIntent = new Intent("android.intent.action.VIEW",
-				Uri.parse(getString(R.string.website_url)));
-		
-		startActivity(viewIntent);
-	}
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
+                                          String key) {
+        if (key.equals(Setting.BooleanSettings.PERIODIC_UPDATES_ENABLED)) {
+            swapStatusController();
 
-	private void startSettings() {
-		Intent intent = new Intent(this, SettingsActivity.class);
-		startActivity(intent);
-	}
+        }
+    }
 
-	private void startUpdateLog() {
-		Intent intent = new Intent(this, UpdateLogActivity.class);
-		startActivity(intent);
-	}
-	
-	private void startBuddyMessageActivity() {
-		Intent intent = new Intent(this, BuddyMessageActivity.class);
-		startActivity(intent);
-	}
+    private void startWebSite() {
+
+        Intent viewIntent = new Intent("android.intent.action.VIEW",
+                Uri.parse(getString(R.string.website_url)));
+
+        startActivity(viewIntent);
+    }
+
+    private void startSettings() {
+        Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
+    }
+
+    private void startUpdateLog() {
+        Intent intent = new Intent(this, UpdateLogActivity.class);
+        startActivity(intent);
+    }
+
+    private void startBuddyMessageActivity() {
+        Intent intent = new Intent(this, BuddyMessageActivity.class);
+        startActivity(intent);
+    }
 
     private void startAuthenticationActivity() {
         Intent intent = new Intent(this, AuthenticationActivity.class);
@@ -173,103 +173,103 @@ public class DashboardActivity extends ActivityThatSupportsControllers implement
         finish();
     }
 
-	private void swapStatusController() {
+    private void swapStatusController() {
 
-		if (isUpdatesEnabled()) {
-			refreshRunningServiceList();
-			if (isUpdateServiceRunning()) {
-				showStatusController(mUpdateStatusController);
-			} else if (isLocationPollerRunning()) {
-				showStatusController(mLocationStatusController);
-			} else {
-				showCountdownController();
-			}
-		} else {
-			showStatusController(mUpdatesDisabledController);
-		}
+        if (isUpdatesEnabled()) {
+            refreshRunningServiceList();
+            if (isUpdateServiceRunning()) {
+                showStatusController(mUpdateStatusController);
+            } else if (isLocationPollerRunning()) {
+                showStatusController(mLocationStatusController);
+            } else {
+                showCountdownController();
+            }
+        } else {
+            showStatusController(mUpdatesDisabledController);
+        }
 
-	}
+    }
 
-	private boolean isUpdatesEnabled() {
-		return SettingsHelper.isPeriodicUpdatesEnabled();
-	}
-	
-	private void showCountdownController() {
-		showStatusController(mCountdownController);
-		mCountdownController.start();
-	}
+    private boolean isUpdatesEnabled() {
+        return SettingsHelper.isPeriodicUpdatesEnabled();
+    }
 
-	private void showStatusController(ViewController controller) {
-		detachStatusControllers();
-		FrameLayout counterContainer = (FrameLayout) findViewById(R.id.status_container);
-		counterContainer.addView(controller.getView());
-	}
+    private void showCountdownController() {
+        showStatusController(mCountdownController);
+        mCountdownController.start();
+    }
 
-	private void detachStatusControllers() {
-		mCountdownController.stop();
-		mCountdownController.detachViewFromParent();
-		mUpdateStatusController.detachViewFromParent();
-		mLocationStatusController.detachViewFromParent();
-		mUpdatesDisabledController.detachViewFromParent();
-	}
+    private void showStatusController(ViewController controller) {
+        detachStatusControllers();
+        FrameLayout counterContainer = (FrameLayout) findViewById(R.id.status_container);
+        counterContainer.addView(controller.getView());
+    }
 
-	public long getLastUpdateTimestamp() {
-		return mDatabaseController.getLastUpdateTimestamp();
-	}
+    private void detachStatusControllers() {
+        mCountdownController.stop();
+        mCountdownController.detachViewFromParent();
+        mUpdateStatusController.detachViewFromParent();
+        mLocationStatusController.detachViewFromParent();
+        mUpdatesDisabledController.detachViewFromParent();
+    }
 
-	private void refreshRunningServiceList() {
-		ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
-		mRunningServices = manager.getRunningServices(Integer.MAX_VALUE);
-	}
+    public long getLastUpdateTimestamp() {
+        return mDatabaseController.getLastUpdateTimestamp();
+    }
 
-	private boolean isLocationPollerRunning() {
-		return isServiceRunning("com.commonsware.cwac.locpoll.LocationPollerService");
-	}
+    private void refreshRunningServiceList() {
+        ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+        mRunningServices = manager.getRunningServices(Integer.MAX_VALUE);
+    }
 
-	private boolean isUpdateServiceRunning() {
-		return isServiceRunning("com.birkettenterprise.phonelocator.service.UpdateService");
-	}
+    private boolean isLocationPollerRunning() {
+        return isServiceRunning("com.commonsware.cwac.locpoll.LocationPollerService");
+    }
 
-	private boolean isServiceRunning(String className) {
-		for (RunningServiceInfo runningServiceInfo : mRunningServices) {
-			if (className.equals(runningServiceInfo.service.getClassName())) {
-				return true;
-			}
-		}
-		return false;
-	}
+    private boolean isUpdateServiceRunning() {
+        return isServiceRunning("com.birkettenterprise.phonelocator.service.UpdateService");
+    }
 
-	private void registerBroadcastReceiver() {
-		IntentFilter filter = new IntentFilter();
-		filter.addAction(PollLocationAndSendUpdateBroadcastReceiver.ACTION);
-		filter.addAction("com.birkettenterprise.phonelocator.UPDATE_COMPLETE");
-		filter.addAction("com.birkettenterprise.phonelocator.SENDING_UPDATE");
-		registerReceiver(mBroadcastReceiver, filter);
-	}
+    private boolean isServiceRunning(String className) {
+        for (RunningServiceInfo runningServiceInfo : mRunningServices) {
+            if (className.equals(runningServiceInfo.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-	private void unregisterBroadcastReceiver() {
-		unregisterReceiver(mBroadcastReceiver);
-	}
+    private void registerBroadcastReceiver() {
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(PollLocationAndSendUpdateBroadcastReceiver.ACTION);
+        filter.addAction("com.birkettenterprise.phonelocator.UPDATE_COMPLETE");
+        filter.addAction("com.birkettenterprise.phonelocator.SENDING_UPDATE");
+        registerReceiver(mBroadcastReceiver, filter);
+    }
 
-	private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
+    private void unregisterBroadcastReceiver() {
+        unregisterReceiver(mBroadcastReceiver);
+    }
 
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			if (isUpdatesEnabled()) {
-				if ("com.birkettenterprise.phonelocator.UPDATE_COMPLETE"
-						.equals(intent.getAction())) {
-					showCountdownController();
-				} else if ("com.birkettenterprise.phonelocator.SENDING_UPDATE"
-						.equals(intent.getAction())) {
-					showStatusController(mUpdateStatusController);
-				} else if (PollLocationAndSendUpdateBroadcastReceiver.ACTION
-						.equals(intent.getAction())) {
-					showStatusController(mLocationStatusController);
-				}
-			}
-		}
+    private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
 
-	};
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (isUpdatesEnabled()) {
+                if ("com.birkettenterprise.phonelocator.UPDATE_COMPLETE"
+                        .equals(intent.getAction())) {
+                    showCountdownController();
+                } else if ("com.birkettenterprise.phonelocator.SENDING_UPDATE"
+                        .equals(intent.getAction())) {
+                    showStatusController(mUpdateStatusController);
+                } else if (PollLocationAndSendUpdateBroadcastReceiver.ACTION
+                        .equals(intent.getAction())) {
+                    showStatusController(mLocationStatusController);
+                }
+            }
+        }
+
+    };
 
     private boolean hasAuthenticationToken() {
         return SettingsHelper.getAuthenticationToken() != null;
