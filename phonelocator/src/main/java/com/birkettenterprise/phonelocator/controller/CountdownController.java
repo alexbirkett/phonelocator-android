@@ -1,3 +1,22 @@
+/**
+ *
+ *  Copyright 2011-2014 Birkett Enterprise Ltd
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ */
+
+
 package com.birkettenterprise.phonelocator.controller;
 
 import java.util.Calendar;
@@ -8,10 +27,8 @@ import com.birkettenterprise.phonelocator.R;
 import com.birkettenterprise.phonelocator.settings.SettingsHelper;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.TextView;
 
@@ -19,10 +36,10 @@ import android.widget.TextView;
 public class CountdownController extends ViewController {
 	
 	private static final String LOG_TAG = "CountdownController";
-	private boolean mBeating;
+	private boolean beating;
 	
-	private Handler mHandler;
-	private TextView mTimerTextView;
+	private Handler handler;
+	private TextView timerTextView;
 	
 	private static final long BEAT_INTERVAL = 1000;
 	
@@ -33,20 +50,20 @@ public class CountdownController extends ViewController {
 	@Override 
 	public void onCreate(Bundle savedInstanceState) {
 		setContentView(R.layout.countdown_controller);
-		mTimerTextView = (TextView) getView().findViewById(R.id.timer_text_view);
-		mHandler = new Handler();
+		timerTextView = (TextView) getView().findViewById(R.id.timer_text_view);
+		handler = new Handler();
 	}
 	
 	@Override
 	protected void onResume() {
-		if (mBeating) {
+		if (beating) {
 			scheduleNextBeatDelayed();
 		}
 	}
 	
 	@Override
 	protected void onPause() {
-		if (mBeating) {
+		if (beating) {
 			cancelBeat();
 		}
 	}
@@ -56,25 +73,25 @@ public class CountdownController extends ViewController {
 	}
 	
 	public void start() {	
-		mBeating = true;
+		beating = true;
 		scheduleNextBeatDelayed();
 	}
 	
 	public void stop() {
-		mBeating = false;
+		beating = false;
 		cancelBeat();
 	}
 	
 	private void scheduleNextBeatAfterBeatInterval() {
-		mHandler.postDelayed(mBeatRunnable, BEAT_INTERVAL);
+		handler.postDelayed(mBeatRunnable, BEAT_INTERVAL);
 	}
 	
 	private void scheduleNextBeatDelayed() {
-		mHandler.post(mBeatRunnable);
+		handler.post(mBeatRunnable);
 	}
 	
 	private void cancelBeat() {
-		mHandler.removeCallbacks(mBeatRunnable);
+		handler.removeCallbacks(mBeatRunnable);
 	}
 	
 	private Runnable mBeatRunnable = new Runnable() {
@@ -83,7 +100,7 @@ public class CountdownController extends ViewController {
 		public void run() {
 			Log.d(LOG_TAG, "beat");
 			updateClock();
-			if (mBeating) {
+			if (beating) {
 				scheduleNextBeatAfterBeatInterval();
 			}
 		}
@@ -93,7 +110,7 @@ public class CountdownController extends ViewController {
 		long timeRemaing = getCountDownTimerEndTime() - System.currentTimeMillis();
 		String timeString = formatTime(timeRemaing);
 		Log.d(LOG_TAG, "time string " + timeString);
-		mTimerTextView.setText(timeString);
+		timerTextView.setText(timeString);
 	}
 	
 	private String formatTime(long time) {

@@ -36,13 +36,13 @@ import android.preference.PreferenceManager;
 public class SettingTimestampListener implements OnSharedPreferenceChangeListener {
 
 	
-	private SharedPreferences mSharedPreferences;
-	private Context mContext;
+	private SharedPreferences sharedPreferences;
+	private Context context;
 	
 	public SettingTimestampListener(Context context) {
-		mContext = context;
-		mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-		mSharedPreferences.registerOnSharedPreferenceChangeListener(this);
+		this.context = context;
+		sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+		sharedPreferences.registerOnSharedPreferenceChangeListener(this);
 	}
 		
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
@@ -54,7 +54,7 @@ public class SettingTimestampListener implements OnSharedPreferenceChangeListene
 	private void scheduleUpdatesIfRequired(String key) {
 		if (key.equals(Setting.StringSettings.UPDATE_FREQUENCY) 
 		 || key.equals(Setting.BooleanSettings.PERIODIC_UPDATES_ENABLED)) {
-					SettingsHelper.scheduleUpdates(mContext);
+					SettingsHelper.scheduleUpdates(context);
 		}
 	}
 	private void updateTimestamp(String key) {
@@ -62,16 +62,16 @@ public class SettingTimestampListener implements OnSharedPreferenceChangeListene
 		
 		if (!SettingTimestampHelper.isTimestamp(key)) {
 			// pending timestamps are set when remote settings are received. The remote timestamp is stored
-			long timestamp = SettingTimestampHelper.getPendingTimestamp(mSharedPreferences, key);
+			long timestamp = SettingTimestampHelper.getPendingTimestamp(sharedPreferences, key);
 
 			if (SettingTimestampHelper.isInvalidTimestamp(timestamp)) {
 				timestamp = System.currentTimeMillis();
 			} else {
 				// set pending timestamp to invalid so that it won't be used in
 				// the future
-				SettingTimestampHelper.setTimesampInvalid(mSharedPreferences, key);
+				SettingTimestampHelper.setTimesampInvalid(sharedPreferences, key);
 			}
-			SettingTimestampHelper.storeTimestamp(mSharedPreferences, key, timestamp);
+			SettingTimestampHelper.storeTimestamp(sharedPreferences, key, timestamp);
 		}
 	}
 }

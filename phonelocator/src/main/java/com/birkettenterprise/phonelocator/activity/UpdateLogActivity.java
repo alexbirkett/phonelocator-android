@@ -1,6 +1,6 @@
 /**
  * 
- *  Copyright 2011, 2012 Birkett Enterprise Ltd
+ *  Copyright 2011-2014 Birkett Enterprise Ltd
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -57,24 +57,24 @@ public class UpdateLogActivity extends ActivityThatSupportsControllers implement
 	private static int LOCATION_TIMESTAMP_COLUMN_INDEX = 4;
 	private static int PROVIDER_COLUMN_INDEX = 5;
 	
-	private ListController mListController;
+	private ListController listController;
 	
-	private ResourceCursorAdapter mResourceCursorAdapter;
+	private ResourceCursorAdapter resourceCursorAdapter;
     
 	@Override
     public void onCreate(Bundle savedInstanceState) {
 		// add controllers before you call super.onCreate()
 		
-		mListController = new ListController(this);
-		mListController.setContentView(R.layout.update_log_activity);
+		listController = new ListController(this);
+		listController.setContentView(R.layout.update_log_activity);
 	
-		addController(mListController);
+		addController(listController);
 		super.onCreate(savedInstanceState);
 		
-		setContentView(mListController.getView());
+		setContentView(listController.getView());
 		
 
-		mResourceCursorAdapter = new ResourceCursorAdapter(UpdateLogActivity.this, R.layout.update_log_list_item, null, true) {
+		resourceCursorAdapter = new ResourceCursorAdapter(UpdateLogActivity.this, R.layout.update_log_list_item, null, true) {
 
 		     
 	        @Override
@@ -107,7 +107,7 @@ public class UpdateLogActivity extends ActivityThatSupportsControllers implement
    
         getSupportLoaderManager().initLoader(0, null, this);
         
-        mListController.setListAdapter(mResourceCursorAdapter);
+        listController.setListAdapter(resourceCursorAdapter);
     }
 	
 	private void setTimeStamp(TextView view, Cursor cursor, int columnIndex) {
@@ -158,7 +158,7 @@ public class UpdateLogActivity extends ActivityThatSupportsControllers implement
     @Override
     public void onResume() {
     	super.onResume();
-    	((ResourceCursorAdapter)mListController.getListAdapter()).notifyDataSetChanged();
+    	((ResourceCursorAdapter) listController.getListAdapter()).notifyDataSetChanged();
 	}
 
 	
@@ -167,12 +167,12 @@ public class UpdateLogActivity extends ActivityThatSupportsControllers implement
 	}
 
 	public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-		 mResourceCursorAdapter.changeCursor(data);
+		 resourceCursorAdapter.changeCursor(data);
 		
 	}
 
 	public void onLoaderReset(Loader<Cursor> loader) {
-		 mResourceCursorAdapter.changeCursor(null);
+		 resourceCursorAdapter.changeCursor(null);
 	}
 	
 	@Override

@@ -1,3 +1,22 @@
+/**
+ *
+ *  Copyright 2011-2014 Birkett Enterprise Ltd
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ */
+
+
 package com.birkettenterprise.phonelocator.controller;
 
 import android.content.Context;
@@ -8,25 +27,25 @@ import com.birkettenterprise.phonelocator.database.UpdateLogDatabase;
 
 public class DatabaseController extends Controller {
 	
-	private UpdateLogDatabase mDatabase;
-    private Context mContext;
+	private UpdateLogDatabase database;
+    private Context context;
 	
 	public DatabaseController(Context context) {
-		this.mContext = context;
+		this.context = context;
 	}
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
-		mDatabase = new UpdateLogDatabase(mContext);
+		database = new UpdateLogDatabase(context);
 	}
 	
 	@Override
     public void onDestroy() {
-		mDatabase.close();
+		database.close();
 	}
 	
 	public long getLastUpdateTimestamp() {
-		return mDatabase.getLastUpdateTimestamp();
+		return database.getLastUpdateTimestamp();
 	}
 
 }

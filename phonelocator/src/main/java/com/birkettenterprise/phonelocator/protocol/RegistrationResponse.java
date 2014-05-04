@@ -20,20 +20,20 @@ package com.birkettenterprise.phonelocator.protocol;
 
 public class RegistrationResponse {
 
-	private String mAuthenticationToken;
-	private String mRegistrationUrl;
+	private String authenticationToken;
+	private String registrationUrl;
 	
 	public String getAuthenticationToken() {
-		return mAuthenticationToken;
+		return authenticationToken;
 	}
 	public void setAuthenticationToken(String authenticationToken) {
-		this.mAuthenticationToken = authenticationToken;
+		this.authenticationToken = authenticationToken;
 	}
 	public String getRegistrationUrl() {
-		return mRegistrationUrl;
+		return registrationUrl;
 	}
 	public void setRegistrationUrl(String registrationUrl) {
-		this.mRegistrationUrl = registrationUrl;
+		this.registrationUrl = registrationUrl;
 	}
 	
 }

@@ -22,9 +22,8 @@ public class AudioAlarmService extends Service {
 	private static final String LOG_TAG = "AudioAlarmService";
 	private static final int NOTIFICATION_ID = 1;
 	
-	private int mStreamId;
-	private MediaPlayer mMediaPlayer;
-	private NotificationManager mNotificationManager;
+	private MediaPlayer mediaPlayer;
+	private NotificationManager notificationManager;
 
 	
 	public static void startAlarmService(Context context) {
@@ -40,8 +39,8 @@ public class AudioAlarmService extends Service {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		mMediaPlayer = createAndConfigureMediaPlayer(this, R.raw.alarm);
-		mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+		mediaPlayer = createAndConfigureMediaPlayer(this, R.raw.alarm);
+		notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		Log.d(LOG_TAG, "onCreate()");
 	}
 	
@@ -69,17 +68,17 @@ public class AudioAlarmService extends Service {
 	
 	private void startAlarm() {
 		Log.d(LOG_TAG, "startAlarm()");
-		mMediaPlayer.start();
-		Log.d(LOG_TAG, "playing stream " + mStreamId);
+		mediaPlayer.start();
+		Log.d(LOG_TAG, "playing stream");
 	}
 	
 	private void stopAlarm() {
-		Log.d(LOG_TAG, "stopping stream " + mStreamId);
-		mMediaPlayer.stop();
+		Log.d(LOG_TAG, "stopping stream");
+		mediaPlayer.stop();
 	}
 	
 	private void releaseSoundPool() {
-		mMediaPlayer.release();
+		mediaPlayer.release();
 	}
 
 	/*
@@ -120,10 +119,10 @@ public class AudioAlarmService extends Service {
 		notification.flags = Notification.FLAG_ONGOING_EVENT | Notification.FLAG_SHOW_LIGHTS;
 		PendingIntent contentIntent = PendingIntent.getBroadcast(this, 0, new Intent(this,StopAudioAlarmBroadcastReceiver.class), PendingIntent.FLAG_UPDATE_CURRENT);
 		notification.setLatestEventInfo(this,  getString(R.string.alarm_notification_content_title), getString(R.string.alarm_notification_content_text), contentIntent);
-		mNotificationManager.notify(NOTIFICATION_ID, notification);
+		notificationManager.notify(NOTIFICATION_ID, notification);
 	}
 	
 	private void cancelNotification() {
-		mNotificationManager.cancel(NOTIFICATION_ID);
+		notificationManager.cancel(NOTIFICATION_ID);
 	}
 }

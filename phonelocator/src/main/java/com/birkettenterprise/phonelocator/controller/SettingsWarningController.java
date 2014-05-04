@@ -1,10 +1,28 @@
+/**
+ *
+ *  Copyright 2011-2014 Birkett Enterprise Ltd
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ */
+
+
 package com.birkettenterprise.phonelocator.controller;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.widget.Toast;
 
 import com.birkett.controllers.Controller;
@@ -20,28 +38,28 @@ import com.birkettenterprise.phonelocator.utility.AsyncSharedPreferencesListener
  */
 public class SettingsWarningController extends Controller implements OnSharedPreferenceChangeListener{
 
-	private AsyncSharedPreferencesListener mAsyncSharedPreferencesListener;
+	private AsyncSharedPreferencesListener asyncSharedPreferencesListener;
 	private static final long MINIMUM_RECOMENDED_UPDATE_FREQUENCY = 10 * 60 * 1000;
-	private Context mContext;
+	private Context context;
 	public SettingsWarningController(Context context) {
 		super();
-        this.mContext = context;
+        this.context = context;
 	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		
-		mAsyncSharedPreferencesListener = new AsyncSharedPreferencesListener();
+		asyncSharedPreferencesListener = new AsyncSharedPreferencesListener();
 	}
 
 	@Override
 	public void onResume() {
-		mAsyncSharedPreferencesListener.registerOnSharedPreferenceChangeListener(this);
+		asyncSharedPreferencesListener.registerOnSharedPreferenceChangeListener(this);
 	}
 	
 	@Override
 	public void onPause() {
-		mAsyncSharedPreferencesListener.unregisterOnSharedPreferenceChangeListener(this);
+		asyncSharedPreferencesListener.unregisterOnSharedPreferenceChangeListener(this);
 	}
 
 	@Override
@@ -60,7 +78,7 @@ public class SettingsWarningController extends Controller implements OnSharedPre
 	}
 	
 	private void showToast(int resourceId) {
-		Toast.makeText(mContext, resourceId, Toast.LENGTH_LONG).show();
+		Toast.makeText(context, resourceId, Toast.LENGTH_LONG).show();
 	}
 	
 	

@@ -1,3 +1,21 @@
+/**
+ *
+ *  Copyright 2011-2014 Birkett Enterprise Ltd
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ */
+
 package com.birkettenterprise.phonelocator.controller;
 
 import android.content.Context;
@@ -5,7 +23,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -19,7 +36,7 @@ import com.birkettenterprise.phonelocator.utility.StringUtil;
 
 public class BuddyMessageNotSetController extends ViewController implements OnSharedPreferenceChangeListener{
 
-	private AsyncSharedPreferencesListener mAsyncSharedPreferencesListener;
+	private AsyncSharedPreferencesListener asyncSharedPreferencesListener;
 	
 	public BuddyMessageNotSetController(Context context) {
 		super(context);
@@ -28,7 +45,7 @@ public class BuddyMessageNotSetController extends ViewController implements OnSh
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		
-		mAsyncSharedPreferencesListener = new AsyncSharedPreferencesListener();
+		asyncSharedPreferencesListener = new AsyncSharedPreferencesListener();
 		
 		setContentView(R.layout.buddy_message_not_set_controller);
 
@@ -50,12 +67,12 @@ public class BuddyMessageNotSetController extends ViewController implements OnSh
 	@Override
 	public void onResume() {
 		displayHideController();
-		mAsyncSharedPreferencesListener.registerOnSharedPreferenceChangeListener(this);
+		asyncSharedPreferencesListener.registerOnSharedPreferenceChangeListener(this);
 	}
 	
 	@Override
 	public void onPause() {
-		mAsyncSharedPreferencesListener.unregisterOnSharedPreferenceChangeListener(this);
+		asyncSharedPreferencesListener.unregisterOnSharedPreferenceChangeListener(this);
 	}
 	
 	/**

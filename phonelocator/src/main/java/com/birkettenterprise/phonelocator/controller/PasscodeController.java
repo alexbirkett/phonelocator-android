@@ -1,3 +1,22 @@
+/**
+ *
+ *  Copyright 2011-2014 Birkett Enterprise Ltd
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ */
+
+
 package com.birkettenterprise.phonelocator.controller;
 
 import com.birkett.controllers.Controller;
@@ -10,10 +29,8 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.content.DialogInterface.OnClickListener;
 import android.content.DialogInterface.OnDismissListener;
-import android.preference.PreferenceManager;
 import android.text.method.DigitsKeyListener;
 import android.text.method.PasswordTransformationMethod;
 import android.view.WindowManager;
@@ -22,15 +39,15 @@ import android.widget.Toast;
 
 public class PasscodeController extends Controller implements OnDismissListener {
 
-	private Dialog mDialog;
-	private EditText mPasscodeEditText;
-	private boolean mCorrectPasswordEntered;
-	private boolean mOkClicked;
-    private Context mContext;
+	private Dialog dialog;
+	private EditText passcodeEditText;
+	private boolean correctPasswordEntered;
+	private boolean okClicked;
+    private Context context;
 	
 	public PasscodeController(Activity context) {
 		super();
-		mContext = context;
+		this.context = context;
 	}
 
 	@Override
@@ -45,10 +62,10 @@ public class PasscodeController extends Controller implements OnDismissListener 
 	}
 
 	private void showDialog() {
-		mDialog.show();
-		mOkClicked = false;
-		mCorrectPasswordEntered = false;
-		mPasscodeEditText.setText("");
+		dialog.show();
+		okClicked = false;
+		correctPasswordEntered = false;
+		passcodeEditText.setText("");
 	}
 	
 	@Override
@@ -57,18 +74,18 @@ public class PasscodeController extends Controller implements OnDismissListener 
 	}
 
 	private Activity getActivity() {
-		return (Activity) mContext;
+		return (Activity) context;
 	}
 
 	private void buildDialogIfNotAlreadyExists() {
-		if (mDialog == null) {
+		if (dialog == null) {
 			buildDialog();
 		}
 	}
 	
 	private void hideDialogIfExists() {
-		if (mDialog != null) {
-			mDialog.hide();
+		if (dialog != null) {
+			dialog.hide();
 		}
 	}
 	
@@ -82,32 +99,32 @@ public class PasscodeController extends Controller implements OnDismissListener 
 	
 	private void buildDialog() {
 
-		AlertDialog.Builder builder = new AlertDialog.Builder(mContext)
-				.setTitle(mContext.getString(R.string.passcode_dialog_title))
+		AlertDialog.Builder builder = new AlertDialog.Builder(context)
+				.setTitle(context.getString(R.string.passcode_dialog_title))
 				.setIcon(R.drawable.icon)
 				.setPositiveButton(
-						mContext.getString(R.string.passcode_dialog_ok),
-						mOkClickListener)
+                        context.getString(R.string.passcode_dialog_ok),
+                        mOkClickListener)
 				.setNegativeButton(
-						mContext.getString(R.string.passcode_dialog_cancel),
-						mCancelClickListener);
+                        context.getString(R.string.passcode_dialog_cancel),
+                        mCancelClickListener);
 
-		mPasscodeEditText = new EditText(mContext);
-		mPasscodeEditText.setTransformationMethod(new PasswordTransformationMethod());
-		mPasscodeEditText.setKeyListener(new DigitsKeyListener());
+		passcodeEditText = new EditText(context);
+		passcodeEditText.setTransformationMethod(new PasswordTransformationMethod());
+		passcodeEditText.setKeyListener(new DigitsKeyListener());
 
-		builder.setView(mPasscodeEditText);
+		builder.setView(passcodeEditText);
 
-		mDialog = builder.create();
-		mDialog.setOnDismissListener(this);
-		mDialog.getWindow().setSoftInputMode(
+		dialog = builder.create();
+		dialog.setOnDismissListener(this);
+		dialog.getWindow().setSoftInputMode(
 				WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
 	}
 
 	@Override
 	public void onDismiss(DialogInterface dialog) {
-		if (mOkClicked) {
-			if (!mCorrectPasswordEntered) {
+		if (okClicked) {
+			if (!correctPasswordEntered) {
 				showIncorrectToast();
 				showDialog();
 			}
@@ -118,7 +135,7 @@ public class PasscodeController extends Controller implements OnDismissListener 
 	}
 
 	private void showIncorrectToast() {
-		Toast toast = Toast.makeText(mContext, R.string.incorrect_passcode, Toast.LENGTH_LONG);
+		Toast toast = Toast.makeText(context, R.string.incorrect_passcode, Toast.LENGTH_LONG);
 		toast.show();
 	}
 	
@@ -127,8 +144,8 @@ public class PasscodeController extends Controller implements OnDismissListener 
 		@Override
 		public void onClick(DialogInterface dialog, int which) {
 			String passcode = getPasscode();
-			mCorrectPasswordEntered = mPasscodeEditText.getText().toString().equals(passcode);
-			mOkClicked = true;
+			correctPasswordEntered = passcodeEditText.getText().toString().equals(passcode);
+			okClicked = true;
 		}
 
 	};

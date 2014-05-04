@@ -43,15 +43,15 @@ public class RegistrationService extends Service {
 
     private final IBinder mBinder = new RegistrationServiceBinder();
     
-    private Handler mHandler;
-    private Session mSession;
-    private Throwable mException;
-    private Vector<Runnable> mObservers;
-    private RegistrationResponse mRegistrationResponse;
+    private Handler handler;
+    private Session session;
+    private Throwable exception;
+    private Vector<Runnable> observers;
+    private RegistrationResponse registrationResponse;
     
-    private RegisrationRunnable mRegisrationRunnable;
-    private SynchronizeRunnable mSynchronizeRunnable;
-    private Thread mWorkerThread;
+    private RegisrationRunnable regisrationRunnable;
+    private SynchronizeRunnable synchronizeRunnable;
+    private Thread workerThread;
     
     private static final String LOG_TAG = "REGISTATION_SERVICE";
     
@@ -68,17 +68,17 @@ public class RegistrationService extends Service {
 			SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(RegistrationService.this);
 			
 			try {
-				mSession.connect();
-				mSession.authenticate(SettingsHelper.getAuthenticationToken());
-				synchronizeSettings(mSession);
+				session.connect();
+				session.authenticate(SettingsHelper.getAuthenticationToken());
+				synchronizeSettings(session);
 			} catch (Throwable e) {
-				mException = e;
+				exception = e;
 			} finally {
-				mSession.close();
+				session.close();
 			}
 			
 			synchronized(this) {
-				mWorkerThread = null;
+				workerThread = null;
 			}
 			
 			updateObservers();
@@ -94,23 +94,23 @@ public class RegistrationService extends Service {
 				DefaultSettingsSetter.setDefaultSettings(RegistrationService.this);
 				EnvironmentalSettingsSetter.updateEnvironmentalSettingsIfRequired(RegistrationService.this);
 				SettingSynchronizationHelper.resetSettingsSynchronizationTimestamp();
-				mSession.connect();
-				mRegistrationResponse = mSession.register();
-				mSession.authenticate(mRegistrationResponse.getAuthenticationToken());		
-				SettingsHelper.storeResponse(mRegistrationResponse.getAuthenticationToken(), mRegistrationResponse.getRegistrationUrl());
-				Log.d(LOG_TAG, "storing authentication token "+ mRegistrationResponse.getAuthenticationToken());
-				Log.d(LOG_TAG, "storing registration url "+ mRegistrationResponse.getRegistrationUrl());
+				session.connect();
+				registrationResponse = session.register();
+				session.authenticate(registrationResponse.getAuthenticationToken());
+				SettingsHelper.storeResponse(registrationResponse.getAuthenticationToken(), registrationResponse.getRegistrationUrl());
+				Log.d(LOG_TAG, "storing authentication token " + registrationResponse.getAuthenticationToken());
+				Log.d(LOG_TAG, "storing registration url " + registrationResponse.getRegistrationUrl());
 
-				synchronizeSettings(mSession);
+				synchronizeSettings(session);
 				
 			} catch (Throwable e) {
-				mException = e;
+				exception = e;
 			} finally {
-				mSession.close();
+				session.close();
 			}
 			
 			synchronized(this) {
-				mWorkerThread = null;
+				workerThread = null;
 			}
 			
 			updateObservers();
@@ -126,11 +126,11 @@ public class RegistrationService extends Service {
     }
 	
 	private void updateObservers() {
-		synchronized (mObservers) {
-			Iterator<Runnable> iterator = mObservers.iterator();
+		synchronized (observers) {
+			Iterator<Runnable> iterator = observers.iterator();
 			while (iterator.hasNext()) {
 				Runnable nextRunnable = iterator.next();
-				mHandler.post(nextRunnable);
+				handler.post(nextRunnable);
 			}
 		}
 
@@ -140,11 +140,11 @@ public class RegistrationService extends Service {
     public void onCreate() {
 		//android.os.Debug.waitForDebugger();
     	super.onCreate();
-    	mHandler = new Handler();
-    	mSession = new Session();
-    	mObservers = new Vector<Runnable>();
-    	mRegisrationRunnable = new RegisrationRunnable();
-    	mSynchronizeRunnable = new SynchronizeRunnable();
+    	handler = new Handler();
+    	session = new Session();
+    	observers = new Vector<Runnable>();
+    	regisrationRunnable = new RegisrationRunnable();
+    	synchronizeRunnable = new SynchronizeRunnable();
     }
 
     @Override
@@ -163,59 +163,59 @@ public class RegistrationService extends Service {
     }
     
     public void register() {
-    	startRunnable(mRegisrationRunnable);
+    	startRunnable(regisrationRunnable);
     }
     
     public void synchronize() {
-    	startRunnable(mSynchronizeRunnable);
+    	startRunnable(synchronizeRunnable);
     }
     
     private void startRunnable(Runnable runnable) {
-    	if (mWorkerThread != null) {
+    	if (workerThread != null) {
     		throw new RuntimeException();
     	}
     	clearResponse();
-    	mWorkerThread = new Thread(runnable);
-    	mWorkerThread.start();
+    	workerThread = new Thread(runnable);
+    	workerThread.start();
     }
     
     public void addObserver(Runnable observer) {
-    	synchronized (mObservers) {
-    		mObservers.remove(observer);
-    		mObservers.add(observer);
+    	synchronized (observers) {
+    		observers.remove(observer);
+    		observers.add(observer);
     	}
     }
     
     public void clearResponse() {
-    	mRegistrationResponse = null;
-    	mException = null;
+    	registrationResponse = null;
+    	exception = null;
     }
     
     public void removeObserver(Runnable observer) {
-    	synchronized (mObservers) {
-    		mObservers.remove(observer);
+    	synchronized (observers) {
+    		observers.remove(observer);
     	}
     }
     
     public boolean isSuccess() {
-    	return mRegistrationResponse != null && mException == null;
+    	return registrationResponse != null && exception == null;
     }
     
     public RegistrationResponse getResponse() {
-    	return mRegistrationResponse;
+    	return registrationResponse;
     }
     
     public Throwable getException() {
-    	return mException;
+    	return exception;
     }
     
     public boolean isErrorOccured() {
-    	return mException != null;
+    	return exception != null;
     }
     
     public boolean isRunning() {
     	synchronized(this) {
-    	return mWorkerThread != null;
+    	return workerThread != null;
     	}
     }
 }

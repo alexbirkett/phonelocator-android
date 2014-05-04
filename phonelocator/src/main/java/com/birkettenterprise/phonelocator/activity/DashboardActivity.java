@@ -1,3 +1,21 @@
+/**
+ *
+ *  Copyright 2011-2014 Birkett Enterprise Ltd
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ */
+
 package com.birkettenterprise.phonelocator.activity;
 
 import java.util.List;
@@ -12,7 +30,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -36,42 +53,42 @@ import com.birkettenterprise.phonelocator.utility.AsyncSharedPreferencesListener
 public class DashboardActivity extends ActivityThatSupportsControllers implements
         OnSharedPreferenceChangeListener {
 
-    private CountdownController mCountdownController;
-    private DatabaseController mDatabaseController;
-    private LocationStatusController mLocationStatusController;
-    private UpdateStatusController mUpdateStatusController;
-    private UpdatesDisabledController mUpdatesDisabledController;
-    private BuddyMessageNotSetController mBuddyMessageNotSetController;
+    private CountdownController countdownController;
+    private DatabaseController databaseController;
+    private LocationStatusController locationStatusController;
+    private UpdateStatusController updateStatusController;
+    private UpdatesDisabledController updatesDisabledController;
+    private BuddyMessageNotSetController buddyMessageNotSetController;
 
-    private List<ActivityManager.RunningServiceInfo> mRunningServices;
-    private AsyncSharedPreferencesListener mAsyncSharedPreferencesListener;
+    private List<ActivityManager.RunningServiceInfo> runningServiceInfos;
+    private AsyncSharedPreferencesListener asyncSharedPreferencesListener;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
-        mCountdownController = new CountdownController(this);
-        mDatabaseController = new DatabaseController(this);
-        mUpdateStatusController = new UpdateStatusController(this);
-        mLocationStatusController = new LocationStatusController(this);
-        mUpdatesDisabledController = new UpdatesDisabledController(this);
-        mBuddyMessageNotSetController = new BuddyMessageNotSetController(this);
+        countdownController = new CountdownController(this);
+        databaseController = new DatabaseController(this);
+        updateStatusController = new UpdateStatusController(this);
+        locationStatusController = new LocationStatusController(this);
+        updatesDisabledController = new UpdatesDisabledController(this);
+        buddyMessageNotSetController = new BuddyMessageNotSetController(this);
 
 /*		addController(new HockeyAppController(this,
                 "https://rink.hockeyapp.net/",
 				"3f7ef8dc87d197b81fb86ff41dcc1314"));*/
-        addController(mCountdownController);
-        addController(mDatabaseController);
-        addController(mLocationStatusController);
-        addController(mUpdateStatusController);
-        addController(mUpdatesDisabledController);
-        addController(mBuddyMessageNotSetController);
+        addController(countdownController);
+        addController(databaseController);
+        addController(locationStatusController);
+        addController(updateStatusController);
+        addController(updatesDisabledController);
+        addController(buddyMessageNotSetController);
 
 
         super.onCreate(savedInstanceState);
 
 
-        mAsyncSharedPreferencesListener = new AsyncSharedPreferencesListener();
+        asyncSharedPreferencesListener = new AsyncSharedPreferencesListener();
         setContentView(R.layout.dashboard_activity);
 
         addBuddyNumberNotSetController();
@@ -79,7 +96,7 @@ public class DashboardActivity extends ActivityThatSupportsControllers implement
 
     private void addBuddyNumberNotSetController() {
         FrameLayout counterContainer = (FrameLayout) findViewById(R.id.buddy_message_not_set_container);
-        counterContainer.addView(mBuddyMessageNotSetController.getView());
+        counterContainer.addView(buddyMessageNotSetController.getView());
     }
 
     @Override
@@ -90,7 +107,7 @@ public class DashboardActivity extends ActivityThatSupportsControllers implement
             startAuthenticationActivity();
         }
 
-        mAsyncSharedPreferencesListener.registerOnSharedPreferenceChangeListener(this);
+        asyncSharedPreferencesListener.registerOnSharedPreferenceChangeListener(this);
         swapStatusController();
         registerBroadcastReceiver();
     }
@@ -98,7 +115,7 @@ public class DashboardActivity extends ActivityThatSupportsControllers implement
     @Override
     public void onPause() {
         super.onPause();
-        mAsyncSharedPreferencesListener.unregisterOnSharedPreferenceChangeListener(this);
+        asyncSharedPreferencesListener.unregisterOnSharedPreferenceChangeListener(this);
         unregisterBroadcastReceiver();
     }
 
@@ -178,14 +195,14 @@ public class DashboardActivity extends ActivityThatSupportsControllers implement
         if (isUpdatesEnabled()) {
             refreshRunningServiceList();
             if (isUpdateServiceRunning()) {
-                showStatusController(mUpdateStatusController);
+                showStatusController(updateStatusController);
             } else if (isLocationPollerRunning()) {
-                showStatusController(mLocationStatusController);
+                showStatusController(locationStatusController);
             } else {
                 showCountdownController();
             }
         } else {
-            showStatusController(mUpdatesDisabledController);
+            showStatusController(updatesDisabledController);
         }
 
     }
@@ -195,8 +212,8 @@ public class DashboardActivity extends ActivityThatSupportsControllers implement
     }
 
     private void showCountdownController() {
-        showStatusController(mCountdownController);
-        mCountdownController.start();
+        showStatusController(countdownController);
+        countdownController.start();
     }
 
     private void showStatusController(ViewController controller) {
@@ -206,20 +223,20 @@ public class DashboardActivity extends ActivityThatSupportsControllers implement
     }
 
     private void detachStatusControllers() {
-        mCountdownController.stop();
-        mCountdownController.detachViewFromParent();
-        mUpdateStatusController.detachViewFromParent();
-        mLocationStatusController.detachViewFromParent();
-        mUpdatesDisabledController.detachViewFromParent();
+        countdownController.stop();
+        countdownController.detachViewFromParent();
+        updateStatusController.detachViewFromParent();
+        locationStatusController.detachViewFromParent();
+        updatesDisabledController.detachViewFromParent();
     }
 
     public long getLastUpdateTimestamp() {
-        return mDatabaseController.getLastUpdateTimestamp();
+        return databaseController.getLastUpdateTimestamp();
     }
 
     private void refreshRunningServiceList() {
         ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
-        mRunningServices = manager.getRunningServices(Integer.MAX_VALUE);
+        runningServiceInfos = manager.getRunningServices(Integer.MAX_VALUE);
     }
 
     private boolean isLocationPollerRunning() {
@@ -231,7 +248,7 @@ public class DashboardActivity extends ActivityThatSupportsControllers implement
     }
 
     private boolean isServiceRunning(String className) {
-        for (RunningServiceInfo runningServiceInfo : mRunningServices) {
+        for (RunningServiceInfo runningServiceInfo : runningServiceInfos) {
             if (className.equals(runningServiceInfo.service.getClassName())) {
                 return true;
             }
@@ -261,10 +278,10 @@ public class DashboardActivity extends ActivityThatSupportsControllers implement
                     showCountdownController();
                 } else if ("com.birkettenterprise.phonelocator.SENDING_UPDATE"
                         .equals(intent.getAction())) {
-                    showStatusController(mUpdateStatusController);
+                    showStatusController(updateStatusController);
                 } else if (PollLocationAndSendUpdateBroadcastReceiver.ACTION
                         .equals(intent.getAction())) {
-                    showStatusController(mLocationStatusController);
+                    showStatusController(locationStatusController);
                 }
             }
         }

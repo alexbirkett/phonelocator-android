@@ -53,18 +53,18 @@ public class UpdateService extends WakefulIntentService {
 
 	private static final String LOG_TAG = PhonelocatorApplication.LOG_TAG + "_UPDATE_SERVICE";
 	
-	private UpdateLogDatabase mDatabase;
+	private UpdateLogDatabase database;
 	
 	public UpdateService() {
 		super("PhonelocatorSerivce");
 		//android.os.Debug.waitForDebugger();
-		mDatabase = new UpdateLogDatabase(this);
+		database = new UpdateLogDatabase(this);
 	}
 
 	@Override
 	protected void doWakefulWork(Intent intent) {
 		handleUpdateLocation(intent);
-		mDatabase.close();
+		database.close();
 	}
 	
 	private void storeLocationBestEffort(Intent intent) {
@@ -172,13 +172,13 @@ public class UpdateService extends WakefulIntentService {
 	
 	private void updateLog(List<Location> locations) {
 		for (Location location : locations) {
-			mDatabase.updateLog(location);
+			database.updateLog(location);
 		}
 		notifyDataChanged();
 	}
 	
 	private void updateLog(Exception e) {
-		mDatabase.updateLog(e);
+		database.updateLog(e);
 		notifyDataChanged();
 	}
 	

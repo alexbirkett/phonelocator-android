@@ -34,7 +34,7 @@ import com.birkettenterprise.phonelocator.settings.Setting;
 
 public class Session {
 
-	private Socket mSocket;
+	private Socket socket;
 	
 	//private static final String HOST = "stage.phonelocator.mobi";
 	private static final String HOST = "server1.phonelocator.mobi";
@@ -50,12 +50,12 @@ public class Session {
 	private static final String LOG_TAG = "SESSION";
 	
 	public void connect() throws UnknownHostException, IOException {
-		mSocket = new Socket(HOST, PORT);
+		socket = new Socket(HOST, PORT);
 	}
 
 	public void close() {
 		try {
-			mSocket.close();
+			socket.close();
 		} catch (Throwable e) {
 			// ignore
 		}
@@ -64,13 +64,13 @@ public class Session {
 	public RegistrationResponse register() throws IOException {
 
 		DataOutputStream dataOutputStream = new DataOutputStream(
-				mSocket.getOutputStream());
+				socket.getOutputStream());
 
 		dataOutputStream.writeByte(Methods.REGISTER);
 		dataOutputStream.writeShort(0); // Message Length
 
 		DataInputStream dataInputStream = new DataInputStream(
-				mSocket.getInputStream());
+				socket.getInputStream());
 
 		dataInputStream.readShort(); // length
 
@@ -85,7 +85,7 @@ public class Session {
 			CorruptStreamException, AuthenticationFailedException {
 		Log.d(LOG_TAG, "authentication token " + authenticationToken);
 		DataOutputStream dataOutputStream = new DataOutputStream(
-				mSocket.getOutputStream());
+				socket.getOutputStream());
 		dataOutputStream.writeByte(Methods.AUTHENTICATE);
 
 		ByteArrayOutputStream authenticationStream = new ByteArrayOutputStream();
@@ -98,7 +98,7 @@ public class Session {
 		dataOutputStream.write(authenticationStream.toByteArray());
 
 		DataInputStream dataInputStream = new DataInputStream(
-				mSocket.getInputStream());
+				socket.getInputStream());
 		if (dataInputStream.readShort() != AUTHENTICATION_RESPONSE_LENGTH) {
 			throw new CorruptStreamException();
 		}
@@ -111,7 +111,7 @@ public class Session {
 			CorruptStreamException {
 
 		DataOutputStream dataOutputStream = new DataOutputStream(
-				mSocket.getOutputStream());
+				socket.getOutputStream());
 		dataOutputStream.writeByte(Methods.POSITIONUPDATE);
 
 		ByteArrayOutputStream beaconListStream = new ByteArrayOutputStream();
@@ -123,7 +123,7 @@ public class Session {
 		dataOutputStream.write(beaconListStream.toByteArray());
 
 		DataInputStream dataInputStream = new DataInputStream(
-				mSocket.getInputStream());
+				socket.getInputStream());
 		if (dataInputStream.readShort() != POSITION_UPDATE_RESPONSE_LENGTH) {
 			throw new CorruptStreamException();
 		}
@@ -137,7 +137,7 @@ public class Session {
 	 */
 	public Vector<Setting> synchronizeSettings(Vector<Setting> settingsToSend) throws IOException {
 		DataOutputStream dataOutputStream = new DataOutputStream(
-				mSocket.getOutputStream());
+				socket.getOutputStream());
 		
 		dataOutputStream.writeByte(Methods.SYNCHRONIZESETTINGS);
 
@@ -148,7 +148,7 @@ public class Session {
 		dataOutputStream.writeShort(settingsStream.size());
 		dataOutputStream.write(settingsStream.toByteArray());
 		dataOutputStream.flush();
-		return SettingsProtocol.readingSettings(new DataInputStream(mSocket.getInputStream()));
+		return SettingsProtocol.readingSettings(new DataInputStream(socket.getInputStream()));
 	}
 	
 	public Vector<Setting> createDefaultSettings() throws IOException {

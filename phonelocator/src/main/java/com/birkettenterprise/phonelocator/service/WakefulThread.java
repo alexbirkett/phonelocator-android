@@ -29,7 +29,7 @@ import android.util.Log;
  */
 public class WakefulThread extends HandlerThread {
   
-	private PowerManager.WakeLock mLock;
+	private PowerManager.WakeLock lock;
 
   /**
    * Constructor
@@ -43,7 +43,7 @@ public class WakefulThread extends HandlerThread {
   WakefulThread(PowerManager.WakeLock lock, String name) {
     super(name);
 
-    this.mLock=lock;
+    this.lock =lock;
   }
 
   /**
@@ -61,9 +61,9 @@ public class WakefulThread extends HandlerThread {
    * runs
    */
   protected void onPostExecute() {
-    mLock.release();
+    lock.release();
 
-    if (!mLock.isHeld()) {
+    if (!lock.isHeld()) {
       onUnlocked();
     }
   }
