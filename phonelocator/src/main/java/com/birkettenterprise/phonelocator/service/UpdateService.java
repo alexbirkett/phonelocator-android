@@ -21,35 +21,31 @@ package com.birkettenterprise.phonelocator.service;
 import java.io.IOException;
 import java.util.List;
 import java.util.Vector;
+import java.util.concurrent.CountDownLatch;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.location.Location;
-import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.birkettenterprise.phonelocator.application.PhonelocatorApplication;
 import com.birkettenterprise.phonelocator.database.UpdateLogDatabase;
 import com.birkettenterprise.phonelocator.database.UpdateLogDatabaseContentProvider;
 import com.birkettenterprise.phonelocator.domain.BeaconList;
-import com.birkettenterprise.phonelocator.domain.GpsBeacon;
-import com.birkettenterprise.phonelocator.protocol.AuthenticationFailedException;
+import com.birkettenterprise.phonelocator.model.request.MessageRequestDO;
 import com.birkettenterprise.phonelocator.protocol.CorruptStreamException;
 import com.birkettenterprise.phonelocator.protocol.Session;
-import com.birkettenterprise.phonelocator.settings.EnvironmentalSettingsSetter;
-import com.birkettenterprise.phonelocator.settings.Setting;
-import com.birkettenterprise.phonelocator.settings.SettingSynchronizationHelper;
-import com.birkettenterprise.phonelocator.settings.SettingsHelper;
+import com.birkettenterprise.phonelocator.request.MessageRequest;
 import com.birkettenterprise.phonelocator.utility.LocationMarshallingUtility;
 import com.commonsware.cwac.locpoll.LocationPollerResult;
 import com.commonsware.cwac.wakeful.WakefulIntentService;
 
 public class UpdateService extends WakefulIntentService {
 
-	public static final String COMMAND = "command";
-		
-	public static final int UPDATE_LOCATION = 1;
-	public static final int SYNCHRONIZE_SETTINGS = 2;
+    static class VolleyExceptionWrapper {
+        VolleyError volleyError;
+    };
 
 	private static final String LOG_TAG = PhonelocatorApplication.LOG_TAG + "_UPDATE_SERVICE";
 	
@@ -81,63 +77,24 @@ public class UpdateService extends WakefulIntentService {
 		sendBroadcast(new Intent(
 				"com.birkettenterprise.phonelocator.SENDING_UPDATE"));
 
-		Session session = new Session();
-
-		SharedPreferences sharedPreferences = PreferenceManager
-				.getDefaultSharedPreferences(this);
-		EnvironmentalSettingsSetter.updateEnvironmentalSettingsIfRequired(this);
-
 		try {
-			// store the location in case the connection fails so that it can be
-			// sent later
-			storeLocationBestEffort(intent);
+            Location location = getLocationFromIntent(intent);
 
-			session.connect();
-			session.authenticate(SettingsHelper
-					.getAuthenticationToken());
+			sendLocation(location);
 
-			synchronizeSettings(session);
-
-			List<Location> locations = LocationMarshallingUtility
-					.retrieveLocations(this);
-
-			if (locations.size() < 1) {
-				// if the location was not stored, perhaps because of an out of
-				// disk condition
-				Location location = getLocationFromIntent(intent);
-				locations = new Vector<Location>();
-				locations.add(location);
-			}
-
-			sendUpdate(session, locations);
-
-			// delete the stored locations
-			LocationMarshallingUtility.deleteLocations(this);
+            List<Location> locations = new Vector<Location>();
+            locations.add(location);
 
 			updateLog(locations);
 
-		} catch (IOException e) {
-			updateLog(e);
-			Log.d(LOG_TAG, "error sending updates settings " + e.toString());
-		} catch (CorruptStreamException e) {
-			updateLog(e);
-			Log.d(LOG_TAG, "error sending updates settings " + e.toString());
-		} catch (AuthenticationFailedException e) {
-			updateLog(e);
-			Log.d(LOG_TAG, "authentication failed");
 		} catch (LocationPollFailedException e) {
-			try {
-				sendUpdate(session, e.getMessage());
-			} catch (IOException e1) {
-				updateLog(e1);
-			} catch (CorruptStreamException e1) {
-				updateLog(e1);
-			}
 			updateLog(e);
-		} finally {
-			session.close();
-		}
-		sendBroadcast(new Intent(
+		} catch (InterruptedException e) {
+            updateLog(e);
+        } catch (VolleyError e) {
+            updateLog(e);
+        }
+        sendBroadcast(new Intent(
 				"com.birkettenterprise.phonelocator.UPDATE_COMPLETE"));
 	}
    
@@ -149,21 +106,49 @@ public class UpdateService extends WakefulIntentService {
 		}
 		return location;
 	}
-	
-	private static void synchronizeSettings(Session session) throws IOException {
-		Vector<Setting> settings = session.synchronizeSettings(SettingSynchronizationHelper.getSettingsModifiedSinceLastSyncrhonization());
-		SettingSynchronizationHelper.updateSettingsSynchronizationTimestamp();
-		SettingSynchronizationHelper.setSettings(settings);
-	}
-	
-	private static  void sendUpdate(Session session, List<Location> locations) throws IOException, CorruptStreamException {
-		for (Location location : locations) {
-			BeaconList beaconList = new BeaconList();
-			beaconList.add(new GpsBeacon(location, null));
-			session.sendPositionUpdate(beaconList);
-		}
-	}
-	
+
+    private void sendLocation(Location location) throws InterruptedException, VolleyError {
+        final CountDownLatch latch = new CountDownLatch(1);
+        MessageRequestDO dataObject = createMessageRequestDOFromLocation(location);
+        final VolleyExceptionWrapper volleyExceptionWrapper = new VolleyExceptionWrapper();
+
+        Response.Listener listener = new Response.Listener() {
+
+            @Override
+            public void onResponse(Object response) {
+                latch.countDown();
+
+            }
+        };
+        Response.ErrorListener errorListener = new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                volleyExceptionWrapper.volleyError = error;
+                latch.countDown();
+            }
+        };
+
+        MessageRequest messageRequest = new MessageRequest(dataObject, listener, errorListener);
+
+        PhonelocatorApplication.getInstance().getQueue().add(messageRequest);
+
+        latch.await();
+        if (volleyExceptionWrapper.volleyError != null) {
+            throw volleyExceptionWrapper.volleyError;
+        }
+    }
+
+    private static MessageRequestDO createMessageRequestDOFromLocation(Location location) {
+        MessageRequestDO messageRequestDO = new MessageRequestDO();
+        messageRequestDO.location.latitude = location.getLatitude();
+        messageRequestDO.location.longitude = location.getLongitude();
+        messageRequestDO.location.speed = location.getSpeed();
+        messageRequestDO.location.course = location.getBearing();
+        messageRequestDO.location.accuracy = location.getAccuracy();
+        messageRequestDO.location.timestamp = location.getTime();
+        return messageRequestDO;
+    }
+
 	private static  void sendUpdate(Session session, String error) throws IOException, CorruptStreamException {
 		// send empty beacon list
 		BeaconList beaconList = new BeaconList();

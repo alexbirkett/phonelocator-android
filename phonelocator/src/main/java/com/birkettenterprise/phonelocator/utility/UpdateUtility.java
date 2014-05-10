@@ -1,6 +1,6 @@
 /**
  * 
- *  Copyright 2012 Birkett Enterprise Ltd
+ *  Copyright 2012-2014 Birkett Enterprise Ltd
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,15 +20,13 @@ package com.birkettenterprise.phonelocator.utility;
 
 import com.birkettenterprise.phonelocator.broadcastreceiver.SendWorkToUpdateServiceBroadcastReceiver;
 import com.birkettenterprise.phonelocator.settings.SettingsHelper;
-//import com.commonsware.cwac.locpoll.LocationPoller;
-//import com.commonsware.cwac.locpoll.LocationPollerParameter;
+import com.commonsware.cwac.locpoll.LocationPoller;
+import com.commonsware.cwac.locpoll.LocationPollerParameter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 
 public class UpdateUtility {
 	
@@ -36,10 +34,9 @@ public class UpdateUtility {
 	public static void pollLocationAndSendUpdate(Context context) {
 		Bundle bundle = new Bundle();
 		
-/*		LocationPollerParameter parameter = new LocationPollerParameter(bundle);
-		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-		parameter.setTimeout(SettingsHelper.getGpsTimeOut(sharedPreferences));
-		if (SettingsHelper.isGpsEnabled(sharedPreferences)) {
+		LocationPollerParameter parameter = new LocationPollerParameter(bundle);
+		parameter.setTimeout(SettingsHelper.getGpsTimeOut());
+		if (SettingsHelper.isGpsEnabled()) {
 			parameter.addProvider(LocationManager.GPS_PROVIDER);
 		}
 		parameter.addProvider(LocationManager.NETWORK_PROVIDER);
@@ -48,7 +45,7 @@ public class UpdateUtility {
 		Intent intent = new Intent(context, LocationPoller.class);
 		intent.putExtras(bundle);
 		
-		context.sendBroadcast(intent);*/
+		context.sendBroadcast(intent);
 	}
 	
 }
