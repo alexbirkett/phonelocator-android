@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <fr.castorflex.android.smoothprogressbar.SmoothProgressBar
+        android:id="@+id/add_phone_progress_bar"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:visibility="invisible"
+        app:spb_color="@color/ten20_progress_bar_color"
+        app:spb_mirror_mode="false"
+        app:spb_progressiveStart_activated="true"
+        app:spb_progressiveStart_speed="1.5"
+        app:spb_progressiveStop_speed="3.4"
+        app:spb_reversed="false"
+        app:spb_sections_count="4"
+        app:spb_speed="1.0"
+        app:spb_stroke_separator_length="4dp"
+        app:spb_stroke_width="4dp"
+        app:spb_interpolator="spb_interpolator_acceleratedecelerate"/>
+
+    <TextView
+        android:id="@+id/add_phone_status_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"/>
+
+    <EditText
+        android:id="@+id/add_phone_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/add_phone_hint"
+        android:layout_margin="10dp"/>
+
+    <Button
+        android:id="@+id/add_phone_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/add_phone" />
+
+    <Button
+        android:id="@+id/retry_check_tracker_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/add_phone_retry"
+        android:visibility="gone"/>
+
+</LinearLayout>

@@ -118,4 +118,11 @@
     <string name="tab_sign_up">Sign up</string>
     <string name="tab_sign_in">Sign in</string>
 
+    <string name="add_phone">Add phone</string>
+    <string name="add_phone_hint">Phone name</string>
+    <string name="add_phone_description">Add this phone to your ten20 account</string>
+    <string name="add_phone_checking_tracker_added">Checking if phone is added to your account</string>
+    <string name="add_phone_error">Could not connect to server</string>
+    <string name="add_phone_retry">Retry</string>
+    <string name="add_phone_enter_name">Enter a name for this phone</string>
 </resources>

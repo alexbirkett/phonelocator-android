@@ -40,6 +40,7 @@ import com.birkett.controllers.ViewController;
 import com.birkettenterprise.phonelocator.R;
 import com.birkettenterprise.phonelocator.broadcastreceiver.PollLocationAndSendUpdateBroadcastReceiver;
 import com.birkettenterprise.phonelocator.controller.BuddyMessageNotSetController;
+import com.birkettenterprise.phonelocator.controller.CheckTrackerAddedController;
 import com.birkettenterprise.phonelocator.controller.CountdownController;
 import com.birkettenterprise.phonelocator.controller.DatabaseController;
 import com.birkettenterprise.phonelocator.controller.LocationStatusController;
@@ -59,9 +60,14 @@ public class DashboardActivity extends ActivityThatSupportsControllers implement
     private UpdateStatusController updateStatusController;
     private UpdatesDisabledController updatesDisabledController;
     private BuddyMessageNotSetController buddyMessageNotSetController;
+    private CheckTrackerAddedController checkTrackerAddedController;
 
     private List<ActivityManager.RunningServiceInfo> runningServiceInfos;
     private AsyncSharedPreferencesListener asyncSharedPreferencesListener;
+
+
+    private boolean phoneAdded;
+    static final int START_ADD_PHONE_REQUEST = 1;  // The request code
 
 
     @Override
@@ -73,6 +79,7 @@ public class DashboardActivity extends ActivityThatSupportsControllers implement
         locationStatusController = new LocationStatusController(this);
         updatesDisabledController = new UpdatesDisabledController(this);
         buddyMessageNotSetController = new BuddyMessageNotSetController(this);
+        checkTrackerAddedController = new CheckTrackerAddedController(this);
 
 /*		addController(new HockeyAppController(this,
                 "https://rink.hockeyapp.net/",
@@ -83,7 +90,7 @@ public class DashboardActivity extends ActivityThatSupportsControllers implement
         addController(updateStatusController);
         addController(updatesDisabledController);
         addController(buddyMessageNotSetController);
-
+       // addController(checkTrackerAddedController);
 
         super.onCreate(savedInstanceState);
 
@@ -92,6 +99,7 @@ public class DashboardActivity extends ActivityThatSupportsControllers implement
         setContentView(R.layout.dashboard_activity);
 
         addBuddyNumberNotSetController();
+
     }
 
     private void addBuddyNumberNotSetController() {
@@ -103,13 +111,18 @@ public class DashboardActivity extends ActivityThatSupportsControllers implement
     public void onResume() {
         super.onResume();
 
-        if (!hasAuthenticationToken()) {
-            startAuthenticationActivity();
-        }
-
         asyncSharedPreferencesListener.registerOnSharedPreferenceChangeListener(this);
         swapStatusController();
         registerBroadcastReceiver();
+
+        if (SettingsHelper.hasAuthenticationToken()) {
+            if (!phoneAdded) {
+                startAddPhoneRequest();
+            }
+        } else {
+            startAuthenticationActivity();
+        }
+        phoneAdded = false;
     }
 
     @Override
@@ -160,6 +173,18 @@ public class DashboardActivity extends ActivityThatSupportsControllers implement
         }
     }
 
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Check which request we're responding to
+        if (requestCode == START_ADD_PHONE_REQUEST) {
+            // Make sure the request was successful
+            if (resultCode == RESULT_OK) {
+                phoneAdded = true;
+            }
+        }
+    }
+
     private void startWebSite() {
 
         Intent viewIntent = new Intent("android.intent.action.VIEW",
@@ -188,6 +213,11 @@ public class DashboardActivity extends ActivityThatSupportsControllers implement
         // Use startActivityForResult to prevent flicker
         startActivityForResult(intent, 0);
         finish();
+    }
+
+    public void startAddPhoneRequest() {
+        Intent intent = new Intent(this, AddPhoneActivity.class);
+        startActivityForResult(intent, START_ADD_PHONE_REQUEST);
     }
 
     private void swapStatusController() {
@@ -287,9 +317,4 @@ public class DashboardActivity extends ActivityThatSupportsControllers implement
         }
 
     };
-
-    private boolean hasAuthenticationToken() {
-        return SettingsHelper.getAuthenticationToken() != null;
-    }
-
 }

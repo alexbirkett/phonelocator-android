@@ -113,6 +113,10 @@ public class SettingsHelper {
         return getSharedPreferences().getString(StringSettings.AUTHENTICATION_TOKEN, null);
     }
 
+    public static boolean hasAuthenticationToken() {
+        return getAuthenticationToken() != null;
+    }
+
     public static String getRegistrationUrl() {
         return getSharedPreferences().getString(StringSettings.REGISTRATION_URL, null);
     }
