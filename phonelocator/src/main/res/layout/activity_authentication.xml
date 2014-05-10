@@ -26,14 +26,6 @@
         app:spb_stroke_width="4dp"
         app:spb_interpolator="spb_interpolator_acceleratedecelerate"/>
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="60dp"
-        android:layout_gravity="center_horizontal"
-        android:scaleType="centerInside"
-        android:src="@drawable/ten20logo"
-        android:visibility="gone" />
-
     <com.astuetz.PagerSlidingTabStrip
         android:id="@+id/tabs"
         android:layout_width="match_parent"
