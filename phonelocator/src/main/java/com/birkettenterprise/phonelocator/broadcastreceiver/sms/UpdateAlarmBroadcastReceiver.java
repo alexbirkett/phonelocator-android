@@ -8,9 +8,7 @@ import com.birkettenterprise.phonelocator.utility.UpdateUtility;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.telephony.SmsMessage;
 
 
@@ -35,7 +33,7 @@ public class UpdateAlarmBroadcastReceiver extends BroadcastReceiver {
 			AudioAlarmService.startAlarmService(context);		
 		}
 		
-		if (action != Action.None && hiddeTriggerMessages(context)) {
+		if (action != Action.None && SettingsHelper.isHideTriggerMessage()) {
 			abortBroadcast();
 		}
 	}
@@ -88,10 +86,6 @@ public class UpdateAlarmBroadcastReceiver extends BroadcastReceiver {
 	    	smsAsString = smsBody;
 	    }
 	    return smsAsString;
-	}
-	
-	private boolean hiddeTriggerMessages(Context context) {
-		return SettingsHelper.isHideTriggerMessage();
 	}
 	
 	private String getPasscode() {
