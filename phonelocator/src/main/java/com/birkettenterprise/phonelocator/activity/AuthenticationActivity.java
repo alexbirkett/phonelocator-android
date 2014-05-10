@@ -177,7 +177,9 @@ public class AuthenticationActivity extends Activity {
         AuthenticateRequest request = new AuthenticateRequest();
         request.email = usernameOrEmail;
         request.password = password;
-        JacksonRequest<AuthenticateResponse> jacksonRequest = new JacksonRequest(Request.Method.POST, Constants.BASE_URL + "/authenticate", request,AuthenticateResponse.class,
+
+        String url = Constants.BASE_URL + "/authenticate";
+        JacksonRequest<AuthenticateResponse> jacksonRequest = new JacksonRequest(Request.Method.POST, url, request,AuthenticateResponse.class,
                 new Response.Listener<AuthenticateResponse>() {
 
                     @Override
