@@ -40,7 +40,6 @@ import com.birkett.controllers.ViewController;
 import com.birkettenterprise.phonelocator.R;
 import com.birkettenterprise.phonelocator.broadcastreceiver.PollLocationAndSendUpdateBroadcastReceiver;
 import com.birkettenterprise.phonelocator.controller.BuddyMessageNotSetController;
-import com.birkettenterprise.phonelocator.controller.CheckTrackerAddedController;
 import com.birkettenterprise.phonelocator.controller.CountdownController;
 import com.birkettenterprise.phonelocator.controller.DatabaseController;
 import com.birkettenterprise.phonelocator.controller.LocationStatusController;
@@ -60,7 +59,6 @@ public class DashboardActivity extends ActivityThatSupportsControllers implement
     private UpdateStatusController updateStatusController;
     private UpdatesDisabledController updatesDisabledController;
     private BuddyMessageNotSetController buddyMessageNotSetController;
-    private CheckTrackerAddedController checkTrackerAddedController;
 
     private List<ActivityManager.RunningServiceInfo> runningServiceInfos;
     private AsyncSharedPreferencesListener asyncSharedPreferencesListener;
@@ -79,7 +77,6 @@ public class DashboardActivity extends ActivityThatSupportsControllers implement
         locationStatusController = new LocationStatusController(this);
         updatesDisabledController = new UpdatesDisabledController(this);
         buddyMessageNotSetController = new BuddyMessageNotSetController(this);
-        checkTrackerAddedController = new CheckTrackerAddedController(this);
 
 /*		addController(new HockeyAppController(this,
                 "https://rink.hockeyapp.net/",
@@ -117,7 +114,7 @@ public class DashboardActivity extends ActivityThatSupportsControllers implement
 
         if (SettingsHelper.hasAuthenticationToken()) {
             if (!phoneAdded) {
-                startAddPhoneRequest();
+                startAddPhoneActivity();
             }
         } else {
             startAuthenticationActivity();
@@ -215,7 +212,7 @@ public class DashboardActivity extends ActivityThatSupportsControllers implement
         finish();
     }
 
-    public void startAddPhoneRequest() {
+    public void startAddPhoneActivity() {
         Intent intent = new Intent(this, AddPhoneActivity.class);
         startActivityForResult(intent, START_ADD_PHONE_REQUEST);
     }
