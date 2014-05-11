@@ -16,6 +16,7 @@ import com.birkettenterprise.phonelocator.R;
 import com.birkettenterprise.phonelocator.application.PhonelocatorApplication;
 import com.birkettenterprise.phonelocator.request.AddTrackerRequest;
 import com.birkettenterprise.phonelocator.request.CheckTrackerAddedRequest;
+import com.birkettenterprise.phonelocator.settings.SettingsHelper;
 import com.birkettenterprise.phonelocator.utility.SerialUtil;
 
 /**
@@ -46,11 +47,15 @@ public class AddPhoneActivity extends Activity {
         @Override
         public void onError(Exception error) {
             checkTrackerAddedRequest = null;
-            statusMessage.setText(R.string.add_phone_error);
-            progressBar.setVisibility(View.INVISIBLE);
-            addTrackerButton.setVisibility(View.GONE);
-            retryCheckTrackerButton.setVisibility(View.VISIBLE);
-            retryCheckTrackerButton.setEnabled(true);
+            if (SettingsHelper.getAuthenticationToken() == null) {
+                finish();
+            } else {
+                statusMessage.setText(R.string.add_phone_error);
+                progressBar.setVisibility(View.INVISIBLE);
+                addTrackerButton.setVisibility(View.GONE);
+                retryCheckTrackerButton.setVisibility(View.VISIBLE);
+                retryCheckTrackerButton.setEnabled(true);
+            }
         }
     };
 

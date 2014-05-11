@@ -13,7 +13,8 @@ public class AuthenticationHelper {
 
     public static Map<String, String> getHeaders() {
         HashMap<String, String> headers = new HashMap<String, String>();
-        headers.put("Authorization", "Bearer " + SettingsHelper.getAuthenticationToken());
+        String token = SettingsHelper.getAuthenticationToken();
+        headers.put("Authorization", "Bearer " + token);
         return headers;
     }
 }
