@@ -23,10 +23,11 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.Volley;
 import com.astuetz.PagerSlidingTabStrip;
+import com.birkett.controllers.ActivityThatSupportsControllers;
 import com.birkettenterprise.phonelocator.R;
 import com.birkettenterprise.phonelocator.application.PhonelocatorApplication;
+import com.birkettenterprise.phonelocator.controller.HockeyAppController;
 import com.birkettenterprise.phonelocator.model.request.AuthenticateRequest;
 import com.birkettenterprise.phonelocator.model.request.SingUpRequest;
 import com.birkettenterprise.phonelocator.model.response.AuthenticateResponse;
@@ -35,11 +36,8 @@ import com.birkettenterprise.phonelocator.settings.SettingsHelper;
 import com.birkettenterprise.phonelocator.utility.Constants;
 import com.birkettenterprise.phonelocator.utility.JacksonRequest;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Gravity;
@@ -48,7 +46,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class AuthenticationActivity extends Activity {
+public class AuthenticationActivity extends ActivityThatSupportsControllers {
 
     private AuthenticationAdapter adapter;
     private ViewPager viewPager;
@@ -136,19 +134,20 @@ public class AuthenticationActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        addController(new HockeyAppController(this));
         super.onCreate(savedInstanceState);
-            setContentView(R.layout.activity_authentication);
-            adapter = new AuthenticationAdapter();
-            viewPager = (ViewPager)findViewById(R.id.pager);
-            viewPager.setAdapter(adapter);
-            tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
-            tabs.setViewPager(viewPager);
-            tabs.setOnPageChangeListener(pageChangeListener);
-            queue = PhonelocatorApplication.getInstance().getQueue();
+        setContentView(R.layout.activity_authentication);
+        adapter = new AuthenticationAdapter();
+        viewPager = (ViewPager) findViewById(R.id.pager);
+        viewPager.setAdapter(adapter);
+        tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
+        tabs.setViewPager(viewPager);
+        tabs.setOnPageChangeListener(pageChangeListener);
+        queue = PhonelocatorApplication.getInstance().getQueue();
 
-            actionButton = (TextView)findViewById(R.id.authentication_action_button);
-            actionButton.setOnClickListener(actionButtonClickListener);
-            progressBar = findViewById(R.id.authentication_progress_bar);
+        actionButton = (TextView) findViewById(R.id.authentication_action_button);
+        actionButton.setOnClickListener(actionButtonClickListener);
+        progressBar = findViewById(R.id.authentication_progress_bar);
 
     }
 
