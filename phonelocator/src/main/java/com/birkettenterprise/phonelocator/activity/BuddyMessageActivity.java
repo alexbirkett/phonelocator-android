@@ -33,6 +33,7 @@ import com.birkettenterprise.phonelocator.R;
 import com.birkettenterprise.phonelocator.controller.PasscodeController;
 import com.birkettenterprise.phonelocator.controller.SettingsWarningController;
 import com.birkettenterprise.phonelocator.settings.Setting;
+import com.birkettenterprise.phonelocator.settings.SettingsHelper;
 
 public class BuddyMessageActivity extends ActivityThatSupportsControllers {
 	
@@ -164,11 +165,20 @@ public class BuddyMessageActivity extends ActivityThatSupportsControllers {
 	
 	private void loadSettings() {
 		SharedPreferences sharedPreferences = getSharedPreferences();
-		setBuddyMessage(sharedPreferences.getString(Setting.StringSettings.BUDDY_MESSAGE, ""));
+		setBuddyMessage(sharedPreferences.getString(Setting.StringSettings.BUDDY_MESSAGE, getDefaultBuddyMessage()));
 		setBuddyNumber(sharedPreferences.getString(Setting.StringSettings.BUDDY_TELEPHONE_NUMBER, ""));
 	}
 	
 	private SharedPreferences getSharedPreferences() {
 		return PreferenceManager.getDefaultSharedPreferences(this);
 	}
+
+    private String getDefaultBuddyMessage() {
+        String defaultBuddyMessage = "";
+        String trackerName = SettingsHelper.getTrackerName();
+        if (trackerName != null) {
+            defaultBuddyMessage = String.format(getString(R.string.buddy_message_default_message), trackerName);
+        }
+        return defaultBuddyMessage;
+    }
 }

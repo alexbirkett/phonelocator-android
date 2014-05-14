@@ -84,6 +84,7 @@
 	<string name="buddy_message_hint">Enter message to be sent to your buddy when the SIM card is changed</string>
 	<string name="buddy_message_save">Save</string>
 	<string name="buddy_message_cancel">Cancel</string>
+    <string name="buddy_message_default_message">SIM card in phone %S changed. This is the new number. Message sent with ten20 Phonelocator for Android - available for free http://goo.gl/AQZLhu</string>
 	
 	<string name="countdown_controler_next_update">Next update in</string>
 	
