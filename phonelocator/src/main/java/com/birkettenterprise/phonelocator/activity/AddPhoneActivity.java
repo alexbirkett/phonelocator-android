@@ -14,8 +14,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.birkettenterprise.phonelocator.R;
 import com.birkettenterprise.phonelocator.application.PhonelocatorApplication;
+import com.birkettenterprise.phonelocator.model.response.TrackerDO;
+import com.birkettenterprise.phonelocator.model.response.TrackersResponseDO;
 import com.birkettenterprise.phonelocator.request.AddTrackerRequest;
-import com.birkettenterprise.phonelocator.request.CheckTrackerAddedRequest;
+import com.birkettenterprise.phonelocator.request.TrackerBySerialRequest;
 import com.birkettenterprise.phonelocator.settings.SettingsHelper;
 import com.birkettenterprise.phonelocator.utility.SerialUtil;
 
@@ -29,35 +31,8 @@ public class AddPhoneActivity extends Activity {
     private Button retryCheckTrackerButton;
     private EditText trackerNameView;
     private TextView statusMessage;
-    private CheckTrackerAddedRequest checkTrackerAddedRequest;
+    private TrackerBySerialRequest trackerBySerialRequest;
     private AddTrackerRequest addTrackerRequest;
-
-    private CheckTrackerAddedRequest.Callback checkTrackerAddedCallback = new CheckTrackerAddedRequest.Callback() {
-
-        @Override
-        public void onComplete(boolean added) {
-            checkTrackerAddedRequest = null;
-            if (added) {
-                handleSuccess();
-            } else {
-                configureViewsForTrackerNameInput();
-            }
-        }
-
-        @Override
-        public void onError(Exception error) {
-            checkTrackerAddedRequest = null;
-            if (SettingsHelper.getAuthenticationToken() == null) {
-                finish();
-            } else {
-                statusMessage.setText(R.string.add_phone_error);
-                progressBar.setVisibility(View.INVISIBLE);
-                addTrackerButton.setVisibility(View.GONE);
-                retryCheckTrackerButton.setVisibility(View.VISIBLE);
-                retryCheckTrackerButton.setEnabled(true);
-            }
-        }
-    };
 
     private View.OnClickListener addTrackerClickListener = new View.OnClickListener() {
 
@@ -97,8 +72,8 @@ public class AddPhoneActivity extends Activity {
     @Override
     public void onPause() {
         super.onPause();
-        if (checkTrackerAddedRequest != null) {
-            checkTrackerAddedRequest.cancel();
+        if (trackerBySerialRequest != null) {
+            trackerBySerialRequest.cancel();
         }
         if (addTrackerRequest != null) {
             addTrackerRequest.cancel();
@@ -106,8 +81,33 @@ public class AddPhoneActivity extends Activity {
     }
 
     private void checkTrackerAdded() {
-        checkTrackerAddedRequest = new CheckTrackerAddedRequest(checkTrackerAddedCallback);
-        PhonelocatorApplication.getInstance().getQueue().add(checkTrackerAddedRequest);
+        trackerBySerialRequest = new TrackerBySerialRequest(new Response.Listener<TrackersResponseDO>() {
+            @Override
+            public void onResponse(TrackersResponseDO response) {
+                trackerBySerialRequest = null;
+                setTrackerNameByTrackersResponse(response);
+                handleSuccess();
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                trackerBySerialRequest = null;
+                if (volleyError.networkResponse != null && volleyError.networkResponse.statusCode == 404) {
+                    configureViewsForTrackerNameInput();
+                } else {
+                    if (SettingsHelper.getAuthenticationToken() == null) {
+                        finish();
+                    } else {
+                        statusMessage.setText(R.string.add_phone_error);
+                        progressBar.setVisibility(View.INVISIBLE);
+                        addTrackerButton.setVisibility(View.GONE);
+                        retryCheckTrackerButton.setVisibility(View.VISIBLE);
+                        retryCheckTrackerButton.setEnabled(true);
+                    }
+                }
+            }
+        });
+        PhonelocatorApplication.getInstance().getQueue().add(trackerBySerialRequest);
 
         progressBar.setVisibility(View.VISIBLE);
         addTrackerButton.setVisibility(View.GONE);
@@ -174,9 +174,16 @@ public class AddPhoneActivity extends Activity {
         if (trackerName.length() == 0) {
             toast(R.string.add_phone_enter_name);
         }
+        SettingsHelper.setTrackerName(trackerName);
         addTracker(trackerName, SerialUtil.getSerial());
         progressBar.setVisibility(View.VISIBLE);
         addTrackerButton.setEnabled(false);
+    }
+
+    private void setTrackerNameByTrackersResponse(TrackersResponseDO response) {
+        if (response != null && response.items != null && response.items.size() > 0) {
+            SettingsHelper.setTrackerName(response.items.get(0).name);
+        }
     }
 
 }

@@ -40,7 +40,7 @@ public class Setting {
 		 * Not synchronized with the server
 		 */
 		public static final String REGISTRATION_URL = "registration_url";
-	
+        public static final String TRACKER_NAME = "tracker_name";
 	}
     
 	public class BooleanSettings {

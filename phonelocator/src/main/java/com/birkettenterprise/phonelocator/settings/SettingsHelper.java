@@ -205,6 +205,14 @@ public class SettingsHelper {
         storeLong(LongSettings.LAST_UPDATE_TIME_STAMP, value);
     }
 
+    public static void setTrackerName(String name) {
+        putStringIfRequired(StringSettings.TRACKER_NAME, name);
+    }
+
+    public static String getTrackerName() {
+        return getSharedPreferences().getString(StringSettings.TRACKER_NAME, null);
+    }
+
     public static void storeLong(String key, long value) {
         SharedPreferences.Editor editor = getSharedPreferences().edit();
         editor.putLong(key, value);
