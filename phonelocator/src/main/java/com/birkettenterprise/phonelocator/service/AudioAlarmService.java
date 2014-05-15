@@ -115,7 +115,7 @@ public class AudioAlarmService extends Service {
 
 	@SuppressWarnings("deprecation")
 	private void showNotification() {
-		Notification notification = new Notification(R.drawable.icon, getString(R.string.alarm_notification_ticker_text), System.currentTimeMillis());
+		Notification notification = new Notification(R.drawable.ten20_logo_transparent, getString(R.string.alarm_notification_ticker_text), System.currentTimeMillis());
 		notification.flags = Notification.FLAG_ONGOING_EVENT | Notification.FLAG_SHOW_LIGHTS;
 		PendingIntent contentIntent = PendingIntent.getBroadcast(this, 0, new Intent(this,StopAudioAlarmBroadcastReceiver.class), PendingIntent.FLAG_UPDATE_CURRENT);
 		notification.setLatestEventInfo(this,  getString(R.string.alarm_notification_content_title), getString(R.string.alarm_notification_content_text), contentIntent);
