@@ -82,10 +82,7 @@ public class UpdateService extends WakefulIntentService {
 
 			sendLocation(location);
 
-            List<Location> locations = new Vector<Location>();
-            locations.add(location);
-
-			updateLog(locations);
+			updateLog(location);
 
 		} catch (LocationPollFailedException e) {
 			updateLog(e);
@@ -155,10 +152,8 @@ public class UpdateService extends WakefulIntentService {
 		session.sendPositionUpdate(beaconList);
 	}
 	
-	private void updateLog(List<Location> locations) {
-		for (Location location : locations) {
-			database.updateLog(location);
-		}
+	private void updateLog(Location location) {
+        database.updateLog(location);
 		notifyDataChanged();
 	}
 	
