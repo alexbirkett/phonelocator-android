@@ -1,5 +1,5 @@
 /**
- * 
+ *
  *  Copyright 2012-2014 Birkett Enterprise Ltd
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,7 +13,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 
 package com.birkettenterprise.phonelocator.utility;
@@ -29,23 +29,26 @@ import android.location.LocationManager;
 import android.os.Bundle;
 
 public class UpdateUtility {
-	
 
-	public static void pollLocationAndSendUpdate(Context context) {
-		Bundle bundle = new Bundle();
-		
-		LocationPollerParameter parameter = new LocationPollerParameter(bundle);
-		parameter.setTimeout(SettingsHelper.getGpsTimeOut());
-		if (SettingsHelper.isGpsEnabled()) {
-			parameter.addProvider(LocationManager.GPS_PROVIDER);
-		}
-		parameter.addProvider(LocationManager.NETWORK_PROVIDER);
-		parameter.setIntentToBroadcastOnCompletion(new Intent(context, SendWorkToUpdateServiceBroadcastReceiver.class));
-		
-		Intent intent = new Intent(context, LocationPoller.class);
-		intent.putExtras(bundle);
-		
-		context.sendBroadcast(intent);
-	}
-	
+
+    public static final String FUSED_PROVIDER = "fused";
+
+    public static void pollLocationAndSendUpdate(Context context) {
+        Bundle bundle = new Bundle();
+
+        LocationPollerParameter parameter = new LocationPollerParameter(bundle);
+        parameter.setTimeout(SettingsHelper.getGpsTimeOut());
+        parameter.addProvider(FUSED_PROVIDER);
+        if (SettingsHelper.isGpsEnabled()) {
+            parameter.addProvider(LocationManager.GPS_PROVIDER);
+        }
+        parameter.addProvider(LocationManager.NETWORK_PROVIDER);
+        parameter.setIntentToBroadcastOnCompletion(new Intent(context, SendWorkToUpdateServiceBroadcastReceiver.class));
+
+        Intent intent = new Intent(context, LocationPoller.class);
+        intent.putExtras(bundle);
+
+        context.sendBroadcast(intent);
+    }
+
 }
