@@ -101,7 +101,7 @@ public class PasscodeController extends Controller implements OnDismissListener 
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(context)
 				.setTitle(context.getString(R.string.passcode_dialog_title))
-				.setIcon(R.drawable.icon)
+				.setIcon(R.drawable.ten20_logo_transparent)
 				.setPositiveButton(
                         context.getString(R.string.passcode_dialog_ok),
                         mOkClickListener)
