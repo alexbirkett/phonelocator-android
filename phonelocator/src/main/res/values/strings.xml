@@ -31,7 +31,7 @@
 	
 	<string name="registering_progress_dialog_message">Registering&#8230;</string>
 
-	<string name="update_log_no_updates_sent_message">Local update history is empty. Use the Phonelocator web site to clear your location history.</string>
+	<string name="update_log_no_updates_sent_message">Local update history is empty. Use the ten20 web site to clear your location history.</string>
 	<string name="location_provider_description">Location provider: </string>
 
 	<string name="error_io_exception">Could not connect to server</string>
