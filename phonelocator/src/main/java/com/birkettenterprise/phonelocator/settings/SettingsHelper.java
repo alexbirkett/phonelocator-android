@@ -51,6 +51,9 @@ public class SettingsHelper {
 
         if (isPeriodicUpdatesEnabled()) {
             long intervalInMicroseconds = getUpdateFrequencyInMilliSeconds();
+            if (intervalInMicroseconds < 1) {
+                throw new RuntimeException("update frequency in ms is " + intervalInMicroseconds);
+            }
             alamManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
                     SystemClock.elapsedRealtime(),
                     intervalInMicroseconds, pendingIntent);
