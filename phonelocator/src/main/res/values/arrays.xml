@@ -19,7 +19,9 @@
 
 <resources>
 	<string-array name="update_frequencies">
-		<item>Minute</item>
+        <item>10 seconds</item>
+        <item>30 seconds</item>
+        <item>Minute</item>
 		<item>5 Minutes</item>
 		<item>10 Minutes</item>
 		<item>15 Minutes</item>
@@ -33,6 +35,8 @@
 	</string-array>
 	
 	<string-array name="update_frequencies_values">
+        <item>10</item> <!--  Minute -->
+        <item>30</item> <!--  Minute -->
 		<item>60</item> <!--  Minute -->
 		<item>300</item> <!-- 5 Minutes -->
 		<item>600</item> <!-- 10 Minutes -->
