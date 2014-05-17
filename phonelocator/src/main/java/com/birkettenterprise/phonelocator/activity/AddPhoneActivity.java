@@ -21,6 +21,8 @@ import com.birkettenterprise.phonelocator.request.TrackerBySerialRequest;
 import com.birkettenterprise.phonelocator.settings.SettingsHelper;
 import com.birkettenterprise.phonelocator.utility.SerialUtil;
 
+import java.io.IOException;
+
 /**
  * Created by alex on 05/05/14.
  */
@@ -94,6 +96,12 @@ public class AddPhoneActivity extends Activity {
                 trackerBySerialRequest = null;
                 if (volleyError.networkResponse != null && volleyError.networkResponse.statusCode == 404) {
                     configureViewsForTrackerNameInput();
+                } else if (volleyError.getCause() != null &&
+                           volleyError.getCause() instanceof IOException &&
+                           SettingsHelper.getTrackerName() != null &&
+                           SettingsHelper.getAuthenticationToken() != null) {
+                        // could not connect but the tracker is named and we have an authentication token
+                        handleSuccess();
                 } else {
                     if (SettingsHelper.getAuthenticationToken() == null) {
                         finish();
