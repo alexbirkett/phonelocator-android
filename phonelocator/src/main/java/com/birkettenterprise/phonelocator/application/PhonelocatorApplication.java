@@ -20,6 +20,7 @@ package com.birkettenterprise.phonelocator.application;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
+import com.birkettenterprise.phonelocator.settings.DefaultSettingsSetter;
 import com.birkettenterprise.phonelocator.settings.SettingTimestampListener;
 
 //import net.hockeyapp.android.CrashManager;
@@ -44,6 +45,7 @@ public class PhonelocatorApplication extends Application {
         createTimestampListener();
         queue = Volley.newRequestQueue(this);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        DefaultSettingsSetter.setDefaultSettings();
     }
 
     private void setInstanceVariable() {

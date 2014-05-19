@@ -70,7 +70,7 @@ public class SettingsHelper {
     }
 
     public static long getUpdateFrequencyInSeconds() {
-        return getSettingAsLong(Setting.StringSettings.UPDATE_FREQUENCY, DEFAULT_UPDATE_FREQUENCY);
+        return getSettingAsLong(Setting.StringSettings.UPDATE_FREQUENCY, 0);
     }
 
     public static void setUpdateFrequencyInSeconds(long value) {
@@ -78,7 +78,7 @@ public class SettingsHelper {
     }
 
     public static long getGpsTimeOut() {
-        return getSettingAsLong(Setting.StringSettings.GPS_UPDATE_TIMEOUT, DEFAULT_GPS_TIMEOUT);
+        return getSettingAsLong(Setting.StringSettings.GPS_UPDATE_TIMEOUT, 0);
     }
 
     public static void setGpsTimeOut(long value) {
