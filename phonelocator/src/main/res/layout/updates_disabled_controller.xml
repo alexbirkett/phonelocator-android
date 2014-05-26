@@ -30,6 +30,10 @@
         android:layout_gravity="center"
         android:text="@string/updates_disabled_controller_updates_disabled"
         android:textAppearance="?android:textAppearanceMedium" />
+    
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/default_padding" />
 
     <LinearLayout
         android:layout_width="fill_parent"
