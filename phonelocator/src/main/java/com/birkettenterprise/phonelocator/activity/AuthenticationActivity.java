@@ -191,7 +191,8 @@ public class AuthenticationActivity extends ActivityThatSupportsControllers {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         NetworkResponse networkResponse = error.networkResponse;
-                        if (networkResponse != null && networkResponse.statusCode == 401) {
+                        if ((networkResponse != null && networkResponse.statusCode == 401)
+                         || (error.getMessage() != null && error.getMessage().contains("authentication"))) {
                             toast(R.string.sign_in_error_invalid_email_user_name_or_password);
                         } else {
                             toast(R.string.sign_in_could_not_connect_to_server);
