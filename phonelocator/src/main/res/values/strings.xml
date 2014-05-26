@@ -12,7 +12,7 @@
 	<string name="app_name">Phonelocator</string>
 
 	<string name="menu_item_settings">Settings</string>
-	<string name="menu_item_web_site">Web site</string>
+	<string name="menu_item_web_site">Open Web site</string>
 	<string name="menu_item_test_alarm">Test alarm</string>
 	<string name="menu_item_update_log">Update history</string>
 	<string name="menu_item_buddy_message">Buddy message settings</string>
