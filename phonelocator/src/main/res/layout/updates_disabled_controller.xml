@@ -20,23 +20,16 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:layout_gravity="center" >
+    android:layout_gravity="center"
+    android:padding="8dp">
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" 
-        android:layout_gravity="center">
-
-        <TextView
-            android:id="@+id/textView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="@string/updates_disabled_controller_updates_disabled"
-            android:textSize="16sp" />
-
-    </LinearLayout>
+        android:layout_gravity="center"
+        android:text="@string/updates_disabled_controller_updates_disabled"
+        android:textAppearance="?android:textAppearanceMedium" />
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -46,17 +39,19 @@
 
         <Button
             android:id="@+id/button_enable_updates"
-            android:layout_width="fill_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/updates_disabled_controller_enable_updates"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            />
 
         <Button
             android:id="@+id/button_settings"
-            android:layout_width="fill_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/updates_disabled_controller_settings" 
-            android:layout_weight="1"/>
+            android:text="@string/updates_disabled_controller_settings"
+            android:layout_weight="1"
+            />
     </LinearLayout>
 
 </LinearLayout>
