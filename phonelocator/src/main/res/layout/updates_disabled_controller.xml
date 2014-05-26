@@ -28,13 +28,6 @@
         android:orientation="horizontal" 
         android:layout_gravity="center">
 
-        <ImageView
-            android:id="@+id/imageView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/warning"
-            android:padding="3dp" />
-
         <TextView
             android:id="@+id/textView1"
             android:layout_width="wrap_content"
