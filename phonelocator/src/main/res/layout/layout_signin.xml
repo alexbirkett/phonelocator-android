@@ -22,7 +22,7 @@
     android:layout_gravity="center"
     android:gravity="center"
     android:orientation="vertical"
-    android:padding="10dp">
+    android:padding="@dimen/default_padding">
 
     <EditText
         android:id="@+id/sign_in_email_or_user_name"
