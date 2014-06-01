@@ -14,7 +14,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.birkettenterprise.phonelocator.R;
 import com.birkettenterprise.phonelocator.application.PhonelocatorApplication;
-import com.birkettenterprise.phonelocator.model.response.TrackerDO;
 import com.birkettenterprise.phonelocator.model.response.TrackersResponseDO;
 import com.birkettenterprise.phonelocator.request.AddTrackerRequest;
 import com.birkettenterprise.phonelocator.request.TrackerBySerialRequest;
@@ -87,7 +86,7 @@ public class AddPhoneActivity extends Activity {
             @Override
             public void onResponse(TrackersResponseDO response) {
                 trackerBySerialRequest = null;
-                setTrackerNameByTrackersResponse(response);
+                setTrackerNameAndIdByTrackersResponse(response);
                 handleSuccess();
             }
         }, new Response.ErrorListener() {
@@ -188,9 +187,12 @@ public class AddPhoneActivity extends Activity {
         addTrackerButton.setEnabled(false);
     }
 
-    private void setTrackerNameByTrackersResponse(TrackersResponseDO response) {
-        if (response != null && response.items != null && response.items.size() > 0) {
+    private void setTrackerNameAndIdByTrackersResponse(TrackersResponseDO response) {
+        if (response != null &&
+            response.items != null &&
+            response.items.size() > 0) {
             SettingsHelper.setTrackerName(response.items.get(0).name);
+            SettingsHelper.setTrackerId(response.items.get(0)._id);
         }
     }
 

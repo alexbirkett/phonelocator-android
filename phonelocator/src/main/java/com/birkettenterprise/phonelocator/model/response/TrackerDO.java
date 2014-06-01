@@ -5,4 +5,5 @@ package com.birkettenterprise.phonelocator.model.response;
  */
 public class TrackerDO {
     public String name;
+    public String _id;
 }

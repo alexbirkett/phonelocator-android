@@ -216,6 +216,14 @@ public class SettingsHelper {
         return getSharedPreferences().getString(StringSettings.TRACKER_NAME, null);
     }
 
+    public static void setTrackerId(String name) {
+        putStringIfRequired(StringSettings.ID, name);
+    }
+
+    public static String getId() {
+        return getSharedPreferences().getString(StringSettings.ID, null);
+    }
+
     public static void setSerial(String name) {
         putStringIfRequired(StringSettings.SERIAL, name);
     }

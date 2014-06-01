@@ -42,6 +42,7 @@ public class Setting {
 		public static final String REGISTRATION_URL = "registration_url";
         public static final String TRACKER_NAME = "tracker_name";
         public static final String SERIAL = "serial";
+        public static final String ID = "id";
 	}
     
 	public class BooleanSettings {
