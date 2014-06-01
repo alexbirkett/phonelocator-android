@@ -19,8 +19,8 @@
 package com.birkettenterprise.phonelocator.service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 import java.util.concurrent.CountDownLatch;
 
 import android.content.Intent;
@@ -78,11 +78,25 @@ public class UpdateService extends WakefulIntentService {
 				"com.birkettenterprise.phonelocator.SENDING_UPDATE"));
 
 		try {
-            Location location = getLocationFromIntent(intent);
 
-			sendLocation(location);
+            // store the location in case the connection fails so that it can be sent later
+            storeLocationBestEffort(intent);
 
-			updateLog(location);
+            List<Location> locations = LocationMarshallingUtility.retrieveLocations(this);
+
+            if (locations.size() < 1) {
+                // if the location was not stored, perhaps because of an out of
+                // disk condition
+                Location location = getLocationFromIntent(intent);
+                locations = new ArrayList<Location>();
+                locations.add(location);
+            }
+
+			sendLocations(locations);
+
+			updateLog(locations);
+
+            LocationMarshallingUtility.deleteLocations(this);
 
 		} catch (LocationPollFailedException e) {
 			updateLog(e);
@@ -104,9 +118,9 @@ public class UpdateService extends WakefulIntentService {
 		return location;
 	}
 
-    private void sendLocation(Location location) throws InterruptedException, VolleyError {
+    private void sendLocations(List<Location> locations) throws InterruptedException, VolleyError {
         final CountDownLatch latch = new CountDownLatch(1);
-        MessageRequestDO dataObject = createMessageRequestDOFromLocation(location);
+        MessageRequestDO dataObject = createMessageRequestDOFromLocation(locations);
         final VolleyExceptionWrapper volleyExceptionWrapper = new VolleyExceptionWrapper();
 
         Response.Listener listener = new Response.Listener() {
@@ -135,14 +149,19 @@ public class UpdateService extends WakefulIntentService {
         }
     }
 
-    private static MessageRequestDO createMessageRequestDOFromLocation(Location location) {
+    private static MessageRequestDO createMessageRequestDOFromLocation(List<Location> locations) {
         MessageRequestDO messageRequestDO = new MessageRequestDO();
-        messageRequestDO.location.latitude = location.getLatitude();
-        messageRequestDO.location.longitude = location.getLongitude();
-        messageRequestDO.location.speed = location.getSpeed();
-        messageRequestDO.location.course = location.getBearing();
-        messageRequestDO.location.accuracy = location.getAccuracy();
-        messageRequestDO.location.timestamp = location.getTime();
+
+        for (Location location : locations) {
+            MessageRequestDO.Message message = new  MessageRequestDO.Message();
+            message.location.latitude = location.getLatitude();
+            message.location.longitude = location.getLongitude();
+            message.location.speed = location.getSpeed();
+            message.location.course = location.getBearing();
+            message.location.accuracy = location.getAccuracy();
+            message.location.timestamp = location.getTime();
+            messageRequestDO.add(message);
+        }
         return messageRequestDO;
     }
 
@@ -152,8 +171,10 @@ public class UpdateService extends WakefulIntentService {
 		session.sendPositionUpdate(beaconList);
 	}
 	
-	private void updateLog(Location location) {
-        database.updateLog(location);
+	private void updateLog(List<Location> locations) {
+        for (Location location: locations) {
+            database.updateLog(location);
+        }
 		notifyDataChanged();
 	}
 	
