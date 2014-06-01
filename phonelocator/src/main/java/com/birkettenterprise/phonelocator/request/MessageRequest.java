@@ -8,6 +8,7 @@ import com.android.volley.Response;
 import com.birkettenterprise.phonelocator.model.request.MessageRequestDO;
 import com.birkettenterprise.phonelocator.model.response.AddTrackerResponse;
 import com.birkettenterprise.phonelocator.model.response.MessageResponseDO;
+import com.birkettenterprise.phonelocator.settings.SettingsHelper;
 import com.birkettenterprise.phonelocator.utility.AuthenticationErrorErrorListenerWrapper;
 import com.birkettenterprise.phonelocator.utility.AuthenticationHelper;
 import com.birkettenterprise.phonelocator.utility.Constants;
@@ -30,7 +31,7 @@ public class MessageRequest extends JacksonRequest<MessageResponseDO> {
 
     private static String getAddTrackerRequestUrl() {
         Uri.Builder builder = Constants.BASE_URI.buildUpon();
-        String url = builder.appendPath("message").appendPath(SerialUtil.getSerial()).build().toString();
+        String url = builder.appendPath("message").appendPath("by-id").appendPath(SettingsHelper.getId()).build().toString();
         return url;
     }
 
