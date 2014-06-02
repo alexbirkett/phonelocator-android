@@ -244,7 +244,7 @@ public class AuthenticationActivity extends ActivityThatSupportsControllers {
             findViewById(R.id.sign_up_user_name).requestFocus();
             toast(R.string.sign_up_error_username);
             valid = false;
-        } else if (password.length() == 0) {
+        } else if (password.length() < 8) {
             findViewById(R.id.sign_up_password).requestFocus();
             toast(R.string.sign_up_error_password);
             valid = false;

@@ -109,7 +109,7 @@
     <string name="sign_up_password">password</string>
     <string name="sign_up_error_email">Enter a valid email address</string>
     <string name="sign_up_error_username">Enter a username</string>
-    <string name="sign_up_error_password">Enter a password</string>
+    <string name="sign_up_error_password">Enter a password (at least 8 characters)</string>
     <string name="sign_up_user_already_registered">User already registered</string>
     <string name="sign_up_could_not_connect_to_server">Could not connect to server</string>
 
