@@ -13,7 +13,7 @@ import net.hockeyapp.android.UpdateManager;
  */
 public class HockeyAppController extends Controller {
 
-    private static final String APP_ID = "3f7ef8dc87d197b81fb86ff41dcc1314";
+    public static final String APP_ID = "3f7ef8dc87d197b81fb86ff41dcc1314";
     private Activity activity;
 
     public HockeyAppController(Activity activity) {
@@ -28,11 +28,6 @@ public class HockeyAppController extends Controller {
     @Override
     public void onResume() {
         super.onResume();
-        checkForCrashes();
-    }
-
-    private void checkForCrashes() {
-        CrashManager.register(activity, APP_ID);
     }
 
     private void checkForUpdates() {

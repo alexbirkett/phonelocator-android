@@ -20,13 +20,17 @@ package com.birkettenterprise.phonelocator.application;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
+import com.birkettenterprise.phonelocator.controller.HockeyAppController;
 import com.birkettenterprise.phonelocator.settings.DefaultSettingsSetter;
 import com.birkettenterprise.phonelocator.settings.SettingTimestampListener;
 
-//import net.hockeyapp.android.CrashManager;
+import net.hockeyapp.android.CrashManager;
+import net.hockeyapp.android.CrashManagerListener;
+
 import android.app.Application;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+
 
 public class PhonelocatorApplication extends Application {
 
@@ -41,7 +45,11 @@ public class PhonelocatorApplication extends Application {
     public void onCreate() {
         super.onCreate();
         setInstanceVariable();
-//		CrashManager.registerHandler();
+        CrashManager.register(this, HockeyAppController.APP_ID, new CrashManagerListener() {
+            public boolean shouldAutoUploadCrashes() {
+                return true;
+            }
+        });
         createTimestampListener();
         queue = Volley.newRequestQueue(this);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
