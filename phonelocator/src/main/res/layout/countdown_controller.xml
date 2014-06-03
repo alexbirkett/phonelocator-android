@@ -24,18 +24,46 @@
     android:layout_gravity="center">
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/countdown_controller_next_update_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="@string/countdown_controler_next_update"
-        android:textSize="24sp" />
+        android:text="@string/countdown_controller_next_update"
+        android:textSize="24sp"
+        android:visibility="gone"/>
 
     <TextView
-        android:id="@+id/timer_text_view"
+        android:id="@+id/countdown_controller_timer_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:textSize="40sp" />
+        android:textSize="40sp"
+        android:visibility="gone"/>
+
+    <fr.castorflex.android.smoothprogressbar.SmoothProgressBar xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/countdown_controller_progress_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        app:spb_color="@color/ten20_progress_bar_color"
+        app:spb_interpolator="spb_interpolator_acceleratedecelerate"
+        app:spb_mirror_mode="false"
+        app:spb_progressiveStart_activated="true"
+        app:spb_progressiveStart_speed="1.5"
+        app:spb_progressiveStop_speed="3.4"
+        app:spb_reversed="false"
+        app:spb_sections_count="4"
+        app:spb_speed="1.0"
+        app:spb_stroke_separator_length="4dp"
+        app:spb_stroke_width="4dp" />
+
+    <TextView
+        android:id="@+id/countdown_controller_starting_shortly_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/countdown_controller_starting_shortly"
+        android:textSize="24sp" />
+
 
 </LinearLayout>

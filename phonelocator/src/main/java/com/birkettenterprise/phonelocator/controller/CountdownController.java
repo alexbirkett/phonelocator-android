@@ -30,6 +30,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 
 
@@ -40,7 +41,10 @@ public class CountdownController extends ViewController {
 	
 	private Handler handler;
 	private TextView timerTextView;
-	
+    private View nextUpdateLabel;
+    private View progressBar;
+    private View startingShortlyLabel;
+
 	private static final long BEAT_INTERVAL = 1000;
 	
 	public CountdownController(Context context) {
@@ -50,7 +54,12 @@ public class CountdownController extends ViewController {
 	@Override 
 	public void onCreate(Bundle savedInstanceState) {
 		setContentView(R.layout.countdown_controller);
-		timerTextView = (TextView) getView().findViewById(R.id.timer_text_view);
+		timerTextView = (TextView) getView().findViewById(R.id.countdown_controller_timer_text_view);
+        nextUpdateLabel = getView().findViewById(R.id.countdown_controller_next_update_label);
+        progressBar = getView().findViewById(R.id.countdown_controller_progress_bar);
+        startingShortlyLabel = getView().findViewById(R.id.countdown_controller_starting_shortly_label);
+
+
 		handler = new Handler();
 	}
 	
@@ -100,6 +109,7 @@ public class CountdownController extends ViewController {
 		public void run() {
 			Log.d(LOG_TAG, "beat");
 			updateClock();
+            showHideViews();
 			if (beating) {
 				scheduleNextBeatAfterBeatInterval();
 			}
@@ -107,26 +117,29 @@ public class CountdownController extends ViewController {
 	};
 	
 	private void updateClock() {
-		long timeRemaing = getCountDownTimerEndTime() - System.currentTimeMillis();
-		String timeString = formatTime(timeRemaing);
-		Log.d(LOG_TAG, "time string " + timeString);
-		timerTextView.setText(timeString);
+        timerTextView.setText(formatTime(getTimeRemaining()));
 	}
+
+    private void showHideViews() {
+        boolean showCountdown = showCountdown();
+        nextUpdateLabel.setVisibility(showCountdown ? View.VISIBLE : View.GONE);
+        timerTextView.setVisibility(showCountdown ? View.VISIBLE : View.GONE);
+        progressBar.setVisibility(showCountdown ? View.GONE : View.VISIBLE);
+        startingShortlyLabel.setVisibility(showCountdown ? View.GONE : View.VISIBLE);
+    }
+
+    private boolean showCountdown() {
+        return getTimeRemaining() > 0;
+    }
+
+    private long getTimeRemaining() {
+        return getCountDownTimerEndTime() - System.currentTimeMillis();
+    }
 	
 	private String formatTime(long time) {
-		
-		boolean negative = false;
-		if (time < 0) {
-			time = -time;
-			negative = true;
-		}
 		Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
 		calendar.setTimeInMillis(time);
 		String timeString = String.format("%02d:%02d:%02d", calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), calendar.get(Calendar.SECOND));
-	
-		if (negative) {
-			timeString = "-" + timeString;
-		}
 		return timeString;
 	}
 	
