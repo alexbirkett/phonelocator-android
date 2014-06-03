@@ -37,6 +37,7 @@ import com.birkettenterprise.phonelocator.utility.Constants;
 import com.birkettenterprise.phonelocator.utility.JacksonRequest;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -55,7 +56,8 @@ public class AuthenticationActivity extends ActivityThatSupportsControllers {
     private View progressBar;
     private RequestQueue queue;
 
-    private static int SIGN_UP_INDEX = 0;
+    private static final int SIGN_UP_INDEX = 0;
+    private static final String TOS_LINK = "https://ten20live.com/docs/terms-of-service";
 
     private ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {
 
@@ -148,7 +150,14 @@ public class AuthenticationActivity extends ActivityThatSupportsControllers {
         actionButton = (TextView) findViewById(R.id.authentication_action_button);
         actionButton.setOnClickListener(actionButtonClickListener);
         progressBar = findViewById(R.id.authentication_progress_bar);
-
+        findViewById(R.id.sign_up_open_tos).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse(TOS_LINK));
+                startActivity(intent);
+            }
+        });
     }
 
 	private void toast(int resourceId) {

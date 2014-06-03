@@ -112,6 +112,7 @@
     <string name="sign_up_error_password">Enter a password (at least 8 characters)</string>
     <string name="sign_up_user_already_registered">User already registered</string>
     <string name="sign_up_could_not_connect_to_server">Could not connect to server</string>
+    <string name="sign_up_tos_link">By clicking sign up you are agreeing to our <u>terms of service</u></string>
 
     <string name="action_sign_up">Sign up</string>
     <string name="action_sign_in">Sign in</string>
