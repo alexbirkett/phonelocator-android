@@ -39,7 +39,7 @@
     <android.support.v4.view.ViewPager
         android:id="@+id/pager"
         android:layout_width="match_parent"
-        android:layout_height="190dp">
+        android:layout_height="150dp">
 
         <include layout="@layout/layout_signup" />
 
@@ -52,5 +52,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/action_sign_up" />
+
+    <TextView android:id="@+id/sign_up_open_tos"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/sign_up_tos_link"
+        android:selectAllOnFocus="false"
+        android:linksClickable="false"
+        android:autoLink="all"
+        android:padding="8dp"/>
+
 
 </LinearLayout>

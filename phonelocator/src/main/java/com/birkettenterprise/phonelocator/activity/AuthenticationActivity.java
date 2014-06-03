@@ -54,6 +54,7 @@ public class AuthenticationActivity extends ActivityThatSupportsControllers {
     private PagerSlidingTabStrip tabs;
     private TextView actionButton;
     private View progressBar;
+    private View tosLink;
     private RequestQueue queue;
 
     private static final int SIGN_UP_INDEX = 0;
@@ -71,8 +72,10 @@ public class AuthenticationActivity extends ActivityThatSupportsControllers {
         public void onPageSelected(int position) {
             if (position == SIGN_UP_INDEX) {
                 actionButton.setText(R.string.action_sign_up);
+                tosLink.setVisibility(View.VISIBLE);
             } else {
                 actionButton.setText(R.string.action_sign_in);
+                tosLink.setVisibility(View.GONE);
             }
 
         }
@@ -143,6 +146,17 @@ public class AuthenticationActivity extends ActivityThatSupportsControllers {
         adapter = new AuthenticationAdapter();
         viewPager = (ViewPager) findViewById(R.id.pager);
         viewPager.setAdapter(adapter);
+
+        tosLink = findViewById(R.id.sign_up_open_tos);
+        tosLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse(TOS_LINK));
+                startActivity(intent);
+            }
+        });
+
         tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
         tabs.setViewPager(viewPager);
         tabs.setOnPageChangeListener(pageChangeListener);
@@ -151,14 +165,7 @@ public class AuthenticationActivity extends ActivityThatSupportsControllers {
         actionButton = (TextView) findViewById(R.id.authentication_action_button);
         actionButton.setOnClickListener(actionButtonClickListener);
         progressBar = findViewById(R.id.authentication_progress_bar);
-        findViewById(R.id.sign_up_open_tos).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setData(Uri.parse(TOS_LINK));
-                startActivity(intent);
-            }
-        });
+
     }
 
 	private void toast(int resourceId) {
