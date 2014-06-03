@@ -25,4 +25,5 @@ package com.birkettenterprise.phonelocator.model.request;
 public class AuthenticateRequest {
     public String email;
     public String password;
+    public int expiresInMinutes;
 }

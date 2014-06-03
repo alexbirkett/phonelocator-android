@@ -58,6 +58,7 @@ public class AuthenticationActivity extends ActivityThatSupportsControllers {
 
     private static final int SIGN_UP_INDEX = 0;
     private static final String TOS_LINK = "https://ten20live.com/docs/terms-of-service";
+    private static final int TOKEN_EXPIRES_IN_MINUTES = 60 * 24 * 365;
 
     private ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {
 
@@ -185,6 +186,7 @@ public class AuthenticationActivity extends ActivityThatSupportsControllers {
         AuthenticateRequest request = new AuthenticateRequest();
         request.email = usernameOrEmail;
         request.password = password;
+        request.expiresInMinutes = TOKEN_EXPIRES_IN_MINUTES;
 
         String url = Constants.BASE_URL + "/authenticate";
         JacksonRequest<AuthenticateResponse> jacksonRequest = new JacksonRequest(Request.Method.POST, url, request,AuthenticateResponse.class,
