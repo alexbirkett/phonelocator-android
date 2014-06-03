@@ -32,10 +32,8 @@ import com.android.volley.VolleyError;
 import com.birkettenterprise.phonelocator.application.PhonelocatorApplication;
 import com.birkettenterprise.phonelocator.database.UpdateLogDatabase;
 import com.birkettenterprise.phonelocator.database.UpdateLogDatabaseContentProvider;
-import com.birkettenterprise.phonelocator.domain.BeaconList;
 import com.birkettenterprise.phonelocator.model.request.MessageRequestDO;
 import com.birkettenterprise.phonelocator.protocol.CorruptStreamException;
-import com.birkettenterprise.phonelocator.protocol.Session;
 import com.birkettenterprise.phonelocator.request.MessageRequest;
 import com.birkettenterprise.phonelocator.utility.LocationMarshallingUtility;
 import com.commonsware.cwac.locpoll.LocationPollerResult;
@@ -164,12 +162,6 @@ public class UpdateService extends WakefulIntentService {
         }
         return messageRequestDO;
     }
-
-	private static  void sendUpdate(Session session, String error) throws IOException, CorruptStreamException {
-		// send empty beacon list
-		BeaconList beaconList = new BeaconList();
-		session.sendPositionUpdate(beaconList);
-	}
 	
 	private void updateLog(List<Location> locations) {
         for (Location location: locations) {
