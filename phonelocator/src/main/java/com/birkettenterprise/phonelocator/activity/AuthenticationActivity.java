@@ -27,7 +27,6 @@ import com.astuetz.PagerSlidingTabStrip;
 import com.birkett.controllers.ActivityThatSupportsControllers;
 import com.birkettenterprise.phonelocator.R;
 import com.birkettenterprise.phonelocator.application.PhonelocatorApplication;
-import com.birkettenterprise.phonelocator.controller.HockeyAppController;
 import com.birkettenterprise.phonelocator.model.request.AuthenticateRequest;
 import com.birkettenterprise.phonelocator.model.request.SingUpRequest;
 import com.birkettenterprise.phonelocator.model.response.AuthenticateResponse;
@@ -140,7 +139,6 @@ public class AuthenticationActivity extends ActivityThatSupportsControllers {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        addController(new HockeyAppController(this));
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_authentication);
         adapter = new AuthenticationAdapter();

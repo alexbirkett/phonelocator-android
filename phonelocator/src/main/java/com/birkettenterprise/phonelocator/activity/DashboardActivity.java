@@ -42,7 +42,6 @@ import com.birkettenterprise.phonelocator.broadcastreceiver.PollLocationAndSendU
 import com.birkettenterprise.phonelocator.controller.BuddyMessageNotSetController;
 import com.birkettenterprise.phonelocator.controller.CountdownController;
 import com.birkettenterprise.phonelocator.controller.DatabaseController;
-import com.birkettenterprise.phonelocator.controller.HockeyAppController;
 import com.birkettenterprise.phonelocator.controller.LocationStatusController;
 import com.birkettenterprise.phonelocator.controller.UpdateStatusController;
 import com.birkettenterprise.phonelocator.controller.UpdatesDisabledController;
@@ -79,7 +78,6 @@ public class DashboardActivity extends ActivityThatSupportsControllers implement
         updatesDisabledController = new UpdatesDisabledController(this);
         buddyMessageNotSetController = new BuddyMessageNotSetController(this);
 
-		addController(new HockeyAppController(this));
         addController(countdownController);
         addController(databaseController);
         addController(locationStatusController);
