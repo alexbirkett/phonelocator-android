@@ -15,6 +15,7 @@ public class MessageRequestDO extends ArrayList<MessageRequestDO.Message>{
             public double course;
             public long timestamp;
             public float accuracy;
+            public String provider;
         }
         public Location location = new Location();
     }

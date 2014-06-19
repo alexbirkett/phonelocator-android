@@ -158,6 +158,7 @@ public class UpdateService extends WakefulIntentService {
             message.location.course = location.getBearing();
             message.location.accuracy = location.getAccuracy();
             message.location.timestamp = location.getTime();
+            message.location.provider = location.getProvider();
             messageRequestDO.add(message);
         }
         return messageRequestDO;
