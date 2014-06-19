@@ -18,18 +18,18 @@
 
 package com.birkettenterprise.phonelocator.broadcastreceiver;
 
-import com.birkettenterprise.phonelocator.service.UpdateService;
-
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.content.WakefulBroadcastReceiver;
 
-public class SendWorkToUpdateServiceBroadcastReceiver extends BroadcastReceiver {
+import com.birkettenterprise.phonelocator.service.UpdateService;
+
+public class SendWorkToUpdateServiceBroadcastReceiver extends WakefulBroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		intent.setClass(context, com.birkettenterprise.phonelocator.service.UpdateService.class);
-		UpdateService.sendWakefulWork(context, intent);
+		intent.setClass(context, UpdateService.class);
+        startWakefulService(context, intent);
 	}
 
 }

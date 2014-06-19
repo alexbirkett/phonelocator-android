@@ -1,9 +1,6 @@
 apply plugin: 'android'
 
 repositories {
-    maven {
-        url "https://repo.commonsware.com.s3.amazonaws.com"
-    }
 }
 
 android {
@@ -39,7 +36,6 @@ android {
 
 dependencies {
     compile 'com.android.support:appcompat-v7:+'
-    compile 'com.commonsware.cwac:wakeful:1.0.1'
     compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
     compile 'com.mcxiaoke.volley:library:1.0.+@aar'
     compile 'com.github.castorflex.smoothprogressbar:library:0.4.0'
