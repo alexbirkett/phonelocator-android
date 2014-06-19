@@ -130,11 +130,12 @@ public class UpdateService extends Service {
 			updateLog(e);
             handleUpdateComplete(intent);
 		}
-        sendBroadcast(new Intent(
-				"com.birkettenterprise.phonelocator.UPDATE_COMPLETE"));
+
 	}
 
     private void handleUpdateComplete(Intent intent) {
+        sendBroadcast(new Intent(
+                "com.birkettenterprise.phonelocator.UPDATE_COMPLETE"));
         stopSelf();
         SendWorkToUpdateServiceBroadcastReceiver.completeWakefulIntent(intent);
     }
