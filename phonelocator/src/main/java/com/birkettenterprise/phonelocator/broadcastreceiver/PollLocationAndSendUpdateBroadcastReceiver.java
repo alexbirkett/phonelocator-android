@@ -18,7 +18,6 @@
 
 package com.birkettenterprise.phonelocator.broadcastreceiver;
 
-import com.birkettenterprise.phonelocator.settings.SettingsHelper;
 import com.birkettenterprise.phonelocator.utility.UpdateUtility;
 
 
