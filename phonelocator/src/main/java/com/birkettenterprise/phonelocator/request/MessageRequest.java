@@ -14,6 +14,7 @@ import com.birkettenterprise.phonelocator.utility.AuthenticationHelper;
 import com.birkettenterprise.phonelocator.utility.Constants;
 import com.birkettenterprise.phonelocator.utility.JacksonRequest;
 import com.birkettenterprise.phonelocator.utility.SerialUtil;
+import com.birkettenterprise.phonelocator.utility.VersionUtil;
 
 import java.util.Map;
 
@@ -22,6 +23,7 @@ import java.util.Map;
  */
 public class MessageRequest extends JacksonRequest<MessageResponseDO> {
 
+    public static final String VERSION = "version";
     public MessageRequest(
                              MessageRequestDO messageRequestDO,
                              Response.Listener listener,
@@ -31,7 +33,7 @@ public class MessageRequest extends JacksonRequest<MessageResponseDO> {
 
     private static String getAddTrackerRequestUrl() {
         Uri.Builder builder = Constants.BASE_URI.buildUpon();
-        String url = builder.appendPath("message").appendPath("by-id").appendPath(SettingsHelper.getId()).build().toString();
+        String url = builder.appendPath("message").appendPath("by-id").appendPath(SettingsHelper.getId()).appendQueryParameter(VERSION, VersionUtil.getVersion()).build().toString();
         return url;
     }
 
