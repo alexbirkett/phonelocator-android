@@ -5,7 +5,7 @@ repositories {
 
 android {
     compileSdkVersion 19
-    buildToolsVersion "19.0.1"
+    buildToolsVersion '20.0.0'
 
     defaultConfig {
         minSdkVersion 14
@@ -35,7 +35,7 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:+'
+    compile 'com.android.support:appcompat-v7:20.+'
     compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
     compile 'com.mcxiaoke.volley:library:1.0.+@aar'
     compile 'com.github.castorflex.smoothprogressbar:library:0.4.0'
