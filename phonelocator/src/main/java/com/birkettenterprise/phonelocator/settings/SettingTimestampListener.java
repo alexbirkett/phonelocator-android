@@ -23,6 +23,8 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.preference.PreferenceManager;
 
+import com.birkettenterprise.phonelocator.utility.UpdateScheduler;
+
 /**
  * An instance of SettingTimestampListener should always exist when settings are modified
  * (either locally or remotely). It's responsible for updating time stamps when
@@ -54,7 +56,7 @@ public class SettingTimestampListener implements OnSharedPreferenceChangeListene
 	private void scheduleUpdatesIfRequired(String key) {
 		if (key.equals(Setting.StringSettings.UPDATE_FREQUENCY) 
 		 || key.equals(Setting.BooleanSettings.PERIODIC_UPDATES_ENABLED)) {
-					SettingsHelper.scheduleUpdates(context);
+					UpdateScheduler.scheduleUpdates(context);
 		}
 	}
 	private void updateTimestamp(String key) {

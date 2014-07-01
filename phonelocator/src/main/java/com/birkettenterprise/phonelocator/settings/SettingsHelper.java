@@ -19,19 +19,12 @@
 package com.birkettenterprise.phonelocator.settings;
 
 import com.birkettenterprise.phonelocator.application.PhonelocatorApplication;
-import com.birkettenterprise.phonelocator.broadcastreceiver.PollLocationAndSendUpdateBroadcastReceiver;
 import com.birkettenterprise.phonelocator.settings.Setting.BooleanSettings;
 import com.birkettenterprise.phonelocator.settings.Setting.Integer64Settings;
 import com.birkettenterprise.phonelocator.settings.Setting.LongSettings;
 import com.birkettenterprise.phonelocator.settings.Setting.StringSettings;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.SystemClock;
-import android.util.Log;
 
 public class SettingsHelper {
 
@@ -41,29 +34,6 @@ public class SettingsHelper {
     public static final long DEFAULT_GPS_TIMEOUT = 30000;
 
     private static final int MILLISECONDS_IN_SECOND = 1000;
-
-    public static void scheduleUpdates(Context context) {
-        AlarmManager alamManager = (AlarmManager) context
-                .getSystemService(Context.ALARM_SERVICE);
-
-        Intent intent = new Intent(PollLocationAndSendUpdateBroadcastReceiver.ACTION);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        if (isPeriodicUpdatesEnabled()) {
-            long intervalInMicroseconds = getUpdateFrequencyInMilliSeconds();
-            if (intervalInMicroseconds < 1) {
-                throw new RuntimeException("update frequency in ms is " + intervalInMicroseconds);
-            }
-            alamManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
-                    SystemClock.elapsedRealtime(),
-                    intervalInMicroseconds, pendingIntent);
-            Log.d(TAG, "updates scheduled every " + intervalInMicroseconds + " microseconds");
-        } else {
-            alamManager.cancel(pendingIntent);
-            Log.d(TAG, "canceled updates");
-
-        }
-    }
 
     public static long getUpdateFrequencyInMilliSeconds() {
         return getUpdateFrequencyInSeconds() * MILLISECONDS_IN_SECOND;
@@ -200,12 +170,12 @@ public class SettingsHelper {
         return getSharedPreferences().getBoolean(BooleanSettings.GPS_ENABLED, true);
     }
 
-    public static long getLastUpdateTimeStamp() {
-        return getSharedPreferences().getLong(LongSettings.LAST_UPDATE_TIME_STAMP, 0L);
+    public static long getLastUpdateStartedTimeStamp() {
+        return getSharedPreferences().getLong(LongSettings.LAST_UPDATE_STARTED_TIME_STAMP, 0L);
     }
 
-    public static void setLastUpdateTimeStamp(long value) {
-        storeLong(LongSettings.LAST_UPDATE_TIME_STAMP, value);
+    public static void setLastUpdateStartedTimeStamp(long value) {
+        storeLong(LongSettings.LAST_UPDATE_STARTED_TIME_STAMP, value);
     }
 
     public static void setTrackerName(String name) {

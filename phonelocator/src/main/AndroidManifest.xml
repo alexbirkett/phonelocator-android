@@ -66,7 +66,7 @@
 		<service android:name="com.commonsware.cwac.locpoll.LocationPollerService" />
 	
 		
-		<receiver android:name=".broadcastreceiver.boot.ScheduleUpdatesBroadcastReceiver">  
+		<receiver android:name=".broadcastreceiver.boot.SendUpdateOnBootBroadcastReceiver">
 		    <intent-filter>  
 		        <action android:name="android.intent.action.BOOT_COMPLETED" />  
 		    </intent-filter>
@@ -90,8 +90,14 @@
 		</receiver> 
 		<receiver android:name=".broadcastreceiver.SendWorkToUpdateServiceBroadcastReceiver"/>
 		<receiver android:name=".broadcastreceiver.StopAudioAlarmBroadcastReceiver"/>
-		<receiver android:name="com.commonsware.cwac.locpoll.LocationPoller" />
-		
+        <receiver android:name=".broadcastreceiver.ScheduleNextUpdateBroadcastReceiver">
+            <intent-filter>
+                <action android:name="com.birkettenterprise.phonelocator.UPDATE_COMPLETE" />
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name="com.commonsware.cwac.locpoll.LocationPoller" />
+
 		<provider
             android:name=".database.UpdateLogDatabaseContentProvider"
             android:authorities="com.birkettenterprise.phonelocator.database.UpdateLogDatabaseContentProvider"

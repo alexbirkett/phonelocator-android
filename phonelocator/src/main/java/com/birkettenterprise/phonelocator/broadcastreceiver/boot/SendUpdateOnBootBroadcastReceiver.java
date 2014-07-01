@@ -1,6 +1,6 @@
 /**
  * 
- *  Copyright 2011 Birkett Enterprise Ltd
+ *  Copyright 2011-2014 Birkett Enterprise Ltd
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,15 +18,15 @@
 
 package com.birkettenterprise.phonelocator.broadcastreceiver.boot;
 
-import com.birkettenterprise.phonelocator.settings.SettingsHelper;
+import com.birkettenterprise.phonelocator.utility.UpdateUtility;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-public class ScheduleUpdatesBroadcastReceiver extends BroadcastReceiver {
+public class SendUpdateOnBootBroadcastReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-    	SettingsHelper.scheduleUpdates(context);
+        UpdateUtility.pollLocationAndSendUpdate(context);
     }
 }

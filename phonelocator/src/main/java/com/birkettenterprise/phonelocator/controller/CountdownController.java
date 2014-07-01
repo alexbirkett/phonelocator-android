@@ -145,6 +145,6 @@ public class CountdownController extends ViewController {
 	
 	private long getCountDownTimerEndTime() {
 		return (SettingsHelper.getUpdateFrequencyInMilliSeconds()
-				+ SettingsHelper.getLastUpdateTimeStamp());
+				+ SettingsHelper.getLastUpdateStartedTimeStamp());
 	}
 }

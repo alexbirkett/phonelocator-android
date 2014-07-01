@@ -1,6 +1,6 @@
 /**
- * 
- *  Copyright 2011-2014 Birkett Enterprise Ltd
+ *
+ *  Copyright 2014 Birkett Enterprise Ltd
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -13,26 +13,25 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 
 package com.birkettenterprise.phonelocator.broadcastreceiver;
-
-import com.birkettenterprise.phonelocator.settings.SettingsHelper;
-import com.birkettenterprise.phonelocator.utility.UpdateUtility;
-
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
+import com.birkettenterprise.phonelocator.utility.UpdateScheduler;
 
-public class PollLocationAndSendUpdateBroadcastReceiver extends BroadcastReceiver {
-	
-	public static final String ACTION = "com.birkettenterprise.phonelocator.POLL_LOCATION_AND_SEND_UPDATE";
-	@Override
-	public void onReceive(Context context, Intent i) {
-		UpdateUtility.pollLocationAndSendUpdate(context);
-	}
-	
+/**
+ * Created by alex on 01/07/14.
+ */
+public class ScheduleNextUpdateBroadcastReceiver extends BroadcastReceiver {
+
+
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        UpdateScheduler.scheduleUpdates(context);
+    }
 }

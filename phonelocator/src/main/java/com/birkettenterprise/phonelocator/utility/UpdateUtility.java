@@ -34,6 +34,8 @@ public class UpdateUtility {
     public static final String FUSED_PROVIDER = "fused";
 
     public static void pollLocationAndSendUpdate(Context context) {
+        SettingsHelper.setLastUpdateStartedTimeStamp(System.currentTimeMillis());
+
         Bundle bundle = new Bundle();
 
         LocationPollerParameter parameter = new LocationPollerParameter(bundle);

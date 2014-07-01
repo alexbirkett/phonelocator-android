@@ -80,7 +80,7 @@ public class Setting {
 		/*
 		 * Not synchronized
 		 */
-		public static final String LAST_UPDATE_TIME_STAMP = "last_update_time_stamp";
+		public static final String LAST_UPDATE_STARTED_TIME_STAMP = "last_update_time_stamp";
 	}
 	
 	private long mTimestamp;
