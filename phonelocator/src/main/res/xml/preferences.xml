@@ -31,6 +31,13 @@
                 android:entryValues="@array/update_frequencies_values"
                 android:dialogTitle="@string/update_frequency"
                 android:dependency="periodic_updates_enabled" />
+
+    <CheckBoxPreference
+        android:key="fused_enabled"
+        android:title="@string/fused_enabled"
+        android:summary="@string/fused_enabled_summary"
+        android:dependency="periodic_updates_enabled" />
+
    	<CheckBoxPreference
 		android:key="gps_enabled"
 		android:title="@string/gps_enabled"

@@ -52,6 +52,7 @@ public class Setting {
 	    public static final String SEND_BUDDY_MESSAGE = "send_buddy_message";
 	    public static final String BUDDY_MESSAGE_ENABLED = "buddy_message_enabled";
 		public static final String GPS_ENABLED = "gps_enabled";
+        public static final String FUSED_ENABLED = "fused_enabled";
 	    /*
 	     * Not synchronized with the server
 	     */

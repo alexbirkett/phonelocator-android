@@ -40,7 +40,9 @@ public class UpdateUtility {
 
         LocationPollerParameter parameter = new LocationPollerParameter(bundle);
         parameter.setTimeout(SettingsHelper.getGpsTimeOut());
-        parameter.addProvider(FUSED_PROVIDER);
+        if (SettingsHelper.isFusedEnabled()) {
+            parameter.addProvider(FUSED_PROVIDER);
+        }
         if (SettingsHelper.isGpsEnabled()) {
             parameter.addProvider(LocationManager.GPS_PROVIDER);
         }
