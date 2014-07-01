@@ -20,4 +20,8 @@
         android:id="@+id/update_log"
         android:title="@string/menu_item_update_log"/>
 
+    <item
+        android:id="@+id/update_now"
+        android:title="@string/menu_update_now"/>
+
 </menu>

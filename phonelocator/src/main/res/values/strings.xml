@@ -17,6 +17,7 @@
 	<string name="menu_item_update_log">Update history</string>
 	<string name="menu_item_buddy_message">Buddy message settings</string>
 	<string name="menu_item_clear_log">Clear history</string>
+    <string name="menu_update_now">Update now</string>
 	
 	<string name="periodic_updates">Enable updates</string>
 	<string name="periodic_updates_summary">Send location to server periodically</string>

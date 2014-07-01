@@ -144,6 +144,9 @@ public class DashboardActivity extends ActivityThatSupportsControllers implement
         } else if (i == R.id.buddy_message) {
             startBuddyMessageActivity();
             return true;
+        } else if (i == R.id.update_now) {
+            updateNow();
+            return true;
         } else {
             return super.onOptionsItemSelected(item);
         }
@@ -198,6 +201,11 @@ public class DashboardActivity extends ActivityThatSupportsControllers implement
     private void startBuddyMessageActivity() {
         Intent intent = new Intent(this, BuddyMessageActivity.class);
         startActivity(intent);
+    }
+
+    private void updateNow() {
+        Intent intent = new Intent(PollLocationAndSendUpdateBroadcastReceiver.ACTION);
+        sendBroadcast(intent);
     }
 
     private void startAuthenticationActivity() {
