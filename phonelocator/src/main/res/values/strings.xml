@@ -44,9 +44,6 @@
 	<string name="gps_timeout">GPS timeout</string>
 	<string name="gps_timeout_summary">How long to wait for a GPS lock</string>
 
-    <string name="fused_enabled">Fused location provider</string>
-    <string name="fused_enabled_summary">Fused Location Provider intelligently manages the underlying location technology and gives you the best location according to your needs. (Requires Google play services)</string>
-
     <string name="gps_enabled">GPS enabled</string>
 	<string name="gps_enabled_summary">Requires more battery and a clear view of the sky. Will fall back to network location if GPS not available.</string>		
 	

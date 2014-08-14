@@ -16,10 +16,6 @@ public class DefaultSettingsSetter {
             SettingsHelper.setUpdateFrequencyInSeconds(SettingsHelper.DEFAULT_UPDATE_FREQUENCY);
         }
 
-        if (!SettingsHelper.isFusedEnabledSettingSet()) {
-            SettingsHelper.setFusedEnabled(true);
-        }
-
         if (!SettingsHelper.isGpsEnabledSettingSet()) {
             SettingsHelper.setGpsEnabled(true);
         }

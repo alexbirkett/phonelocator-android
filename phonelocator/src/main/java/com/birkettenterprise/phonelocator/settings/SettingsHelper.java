@@ -178,19 +178,6 @@ public class SettingsHelper {
         return getSharedPreferences().contains(BooleanSettings.GPS_ENABLED);
     }
 
-    public static boolean isFusedEnabled() {
-        return getSharedPreferences().getBoolean(BooleanSettings.FUSED_ENABLED, true);
-    }
-
-    public static void setFusedEnabled(boolean enabled) {
-        storeBoolean(BooleanSettings.FUSED_ENABLED, enabled);
-    }
-
-    public static boolean isFusedEnabledSettingSet() {
-        return getSharedPreferences().contains(BooleanSettings.FUSED_ENABLED);
-    }
-
-
     public static long getLastUpdateStartedTimeStamp() {
         return getSharedPreferences().getLong(LongSettings.LAST_UPDATE_STARTED_TIME_STAMP, 0L);
     }

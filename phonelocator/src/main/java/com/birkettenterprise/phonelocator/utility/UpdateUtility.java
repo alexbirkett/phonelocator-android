@@ -30,9 +30,6 @@ import android.os.Bundle;
 
 public class UpdateUtility {
 
-
-    public static final String FUSED_PROVIDER = "fused";
-
     public static void pollLocationAndSendUpdate(Context context) {
         SettingsHelper.setLastUpdateStartedTimeStamp(System.currentTimeMillis());
 
@@ -40,9 +37,6 @@ public class UpdateUtility {
 
         LocationPollerParameter parameter = new LocationPollerParameter(bundle);
         parameter.setTimeout(SettingsHelper.getGpsTimeOut());
-        if (SettingsHelper.isFusedEnabled()) {
-            parameter.addProvider(FUSED_PROVIDER);
-        }
         if (SettingsHelper.isGpsEnabled()) {
             parameter.addProvider(LocationManager.GPS_PROVIDER);
         }
